@@ -24,7 +24,7 @@ export function Button({
     "flex items-center justify-center p-2 rounded transition-transform duration-300 ease-in-out transform hover:scale-105 focus:outline-none";
   const variantStyles = {
     outline:
-      "border border-gray-700 bg-transparent text-gray-700 hover:bg-gray-800 hover:text-white hover:shadow-lg",
+      "border border-gray-700 bg-transparent text-gray-700 hover:bg-gray-800  hover:shadow-lg",
     solid:
       "bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-white hover:from-purple-600 hover:via-pink-600 hover:to-red-600 shadow-lg hover:shadow-xl",
     ghost:
