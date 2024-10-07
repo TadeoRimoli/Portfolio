@@ -10,19 +10,21 @@ function StarryBackground() {
     speedY: number;
   }[] = [];
 
-  const numStars = 50; // Mueve la declaración de numStars fuera de initStars
+  const numStars = 50;
 
   const initStars = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
 
-    const documentHeight = document.documentElement.scrollHeight;
+    const rootDiv = document.getElementById("root");
+    if (!rootDiv) return;
+
+    const documentHeight = rootDiv.offsetHeight; // Usa la altura del div 'root'
+
     for (let i = 0; i < numStars; i++) {
       stars.push({
         x: Math.random() * canvas.width,
-        y: Math.random() * documentHeight,
+        y: Math.random() * documentHeight, // Usa la altura total del documento para las estrellas
         size: Math.random() * 2 + 1,
         speedX: Math.random() * 2 + 0.5,
         speedY: Math.random() * 2 + 0.5,
@@ -38,14 +40,22 @@ function StarryBackground() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    const rootDiv = document.getElementById("root");
+    if (!rootDiv) return;
+    const documentHeight = rootDiv.offsetHeight; // Usa la altura del div 'root'
+
     stars.forEach((star) => {
       star.x += star.speedX;
       star.y += star.speedY;
 
+      // Si la estrella sale por abajo del div, la reinicia en la parte superior
       if (star.x > canvas.width) star.x = 0;
-      if (star.y > canvas.height) star.y = 0;
+      if (star.y > documentHeight) {
+        star.y = 0; // Reinicia su posición en la parte superior del div
+        star.x = Math.random() * canvas.width; // También reinicia la posición en X
+      }
       if (star.x < 0) star.x = canvas.width;
-      if (star.y < 0) star.y = canvas.height;
+      if (star.y < 0) star.y = 0;
 
       ctx.fillStyle = "white";
       ctx.shadowBlur = 10;
@@ -64,16 +74,16 @@ function StarryBackground() {
   const resizeCanvas = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const documentHeight = document.documentElement.scrollHeight;
+    const rootDiv = document.getElementById("root"); // Obtiene el div con id 'root'
+    if (!rootDiv) return;
+
     canvas.width = window.innerWidth;
-    canvas.height = documentHeight;
+    canvas.height = rootDiv.offsetHeight; // Ajusta la altura al tamaño del div 'root'
   };
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
 
     resizeCanvas();
     initStars(); // Inicializa las estrellas una sola vez

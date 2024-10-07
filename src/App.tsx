@@ -49,15 +49,15 @@ const projects = [
   {
     title: "Hotel Estrellas de Mar",
     description:
-      "Developed a site for Hotel Estrellas de Mar with room bookings and amenities info.",
+      "Developed a landing page for Hotel Estrellas de Mar with room bookings, amenities info, a gallery, and contact options.",
     color: "from-green-500 to-teal-500",
     icon: "🛏️",
     technologies: ["React.js", "Firebase", "TailwindCSS"],
     longDescription:
-      "Created a dynamic website for a hotel, allowing users to book rooms, view amenities, and explore local attractions. The site includes a real-time booking system and a detailed gallery of the hotel's facilities.",
+      "Created a dynamic landing page for Hotel Estrellas de Mar, allowing users to book rooms, view amenities, explore local attractions, and access a detailed gallery of the hotel's facilities. The site features a real-time booking system and contact information for inquiries.",
     challenges:
       "Implementing a real-time booking system and ensuring data consistency across multiple users were significant challenges overcome in this project.",
-    link: "http://localhost:4000/",
+    link: "https://hotel.tadeorimoli.com.ar/",
   },
 ];
 
@@ -109,13 +109,111 @@ function App() {
     setLanguage(lang);
     setIsLanguageMenuOpen(false);
   };
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const stars: {
+    x: number;
+    y: number;
+    size: number;
+    speedX: number;
+    speedY: number;
+  }[] = [];
+
+  const numStars = 50;
+
+  const initStars = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const rootDiv = document.getElementById("root");
+    if (!rootDiv) return;
+
+    const documentHeight = rootDiv.offsetHeight; // Usa la altura del div 'root'
+
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * documentHeight, // Usa la altura total del documento para las estrellas
+        size: Math.random() * 2 + 1,
+        speedX: Math.random() * 2 + 0.5,
+        speedY: Math.random() * 2 + 0.5,
+      });
+    }
+  };
+
+  const updateStars = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const rootDiv = document.getElementById("root");
+    if (!rootDiv) return;
+    const documentHeight = rootDiv.offsetHeight; // Usa la altura del div 'root'
+
+    stars.forEach((star) => {
+      star.x += star.speedX;
+      star.y += star.speedY;
+
+      // Si la estrella sale por abajo del div, la reinicia en la parte superior
+      if (star.x > canvas.width) star.x = 0;
+      if (star.y > documentHeight) {
+        star.y = 0; // Reinicia su posición en la parte superior del div
+        star.x = Math.random() * canvas.width; // También reinicia la posición en X
+      }
+      if (star.x < 0) star.x = canvas.width;
+      if (star.y < 0) star.y = 0;
+
+      ctx.fillStyle = "white";
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = "white";
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, star.size, 0, 2 * Math.PI);
+      ctx.fill();
+    });
+  };
+
+  const animateStars = () => {
+    updateStars();
+    requestAnimationFrame(animateStars);
+  };
+
+  const resizeCanvas = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rootDiv = document.getElementById("root"); // Obtiene el div con id 'root'
+    if (!rootDiv) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = rootDiv.offsetHeight; // Ajusta la altura al tamaño del div 'root'
+  };
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    resizeCanvas();
+    initStars(); // Inicializa las estrellas una sola vez
+    window.addEventListener("resize", resizeCanvas);
+    animateStars();
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas);
+    };
+  }, []);
+
   return (
     <div
       ref={containerRef}
       id="appcontainer"
       className="inset-0 overflow-hidden min-h-screen bg-gradient-to-r bg-gray-800 text-gray-100 antialiased overflow-x-hidden relative"
     >
-      <StarryBackground />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none z-0"
+      ></canvas>
 
       <header className="fixed top-0 left-0 right-0 z-20 bg-gray-900/80 backdrop-blur-sm">
         <nav className="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -265,7 +363,7 @@ function App() {
           <h2 className="text-3xl font-semibold mb-10 text-center text-orange-400">
             Featured Projects
           </h2>
-          <div className="flex flex-row flex-wrap justify-center w-full">
+          <div className="flex flex-col  justify-center w-full">
             {projects.map((project, index) => (
               <CardProject key={index} project={project} index={index} />
             ))}
@@ -354,7 +452,7 @@ function App() {
 
       <footer className="bg-gray-900 py-6 mt-20">
         <div className="container mx-auto px-4 text-center text-gray-400 text-sm">
-          © 2024 Tadeo Rimoli
+          2024 Tadeo Rimoli
         </div>
       </footer>
     </div>
