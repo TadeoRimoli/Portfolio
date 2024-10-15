@@ -5,61 +5,12 @@ import "./App.css";
 import { Button } from "./components/Button";
 import { GithubIcon } from "./assets/react";
 import CardProject from "./components/CardProject";
-import StarryBackground from "./components/StarryBackground";
 import ExperienceCard from "./components/ExperienceCard";
 import EducationCard from "./components/EducationCard";
-const projects = [
-  {
-    title: "Entrena+ Atletismo",
-    description:
-      "Mobile app for manage training, track results, and schedule events for athletes and coaches.",
-    color: "from-green-500 to-blue-500",
-    icon: "🏃‍♂️",
-    technologies: [
-      "Docker",
-      "Redis",
-      "JWT",
-      "Firebase",
-      "Expo",
-      "React-Native",
-      "NativeWind",
-      "Java",
-      "Spring-Boot",
-      "Spring-Security",
-      "Hibernate",
-      "MYSQL",
-    ],
-    longDescription:
-      "Developed a comprehensive app for managing athletic training. The app allows users to handle training groups, schedule sessions, track progress, and analyze performance metrics. It supports coaches in organizing workouts, monitoring athlete development, and optimizing training plans.",
-    challenges:
-      "Implementing context awareness and handling ambiguous queries were the main challenges overcome in this project.",
-  },
-  {
-    title: "Meli Pilates",
-    description: "Built a site for Pilates Studio with bookings and purchases.",
-    color: "from-yellow-500 to-orange-500",
-    icon: "🧘‍♀️",
-    technologies: ["React.js", "TailwindCSS"],
-    longDescription:
-      "Developed a comprehensive website for a Pilates studio, enabling users to book classes, purchase packages, and learn about the studio's offerings. The site features a user-friendly interface and seamless integration with payment gateways.",
-    challenges:
-      "Ensuring a smooth user experience during the booking process and integrating secure payment methods were key challenges addressed in this project.",
-    link: "https://pilates.tadeorimoli.com.ar",
-  },
-  {
-    title: "Hotel Estrellas de Mar",
-    description:
-      "Developed a landing page for Hotel Estrellas de Mar with room bookings, amenities info, a gallery, and contact options.",
-    color: "from-green-500 to-teal-500",
-    icon: "🛏️",
-    technologies: ["React.js", "Firebase", "TailwindCSS"],
-    longDescription:
-      "Created a dynamic landing page for Hotel Estrellas de Mar, allowing users to book rooms, view amenities, explore local attractions, and access a detailed gallery of the hotel's facilities. The site features a real-time booking system and contact information for inquiries.",
-    challenges:
-      "Implementing a real-time booking system and ensuring data consistency across multiple users were significant challenges overcome in this project.",
-    link: "https://hotel.tadeorimoli.com.ar/",
-  },
-];
+import { FormattedMessage, useIntl } from "react-intl";
+import { useLocale } from "./i18n/LocaleContext";
+import { projects } from "./Constants/projects";
+// const intl = useIntl();
 
 const skills = [
   "SQL",
@@ -68,16 +19,14 @@ const skills = [
   "React",
   "TypeScript",
   "TailwindCSS",
+  "NativeWind",
   "Nginx",
   "Docker",
 ];
 
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [expandedProject, setExpandedProject] = useState<number | null>(null);
-  const toggleProjectExpansion = (index: number) => {
-    setExpandedProject(expandedProject === index ? null : index);
-  };
+
   function SmoothScrollLink({ href, className, children }: any) {
     const handleClick = (e: any) => {
       e.preventDefault();
@@ -96,8 +45,6 @@ function App() {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [language, setLanguage] = useState("en");
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useState(false);
   const languageMenuRef = useRef(null);
 
@@ -105,8 +52,8 @@ function App() {
     setIsLanguageMenuOpen(!isLanguageMenuOpen);
   };
 
-  const changeLanguage = (lang: string) => {
-    setLanguage(lang);
+  const changeLanguage = (lang: "es" | "en") => {
+    setLocale(lang);
     setIsLanguageMenuOpen(false);
   };
 
@@ -204,6 +151,8 @@ function App() {
     };
   }, []);
 
+  const { currentLocale, setLocale } = useLocale();
+  const intl = useIntl();
   return (
     <div
       ref={containerRef}
@@ -224,21 +173,21 @@ function App() {
                 href="#projects"
                 className="hover:text-violet-400 transition-colors"
               >
-                Projects
+                {intl.formatMessage({ id: "Projects" })}
               </SmoothScrollLink>
             </li>
             <SmoothScrollLink
               href="#experience"
               className="hover:text-violet-400 transition-colors"
             >
-              Experience
+              {intl.formatMessage({ id: "Experience" })}
             </SmoothScrollLink>
             <li>
               <SmoothScrollLink
                 href="#education"
                 className="hover:text-violet-400 transition-colors"
               >
-                Education
+                {intl.formatMessage({ id: "Education" })}
               </SmoothScrollLink>
             </li>
             <li>
@@ -246,7 +195,7 @@ function App() {
                 href="#contact"
                 className="hover:text-violet-400 transition-colors"
               >
-                Contact
+                {intl.formatMessage({ id: "Contact" })}
               </SmoothScrollLink>
             </li>
           </ul>
@@ -265,33 +214,33 @@ function App() {
                 )}
               </Button>
             </div>
-            {/* <div className="relative">
+            <div className="relative">
               <button
                 onClick={toggleLanguageMenu}
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
               >
-                {language === "en" ? "EN" : "ES"}
+                {currentLocale == "en" ? "EN" : "ES"}
               </button>
               {isLanguageMenuOpen && (
                 <ul
                   ref={languageMenuRef}
-                  className="absolute right-0 top-full mt-2 w-32 bg-white text-black rounded-md shadow-lg z-30"
+                  className="absolute right-0 top-full mt-2 w-32 bg-white text-black rounded-md  z-30"
                 >
                   <li
                     onClick={() => changeLanguage("en")}
-                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    className="px-4 py-2  cursor-pointer"
                   >
                     English
                   </li>
                   <li
                     onClick={() => changeLanguage("es")}
-                    className="px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                    className="px-4 py-2  cursor-pointer"
                   >
                     Español
                   </li>
                 </ul>
               )}
-            </div> */}
+            </div>
           </div>
         </nav>
         {isMenuOpen && (
@@ -301,7 +250,7 @@ function App() {
                 href="#projects"
                 className="hover:text-violet-400 transition-colors"
               >
-                Projects
+                {intl.formatMessage({ id: "Projects" })}
               </SmoothScrollLink>
             </li>
             <li>
@@ -309,7 +258,7 @@ function App() {
                 href="#experience"
                 className="hover:text-violet-400 transition-colors"
               >
-                Experience
+                {intl.formatMessage({ id: "Experience" })}
               </SmoothScrollLink>
             </li>
             <li>
@@ -317,7 +266,7 @@ function App() {
                 href="#education"
                 className="hover:text-violet-400 transition-colors"
               >
-                Education
+                {intl.formatMessage({ id: "Education" })}
               </SmoothScrollLink>
             </li>
             <li>
@@ -325,13 +274,12 @@ function App() {
                 href="#contact"
                 className="hover:text-violet-400 transition-colors"
               >
-                Contact
+                {intl.formatMessage({ id: "Contact" })}
               </SmoothScrollLink>
             </li>
           </ul>
         )}
       </header>
-
       <main className=" z-20  items-center w-full px-4 pt-20">
         <section className="pt-20 pb-10 flex flex-col items-center">
           <div className="mb-8 relative">
@@ -344,7 +292,7 @@ function App() {
           </div>
           <h1 className="text-5xl font-bold mb-4 text-center">Tadeo Rimoli</h1>
           <p className="text-xl  text-center text-blue-300">
-            Full Stack Developer
+            {intl.formatMessage({ id: "FullStackDeveloper" })}
           </p>
         </section>
         <section id="skills" className="">
@@ -352,7 +300,7 @@ function App() {
             {skills.map((skill, index) => (
               <span
                 key={index}
-                className="px-4 py-2 bg-gray-800 rounded-full text-sm font-medium "
+                className="px-4 py-2 text-lg bg-gray-800 rounded-full  font-medium "
               >
                 {skill}
               </span>
@@ -361,47 +309,52 @@ function App() {
         </section>
         <section id="projects" className="py-10 ">
           <h2 className="text-3xl font-semibold mb-10 text-center text-orange-400">
-            Featured Projects
+            {intl.formatMessage({ id: "FeaturedProjects" })}
           </h2>
-          <div className="flex flex-col  justify-center w-full">
-            {projects.map((project, index) => (
-              <CardProject key={index} project={project} index={index} />
-            ))}
+
+          <div className="flex flex-row w-full justify-center ">
+            <div className="flex flex-row flex-wrap justify-center w-full md:w-2/3 lg:w-1/3">
+              {projects.map((project, index) => (
+                <CardProject key={index} project={project} />
+              ))}
+            </div>
           </div>
         </section>
 
         <section id="experience" className="py-10">
           <h2 className="text-3xl font-semibold mb-10 text-center text-orange-400">
-            Experience
+            {intl.formatMessage({ id: "Experience" })}
           </h2>
           <div className="space-y-8">
             <ExperienceCard
-              title="Freelance Developer"
-              date="2024 - Present"
-              description="I create websites, develop services, and provide technological solutions."
+              title={intl.formatMessage({ id: "FreelanceDeveloper" })}
+              date={"2024 - " + intl.formatMessage({ id: "Present" })}
+              description={intl.formatMessage({ id: "FreelanceDescription" })}
             />
             <ExperienceCard
-              title="Full Stack Junior Developer"
+              title={
+                intl.formatMessage({ id: "FullStackDeveloper" }) + " Junior"
+              }
               company="Advenio Software"
               date="2022 - 2023"
-              description="I managed SQL tables, developed models and APIs with Java and Spring, and built frontend interfaces with React."
+              description={intl.formatMessage({ id: "FullStackDescription" })}
             />
           </div>
         </section>
 
         <section id="education" className="py-10">
           <h2 className="text-3xl font-semibold mb-10 text-center text-orange-400">
-            Education
+            {intl.formatMessage({ id: "Education" })}
           </h2>
           <div className="space-y-8">
             <EducationCard
-              degree="Bachelor's Degree in Information Systems"
-              university="CAECE University"
-              date="2024 - Present"
+              degree={intl.formatMessage({ id: "BachelorsDegree" })}
+              university={intl.formatMessage({ id: "CAECE" })}
+              date={"2024 - " + intl.formatMessage({ id: "Present" })}
             />
             <EducationCard
-              degree="University Technical Degree in Programming"
-              university="CAECE University"
+              degree={intl.formatMessage({ id: "TechnicalDegree" })}
+              university={intl.formatMessage({ id: "CAECE" })}
               date="2020 - 2023"
             />
           </div>
@@ -409,7 +362,7 @@ function App() {
 
         <section id="contact" className="py-10">
           <h2 className="text-3xl font-semibold mb-10 text-center text-orange-400">
-            Contact
+            {intl.formatMessage({ id: "Contact" })}
           </h2>
           <div className="flex justify-center space-x-6">
             <Button
