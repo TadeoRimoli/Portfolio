@@ -1,23 +1,24 @@
-import React from "react";
 import { useIntl } from "react-intl";
-
 function Card({ project }: any) {
   const intl = useIntl();
   return (
-    <div className="self-center my-4 pb-4 w-full rounded overflow-hidden shadow-lg transition-transform transform hover:scale-105 border border-gray-200 bg-gray-800 min-h-[400px]">
+    <div className="self-center my-4 pb-4 w-full h-full rounded overflow-hidden shadow-lg transition-transform transform hover:scale-105 border border-gray-200 bg-gray-800 min-h-[400px]">
       {" "}
-      {/* Ajusta el valor de min-h según sea necesario */}
       <img
         className="w-full h-48 object-cover"
         src={project.image}
         alt={project.title}
       />
-      <div className="px-6 py-4 flex-grow">
+      <div className="px-6 py-4 flex flex-col">
         <div className="font-bold text-xl mb-2 text-white">
           {intl.formatMessage({ id: project.title })}
         </div>
         <p className="text-gray-300 text-base">
           {intl.formatMessage({ id: project.description })}
+        </p>
+        {/* Aquí agregas el año del proyecto */}
+        <p className="text-gray-400 text-sm mt-2 flex justify-end ">
+          {project.year}
         </p>
       </div>
       <div className="px-6 pt-4 pb-2">
@@ -41,6 +42,7 @@ function Card({ project }: any) {
             {intl.formatMessage({ id: "ViewImages" })}
           </a>
         )}
+
         {project.download && (
           <a
             href={project.download}

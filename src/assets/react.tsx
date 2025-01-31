@@ -1,5 +1,3 @@
-import React from "react";
-
 export const GithubIcon = (props: any) => (
   <svg
     role="img"

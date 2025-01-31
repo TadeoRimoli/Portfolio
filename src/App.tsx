@@ -7,10 +7,9 @@ import { GithubIcon } from "./assets/react";
 import CardProject from "./components/CardProject";
 import ExperienceCard from "./components/ExperienceCard";
 import EducationCard from "./components/EducationCard";
-import { FormattedMessage, useIntl } from "react-intl";
+import { useIntl } from "react-intl";
 import { useLocale } from "./i18n/LocaleContext";
 import { projects } from "./Constants/projects";
-// const intl = useIntl();
 
 const skills = [
   "SQL",
@@ -27,12 +26,17 @@ const skills = [
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  function SmoothScrollLink({ href, className, children }: any) {
+  function SmoothScrollLink({
+    href,
+    className,
+    children,
+    block = "center",
+  }: any) {
     const handleClick = (e: any) => {
       e.preventDefault();
       const target = document.querySelector(href);
       if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        target.scrollIntoView({ behavior: "smooth", block });
         setIsMenuOpen(false);
       }
     };
@@ -172,6 +176,7 @@ function App() {
               <SmoothScrollLink
                 href="#projects"
                 className="hover:text-violet-400 transition-colors"
+                block="start"
               >
                 {intl.formatMessage({ id: "Projects" })}
               </SmoothScrollLink>
@@ -248,6 +253,7 @@ function App() {
             <li>
               <SmoothScrollLink
                 href="#projects"
+                block="start"
                 className="hover:text-violet-400 transition-colors"
               >
                 {intl.formatMessage({ id: "Projects" })}
@@ -307,15 +313,17 @@ function App() {
             ))}
           </div>
         </section>
-        <section id="projects" className="py-10 ">
+        <section id="projects" className="py-10">
           <h2 className="text-3xl font-semibold mb-10 text-center text-orange-400">
             {intl.formatMessage({ id: "FeaturedProjects" })}
           </h2>
 
-          <div className="flex flex-row w-full justify-center ">
-            <div className="flex flex-row flex-wrap justify-center w-full md:w-2/3 lg:w-1/3">
+          <div className="flex flex-row w-full justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full md:w-3/4">
               {projects.map((project, index) => (
-                <CardProject key={index} project={project} />
+                <div key={index} className="flex flex-col h-full">
+                  <CardProject project={project} />
+                </div>
               ))}
             </div>
           </div>
