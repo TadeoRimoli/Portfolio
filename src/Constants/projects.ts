@@ -52,7 +52,7 @@ export const projects = [
         longDescription:
             "EntrenaAppLongDescription",
         image: "/mobileapp.png",
-        images: "https://entrenamas.tadeorimoli.com.ar/images",
+        images: "https://entrenamas.ar/images",
         year: "2023-2024"
     },
     {
@@ -64,13 +64,13 @@ export const projects = [
         technologies: ["React", "TailwindCSS"],
         longDescription: "EntrenaWebLongDescription",
         image: "/entrenamas.png",
-        link: "https://entrenamas.tadeorimoli.com.ar",
+        link: "https://entrenamas.ar",
         year: "2024"
 
     },
     {
         title: "PilatesTitle",
-        description: "Landing page designed to promote and book Pilates classes.",
+        description: "PilatesDescription",
         color: "from-yellow-500 to-orange-500",
         icon: "🧘‍♀️",
         technologies: ["React", "TailwindCSS"],
