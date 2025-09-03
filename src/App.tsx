@@ -388,6 +388,8 @@ function App() {
                 border: "1px solid #007BFF",
                 color: "#007BFF",
               }}
+              url="https://www.linkedin.com/in/tadeo-rimoli-9aa24b1a7/"
+
             >
               <LinkedinIcon className="h-8 w-8" />
               <span className="sr-only">Email</span>
@@ -413,7 +415,7 @@ function App() {
 
       <footer className="bg-gray-900 py-6 mt-20">
         <div className="container mx-auto px-4 text-center text-gray-400 text-sm">
-          2024 Tadeo Rimoli
+          2025 Tadeo Rimoli
         </div>
       </footer>
     </div>

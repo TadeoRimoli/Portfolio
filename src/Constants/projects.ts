@@ -24,7 +24,7 @@ export const projects = [
         technologies: ["React", "TailwindCSS"],
         longDescription:
             "HotelLongDescription",
-        link: "https://hotel.tadeorimoli.com.ar/",
+        link: "https://hotelestrellasdemar.com.ar",
         image: "/hotel.png",
         year: "2024"
 
