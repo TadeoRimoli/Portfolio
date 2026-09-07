@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tadeo Rimoli</title>
-    
+    <title>Tadeo Rimoli // Full Stack Developer</title>
+    <meta name="description" content="Tadeo Rimoli — Full Stack Developer. Especialista Java & Spring. Desarrollo de software escalable y soluciones web modernas.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="code.svg">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -15,1368 +16,1590 @@
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1/bundled/lenis.min.js"></script>
 
     <style>
-        :root {
-            --bg-primary: #050505;
-            --bg-secondary: #0a0a0a;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --accent-cyan: #00f3ff;
-            --accent-orange: #ff6b35;
-            --accent-glow: rgba(0, 243, 255, 0.3);
-            --grid-color: rgba(255, 255, 255, 0.03);
-            --border-color: rgba(255, 255, 255, 0.1);
-            
-            --font-display: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: auto;
-        }
-
-        body {
-            font-family: var(--font-display);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-        }
-
-        section {
-            position: relative;
-            min-height: 100vh;
-            padding: 120px 5vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-neon-lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .neon-line {
-            position: absolute;
-            height: 2px;
-            width: 150%;
-            background: linear-gradient(to right, 
-                transparent 0%, 
-                rgba(0, 243, 255, 0.3) 10%, 
-                rgba(0, 243, 255, 0.5) 20%,
-                rgba(0, 243, 255, 0.4) 30%,
-                rgba(0, 243, 255, 0.6) 40%,
-                rgba(0, 243, 255, 0.3) 50%,
-                rgba(0, 243, 255, 0.5) 60%,
-                rgba(0, 243, 255, 0.4) 70%,
-                rgba(0, 243, 255, 0.3) 80%,
-                transparent 100%);
-            box-shadow: 
-                0 0 10px rgba(0, 243, 255, 0.4),
-                0 0 20px rgba(0, 243, 255, 0.2),
-                0 0 30px rgba(0, 243, 255, 0.1);
-            filter: blur(0.5px);
-            border-radius: 50%;
-        }
-
-        .neon-line-1 {
-            top: 30%;
-            animation: neonMove1 25s linear infinite;
-            transform-origin: center;
-        }
-
-        @keyframes neonMove1 {
-            0% {
-                transform: translateX(-100%) scaleY(0.8);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            50% {
-                transform: translateX(0%) scaleY(1.2);
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(100%) scaleY(0.8);
-                opacity: 0;
-            }
-        }
-
-
-        .hero-scroll-indicator {
-            position: absolute;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            opacity: 0;
-            z-index: 10;
-        }
-
-        .hero-scroll-line {
-            width: 2px;
-            height: 60px;
-            background: linear-gradient(to bottom, var(--accent-cyan), transparent);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            animation: scrollPulse 2s ease-in-out infinite;
-        }
-
-        .hero-scroll-text {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            opacity: 0.7;
-        }
-
-        @keyframes scrollPulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: translateY(10px);
-            }
-        }
-
-        .hero h1,
-        .hero .role,
-        .hero .tagline,
-        .hero .accent-line {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            line-height: 1.3;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.05em;
-            color: var(--text-primary);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-        }
-
-        .hero .role {
-            font-family: var(--font-mono);
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-        }
-
-        .hero .tagline {
-            font-family: var(--font-display);
-            font-size: clamp(0.875rem, 2vw, 1rem);
-            font-weight: 300;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0;
-            letter-spacing: 0.05em;
-        }
-
-
-        .accent-line {
-            width: 200px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            margin: 2rem 0;
-            opacity: 0;
-        }
-
-        .content-section {
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .tech-grid {
-            justify-content: center;
-        }
-
-        .projects-grid {
-            margin: 3rem auto;
-            max-width: 1400px;
-        }
-
-        .experience-timeline {
-            margin: 3rem auto;
-            text-align: left;
-        }
-
-        .section-title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .section-subtitle {
-            font-family: var(--font-mono);
-            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-
-        .tech-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 3rem 0;
-        }
-
-        .tech-tag {
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            padding: 1rem 2rem;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--border-color);
-            color: var(--text-secondary);
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-        }
-
-        .tech-tag::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-cyan), transparent);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tech-tag::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 4px;
-            height: 0;
-            background: var(--accent-cyan);
-            transform: translateY(-50%);
-            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tech-tag:hover {
-            color: var(--accent-cyan);
-            padding-left: 2.5rem;
-        }
-
-        .tech-tag:hover::before {
-            width: 100%;
-        }
-
-        .tech-tag:hover::after {
-            height: 60%;
-        }
-
-        .projects-grid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3rem;
-            margin: 3rem 0;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .project-card {
-            border: 1px solid var(--border-color);
-            background: rgba(10, 10, 10, 0.8);
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            will-change: transform;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
-            transition: left 0.4s ease;
-            pointer-events: none;
-        }
-
-        .project-card:hover::before {
-            left: 100%;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translate3d(0, -3px, 0);
-        }
-
-        .project-card {
-            text-align: left;
-            border-left: 3px solid var(--border-color);
-            padding: 3rem;
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        .project-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .project-badges {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .project-status-badge {
-            font-family: var(--font-mono);
-            font-size: 0.625rem;
-            padding: 0.25rem 0.75rem;
-            background: rgba(255, 107, 53, 0.1);
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-radius: 12px;
-        }
-
-        .project-info-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border-color);
-            background: rgba(10, 10, 10, 0.5);
-            color: var(--text-secondary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex-shrink: 0;
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-        }
-
-        .project-info-btn:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .project-card::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--accent-cyan);
-            transform: scaleY(0);
-            transform-origin: top;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .project-card:hover::after {
-            transform: scaleY(1);
-        }
-
-        .project-type {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .project-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .project-section-title {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 1rem;
-        }
-
-        .project-modules-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.6rem;
-            margin-top: 0.75rem;
-        }
-
-        .project-module-item {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.5rem 0.75rem;
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.15);
-            color: var(--text-secondary);
-            transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-            text-align: center;
-        }
-
-        .project-module-item:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            background: rgba(0, 243, 255, 0.1);
-        }
-
-        .project-module-item-dev {
-            border-color: rgba(255, 107, 53, 0.3);
-            background: rgba(255, 107, 53, 0.05);
-        }
-
-        .project-tech-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .project-tech-item {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            color: var(--accent-cyan);
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .project-modules-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .project-card {
-                padding: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .project-modules-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            overflow: hidden;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            max-width: min(95vw, 1000px);
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            position: relative;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .modal-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .modal-content::-webkit-scrollbar-thumb {
-            background: var(--accent-cyan);
-            border-radius: 3px;
-            opacity: 0.3;
-        }
-
-        .modal-content::-webkit-scrollbar-thumb:hover {
-            opacity: 0.6;
-        }
-
-        .modal-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border-color);
-            background: rgba(10, 10, 10, 0.5);
-            color: var(--text-secondary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: var(--font-mono);
-            font-size: 1.25rem;
-            line-height: 1;
-        }
-
-        .modal-close:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            transform: rotate(90deg);
-        }
-
-        .modal-header {
-            flex-shrink: 0;
-            margin-bottom: 1.25rem;
-            padding-right: 2rem;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-            color: var(--text-primary);
-        }
-
-        .modal-subtitle {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 0;
-        }
-
-        .modal-section {
-            flex-shrink: 0;
-        }
-
-        .modal-sections-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            flex: 1;
-        }
-
-        .modal-section-title {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 0.6rem;
-            padding-bottom: 0.4rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .modal-section-content {
-            font-size: 0.8125rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .modal-tech-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .modal-tech-item {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            color: var(--accent-cyan);
-            border-radius: 4px;
-        }
-
-        .modal-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .modal-list li {
-            padding-left: 1.25rem;
-            position: relative;
-            margin-bottom: 0.4rem;
-            color: var(--text-secondary);
-            font-size: 0.8125rem;
-            line-height: 1.5;
-        }
-
-        .modal-list li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--accent-cyan);
-        }
-
-        .modal-modules-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .modal-module-item {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            padding: 0.45rem 0.6rem;
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.15);
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-        }
-
-        .modal-module-item:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            background: rgba(0, 243, 255, 0.1);
-        }
-
-        .modal-module-item-dev {
-            border-color: rgba(255, 107, 53, 0.3);
-            background: rgba(255, 107, 53, 0.05);
-        }
-
-        .dev-badge {
-            font-size: 0.65rem;
-            color: var(--accent-orange);
-            margin-left: 0.4rem;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            .modal-modules-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .project-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
-        }
-
-        .project-year {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            opacity: 0.7;
-        }
-
-        .project-description {
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            flex: 1;
-            line-height: 1.7;
-        }
-
-        .project-link {
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-        }
-
-        .project-link:hover {
-            gap: 1rem;
-        }
-
-        .experience-timeline {
-            max-width: 900px;
-            margin: 3rem 0;
-        }
-
-        .experience-item {
-            border-left: 2px solid var(--border-color);
-            padding-left: 2rem;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .experience-item::before {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 0;
-            width: 10px;
-            height: 10px;
-            background: var(--accent-cyan);
-            border-radius: 50%;
-        }
-
-        .experience-header {
-            margin-bottom: 1rem;
-        }
-
-        .experience-role {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .experience-company {
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            color: var(--accent-orange);
-        }
-
-        .experience-period {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .experience-description {
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .contact-section {
-            text-align: center;
-        }
-
-        .contact-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .contact-link {
-            width: 60px;
-            height: 60px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            background: rgba(10, 10, 10, 0.5);
-            backdrop-filter: blur(10px);
-        }
-
-        .contact-link:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translateY(-5px);
-        }
-
-        .contact-link svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--text-primary);
-        }
-
-        .fade-up {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-
-        @media (max-width: 768px) {
-            section {
-                padding: 80px 5vw;
-            }
-
-            .contact-links {
-                flex-wrap: wrap;
-            }
-        }
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 100px;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
-            margin-bottom: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            backdrop-filter: blur(5px);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent-cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-cyan);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 1; box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
-            70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 10px rgba(0, 243, 255, 0); }
-            100% { transform: scale(0.95); opacity: 1; box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
-        }
-        .tech-badge {
-            display: inline-block;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            margin-top: 2.5rem;
-            margin-bottom: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-        }
-
-.syntax-gray { color: #6b7280; margin-right: 0.5rem; }
-.syntax-white { color: #e5e7eb; margin-right: 0.5rem; }
-.syntax-cyan { color: var(--accent-cyan); }
-.syntax-orange { color: var(--accent-orange); }
+    /* ============================================================
+       TACTICAL HUD — DESIGN TOKENS
+       ============================================================ */
+    :root {
+        --void:          #000205;
+        --panel:         rgba(8, 18, 30, 0.40);
+        --panel-2:       rgba(6, 14, 24, 0.55);
+        --panel-deep:    rgba(2, 8, 14, 0.62);
+
+        --cyan:          #00e5ff;
+        --cyan-soft:     rgba(0, 229, 255, 0.55);
+        --electric:      #2f7bff;
+        --ice:           #a9e9ff;
+        --amber:         #ffb545;
+        --lime:          #48ffb0;
+
+        --text:          #e2f2fa;
+        --dim:           #7f97a8;
+        --faint:         #4c6070;
+
+        --hair:          rgba(150, 220, 255, 0.13);
+        --hair-2:        rgba(160, 230, 255, 0.26);
+
+        --blur:          22px;
+        --blur-heavy:    40px;
+
+        --font:          'Inter', system-ui, -apple-system, sans-serif;
+        --mono:          'JetBrains Mono', ui-monospace, monospace;
+
+        --rail:          62px;
+        --topbar:        42px;
+        --botbar:        34px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: auto; -webkit-text-size-adjust: 100%; }
+
+    body {
+        font-family: var(--font);
+        background: var(--void);
+        color: var(--text);
+        line-height: 1.65;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+    }
+    ::selection { background: rgba(0, 229, 255, 0.28); color: #fff; }
+
+    ::-webkit-scrollbar { width: 9px; }
+    ::-webkit-scrollbar-track { background: #01060b; }
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, var(--cyan), var(--electric));
+        border-radius: 0;
+    }
+
+    /* ============================================================
+       AMBIENT FIELD — what the glass actually refracts
+       ============================================================ */
+    .field {
+        position: fixed; inset: 0; z-index: 0;
+        pointer-events: none; overflow: hidden;
+        background: radial-gradient(125% 85% at 50% -10%, #04121f 0%, #000308 55%, #000 100%);
+    }
+    .orb {
+        position: absolute; border-radius: 50%;
+        filter: blur(90px); opacity: 0.55; will-change: transform;
+    }
+    .orb-1 {
+        width: 60vw; height: 60vw; min-width: 440px; min-height: 440px;
+        top: -20vh; left: -10vw;
+        background: radial-gradient(circle, rgba(0, 150, 255, 0.42), transparent 68%);
+    }
+    .orb-2 {
+        width: 48vw; height: 48vw; min-width: 360px; min-height: 360px;
+        top: 34vh; right: -12vw;
+        background: radial-gradient(circle, rgba(0, 229, 255, 0.26), transparent 66%);
+    }
+    .orb-3 {
+        width: 54vw; height: 54vw; min-width: 400px; min-height: 400px;
+        bottom: -22vh; left: 24vw;
+        background: radial-gradient(circle, rgba(47, 90, 255, 0.32), transparent 68%);
+    }
+
+    .grid-layer {
+        position: absolute; inset: -2px;
+        background-image:
+            linear-gradient(rgba(120, 210, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(120, 210, 255, 0.05) 1px, transparent 1px);
+        background-size: 68px 68px;
+        -webkit-mask-image: radial-gradient(135% 100% at 50% 26%, #000 18%, transparent 76%);
+        mask-image: radial-gradient(135% 100% at 50% 26%, #000 18%, transparent 76%);
+    }
+    .grid-layer.fine {
+        background-size: 17px 17px;
+        opacity: 0.35;
+    }
+
+    .scanlines {
+        position: absolute; inset: 0;
+        background: repeating-linear-gradient(180deg,
+            rgba(0,0,0,0) 0px, rgba(0,0,0,0) 2px,
+            rgba(0, 12, 22, 0.30) 3px, rgba(0, 12, 22, 0.30) 4px);
+        opacity: 0.55;
+    }
+    .sweep {
+        position: absolute; left: 0; right: 0; height: 24vh;
+        background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.05), transparent);
+        animation: sweepDown 9s linear infinite;
+    }
+    @keyframes sweepDown {
+        0%   { transform: translateY(-30vh); }
+        100% { transform: translateY(135vh); }
+    }
+    .vignette {
+        position: absolute; inset: 0;
+        background: radial-gradient(125% 90% at 50% 45%, transparent 42%, rgba(0,0,0,0.80) 100%);
+    }
+
+    /* ============================================================
+       GLASS PRIMITIVE — 1px refracted-light hairline
+       ============================================================ */
+    .glass {
+        position: relative;
+        background: var(--panel);
+        backdrop-filter: blur(var(--blur)) saturate(155%);
+        -webkit-backdrop-filter: blur(var(--blur)) saturate(155%);
+        border-radius: 3px;
+        box-shadow:
+            inset 0 1px 0 rgba(180, 240, 255, 0.09),
+            0 20px 55px -24px rgba(0, 0, 0, 0.95);
+        isolation: isolate;
+    }
+    /* light catching the edge of the pane */
+    .glass::before {
+        content: '';
+        position: absolute; inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg,
+            rgba(0, 229, 255, 0.72) 0%,
+            rgba(47, 123, 255, 0.30) 17%,
+            rgba(140, 200, 255, 0.05) 40%,
+            rgba(120, 190, 255, 0.04) 60%,
+            rgba(47, 123, 255, 0.32) 84%,
+            rgba(0, 229, 255, 0.58) 100%);
+        -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+        mask-composite: exclude;
+        pointer-events: none;
+        z-index: 3;
+    }
+    /* specular streak across the pane */
+    .glass > .spec {
+        position: absolute; inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(112deg,
+            rgba(190, 240, 255, 0.06) 0%,
+            rgba(190, 240, 255, 0.018) 26%,
+            transparent 48%);
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* machined corner brackets */
+    .brackets > i.bk {
+        position: absolute;
+        width: 13px; height: 13px;
+        border: 1px solid var(--cyan-soft);
+        opacity: 0.7; z-index: 4; pointer-events: none;
+        transition: opacity .35s ease, width .35s ease, height .35s ease;
+    }
+    .brackets > i.tl { top: -1px; left: -1px;   border-right: 0; border-bottom: 0; }
+    .brackets > i.tr { top: -1px; right: -1px;  border-left: 0;  border-bottom: 0; }
+    .brackets > i.bl { bottom: -1px; left: -1px;  border-right: 0; border-top: 0; }
+    .brackets > i.br { bottom: -1px; right: -1px; border-left: 0;  border-top: 0; }
+
+    /* ============================================================
+       FIXED HUD CHROME
+       ============================================================ */
+    .topbar, .botbar {
+        position: fixed; left: 0; right: 0; z-index: 90;
+        display: flex; align-items: center; gap: 1.1rem;
+        padding: 0 1rem;
+        font-family: var(--mono);
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--dim);
+        background: rgba(1, 6, 12, 0.58);
+        backdrop-filter: blur(var(--blur-heavy)) saturate(140%);
+        -webkit-backdrop-filter: blur(var(--blur-heavy)) saturate(140%);
+    }
+    .topbar { top: 0; height: var(--topbar); border-bottom: 1px solid var(--hair); }
+    .botbar { bottom: 0; height: var(--botbar); border-top: 1px solid var(--hair); overflow: hidden; }
+
+    .topbar::after, .botbar::after {
+        content: ''; position: absolute; left: 0; right: 0; height: 1px;
+        background: linear-gradient(90deg, transparent, var(--cyan-soft) 20%,
+            rgba(47,123,255,.40) 50%, var(--cyan-soft) 80%, transparent);
+        opacity: 0.75;
+    }
+    .topbar::after { bottom: -1px; }
+    .botbar::after { top: -1px; }
+
+    .sig { color: var(--text); font-weight: 700; letter-spacing: 0.26em; white-space: nowrap; }
+    .sig b { color: var(--cyan); font-weight: 700; }
+    .sep { color: var(--faint); }
+
+    .readouts { margin-left: auto; display: flex; gap: 1.15rem; align-items: center; }
+    .ro { display: flex; align-items: center; gap: .4rem; white-space: nowrap; }
+    .ro var { font-style: normal; color: var(--ice); }
+
+    .led {
+        width: 6px; height: 6px; border-radius: 50%;
+        background: var(--lime); flex: none;
+        box-shadow: 0 0 8px var(--lime);
+        animation: blink 2.4s ease-in-out infinite;
+    }
+    .led.amber { background: var(--amber); box-shadow: 0 0 8px var(--amber); }
+    .led.cyan  { background: var(--cyan);  box-shadow: 0 0 8px var(--cyan); }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: .22; } }
+
+    /* telemetry ticker */
+    .ticker { position: relative; flex: 1; height: 100%; overflow: hidden; }
+    .ticker-track {
+        position: absolute; top: 50%; left: 0;
+        display: flex; gap: 2.75rem; white-space: nowrap;
+        animation: tick 46s linear infinite;
+    }
+    .ticker-track span { color: var(--faint); }
+    .ticker-track span em { font-style: normal; color: var(--cyan); }
+    @keyframes tick {
+        from { transform: translate(0, -50%); }
+        to   { transform: translate(-50%, -50%); }
+    }
+
+    /* left navigation rail */
+    .rail {
+        position: fixed; left: 0; z-index: 89;
+        top: var(--topbar); bottom: var(--botbar);
+        width: var(--rail);
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center; gap: 1.5rem;
+        border-right: 1px solid var(--hair);
+        background: rgba(1, 6, 12, 0.38);
+        backdrop-filter: blur(var(--blur-heavy));
+        -webkit-backdrop-filter: blur(var(--blur-heavy));
+    }
+    .rail-cap {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        font-family: var(--mono); font-size: .54rem; letter-spacing: .3em;
+        color: var(--faint); writing-mode: vertical-rl; text-transform: uppercase;
+    }
+    .rail-cap.top { top: 1.25rem; }
+    .rail-cap.bot { bottom: 1.25rem; }
+
+    .rail-link {
+        display: flex; flex-direction: column; align-items: center; gap: .5rem;
+        text-decoration: none; padding: .2rem 0;
+        font-family: var(--mono); font-size: .56rem; letter-spacing: .2em;
+        color: var(--faint);
+        transition: color .35s ease;
+    }
+    .rail-tick { width: 16px; height: 1px; background: currentColor; transition: width .35s ease, box-shadow .35s ease; }
+    .rail-num { writing-mode: vertical-rl; }
+    .rail-link:hover, .rail-link.active { color: var(--cyan); }
+    .rail-link.active .rail-tick { width: 30px; box-shadow: 0 0 10px var(--cyan); }
+
+    /* viewport frame corners */
+    .vpc { position: fixed; width: 24px; height: 24px; z-index: 88; opacity: .45;
+           border-color: var(--cyan-soft); border-style: solid; pointer-events: none; }
+    .vp-tl { top: calc(var(--topbar) + 12px); left: calc(var(--rail) + 12px); border-width: 1px 0 0 1px; }
+    .vp-tr { top: calc(var(--topbar) + 12px); right: 12px; border-width: 1px 1px 0 0; }
+    .vp-bl { bottom: calc(var(--botbar) + 12px); left: calc(var(--rail) + 12px); border-width: 0 0 1px 1px; }
+    .vp-br { bottom: calc(var(--botbar) + 12px); right: 12px; border-width: 0 1px 1px 0; }
+
+    /* reticle cursor */
+    .reticle {
+        position: fixed; top: 0; left: 0; z-index: 95;
+        width: 34px; height: 34px; margin: -17px 0 0 -17px;
+        pointer-events: none; opacity: 0;
+        transition: opacity .4s ease;
+        mix-blend-mode: screen;
+    }
+    .reticle i { position: absolute; background: var(--cyan); opacity: .8; }
+    .reticle i:nth-child(1) { left: 50%; top: 0;    width: 1px; height: 8px; }
+    .reticle i:nth-child(2) { left: 50%; bottom: 0; width: 1px; height: 8px; }
+    .reticle i:nth-child(3) { top: 50%; left: 0;    height: 1px; width: 8px; }
+    .reticle i:nth-child(4) { top: 50%; right: 0;   height: 1px; width: 8px; }
+    .reticle b { position: absolute; inset: 11px; border: 1px solid var(--cyan-soft);
+                 border-radius: 50%; box-shadow: 0 0 10px rgba(0,229,255,.5); }
+
+    /* ============================================================
+       LAYOUT
+       ============================================================ */
+    .main {
+        position: relative; z-index: 10;
+        margin-left: var(--rail);
+        padding: calc(var(--topbar) + 3.5rem) 0 calc(var(--botbar) + 5rem);
+    }
+    .wrap {
+        width: 100%;
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 clamp(1.1rem, 3.5vw, 3rem);
+    }
+    section { margin-bottom: clamp(4.5rem, 9vw, 8rem); }
+
+    /* module header */
+    .mod-head {
+        display: flex; align-items: center; gap: 1rem;
+        margin-bottom: 1.75rem;
+        font-family: var(--mono);
+    }
+    .mod-id {
+        font-size: .64rem; letter-spacing: .24em; color: var(--cyan);
+        border: 1px solid rgba(0, 229, 255, .28);
+        background: rgba(0, 229, 255, .05);
+        padding: .28rem .6rem; border-radius: 2px;
+        white-space: nowrap;
+    }
+    .mod-title {
+        font-family: var(--font);
+        font-size: clamp(1.1rem, 2.4vw, 1.6rem);
+        font-weight: 800; letter-spacing: .04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .mod-line {
+        flex: 1; height: 1px;
+        background: linear-gradient(90deg, var(--hair-2), rgba(47,123,255,.18), transparent);
+    }
+    .mod-flag {
+        display: flex; align-items: center; gap: .45rem;
+        font-size: .6rem; letter-spacing: .2em; color: var(--dim);
+        text-transform: uppercase; white-space: nowrap;
+    }
+
+    /* ============================================================
+       HERO — OPERATOR PANEL
+       ============================================================ */
+    .hero { display: grid; grid-template-columns: 1.55fr 1fr; gap: 1rem; align-items: stretch; }
+
+    .hero-main { padding: clamp(1.75rem, 4vw, 3rem); overflow: hidden; }
+    .hero-main .spec { z-index: 1; }
+    .hero-inner { position: relative; z-index: 2; }
+
+    .status-chip {
+        display: inline-flex; align-items: center; gap: .55rem;
+        font-family: var(--mono); font-size: .62rem;
+        letter-spacing: .2em; text-transform: uppercase;
+        color: var(--lime);
+        border: 1px solid rgba(72, 255, 176, .25);
+        background: rgba(72, 255, 176, .05);
+        padding: .35rem .75rem; border-radius: 2px;
+        margin-bottom: 1.75rem;
+    }
+
+    .callsign {
+        font-family: var(--mono); font-size: .62rem;
+        letter-spacing: .3em; color: var(--faint);
+        text-transform: uppercase; margin-bottom: .75rem;
+    }
+    .name {
+        font-size: clamp(2.6rem, 7.5vw, 5.2rem);
+        font-weight: 900; line-height: .95;
+        letter-spacing: -0.035em;
+        background: linear-gradient(160deg, #ffffff 0%, #cfe9f7 42%, #4e9fd8 100%);
+        -webkit-background-clip: text; background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1.1rem;
+    }
+    .role-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .role {
+        font-family: var(--mono); font-size: clamp(.78rem, 1.6vw, .95rem);
+        letter-spacing: .26em; text-transform: uppercase; color: var(--cyan);
+    }
+    .role-bar { flex: 1; min-width: 60px; height: 1px;
+        background: linear-gradient(90deg, var(--cyan), rgba(47,123,255,.3), transparent); }
+
+    .tagline { color: var(--dim); max-width: 46ch; font-size: 1rem; margin-bottom: 2rem; }
+
+    .spec-badge {
+        display: inline-flex; align-items: center; gap: .6rem;
+        font-family: var(--mono); font-size: .68rem; letter-spacing: .18em;
+        text-transform: uppercase; color: var(--ice);
+        border: 1px solid var(--hair-2);
+        background: linear-gradient(120deg, rgba(0,229,255,.08), rgba(47,123,255,.03));
+        padding: .55rem 1rem; border-radius: 2px;
+    }
+
+    /* hero side column */
+    .hero-side { display: grid; grid-template-rows: auto 1fr; gap: 1rem; }
+
+    .vitals { padding: 1.35rem 1.4rem; }
+    .panel-cap {
+        font-family: var(--mono); font-size: .58rem; letter-spacing: .24em;
+        text-transform: uppercase; color: var(--faint);
+        display: flex; align-items: center; gap: .5rem;
+        margin-bottom: 1.15rem;
+    }
+    .panel-cap::after { content: ''; flex: 1; height: 1px; background: var(--hair); }
+
+    .vital-row {
+        display: flex; justify-content: space-between; align-items: baseline;
+        gap: 1rem; padding: .5rem 0;
+        border-bottom: 1px solid rgba(150, 220, 255, .07);
+        font-family: var(--mono); font-size: .68rem; letter-spacing: .1em;
+    }
+    .vital-row:last-child { border-bottom: 0; }
+    .vital-row dt { color: var(--faint); text-transform: uppercase; letter-spacing: .16em; font-size: .6rem; }
+    .vital-row dd { color: var(--ice); text-align: right; }
+
+    .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .stat { padding: 1.1rem 1.15rem; }
+    .stat-val {
+        font-family: var(--mono); font-weight: 700;
+        font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+        color: var(--cyan); line-height: 1;
+        text-shadow: 0 0 22px rgba(0, 229, 255, .45);
+    }
+    .stat-val sup { font-size: .5em; color: var(--electric); }
+    .stat-key {
+        font-family: var(--mono); font-size: .55rem; letter-spacing: .2em;
+        text-transform: uppercase; color: var(--faint); margin-top: .5rem;
+    }
+
+    /* scroll cue */
+    .cue {
+        display: flex; align-items: center; gap: .75rem;
+        margin-top: 1.25rem;
+        font-family: var(--mono); font-size: .58rem;
+        letter-spacing: .26em; text-transform: uppercase; color: var(--faint);
+    }
+    .cue-line {
+        width: 46px; height: 1px;
+        background: linear-gradient(90deg, var(--cyan), transparent);
+        position: relative; overflow: hidden;
+    }
+    .cue-line::after {
+        content: ''; position: absolute; inset: 0;
+        background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
+        animation: cueRun 2.2s ease-in-out infinite;
+    }
+    @keyframes cueRun {
+        0%   { transform: translateX(-100%); opacity: 0; }
+        45%  { opacity: 1; }
+        100% { transform: translateX(100%); opacity: 0; }
+    }
+
+    /* ============================================================
+       MOD 01 — SKILLS: RADAR + TECHNICAL BARS
+       ============================================================ */
+    .skills-grid { display: grid; grid-template-columns: 380px 1fr; gap: 1rem; align-items: stretch; }
+
+    .radar-panel { padding: 1.5rem 1.4rem 1.75rem; display: flex; flex-direction: column; }
+    .radar-stage { position: relative; margin: .25rem auto 0; width: 100%; max-width: 330px; }
+    .radar-stage svg { display: block; width: 100%; height: auto; overflow: visible; }
+
+    .radar-sweep {
+        position: absolute;
+        left: 50%; top: 50%;
+        width: 66%; aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: conic-gradient(from 0deg,
+            rgba(0, 229, 255, 0) 0deg,
+            rgba(0, 229, 255, 0) 285deg,
+            rgba(0, 229, 255, .10) 348deg,
+            rgba(0, 229, 255, .30) 360deg);
+        animation: radarSpin 4.5s linear infinite;
+        pointer-events: none;
+        mix-blend-mode: screen;
+    }
+    @keyframes radarSpin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+
+    .radar-foot {
+        display: flex; justify-content: space-between; gap: 1rem;
+        margin-top: 1.4rem; padding-top: 1rem;
+        border-top: 1px solid var(--hair);
+        font-family: var(--mono); font-size: .55rem;
+        letter-spacing: .18em; text-transform: uppercase; color: var(--faint);
+    }
+    .radar-foot span em { font-style: normal; color: var(--cyan); }
+
+    .bars-panel { padding: 1.5rem clamp(1.25rem, 2.5vw, 2rem) 1.75rem; }
+    .bars-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem 2rem; }
+
+    .bar-head {
+        display: flex; justify-content: space-between; align-items: baseline;
+        gap: .75rem; margin-bottom: .45rem;
+        font-family: var(--mono);
+    }
+    .bar-label { font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text); }
+    .bar-sub { font-size: .55rem; letter-spacing: .12em; color: var(--faint); }
+    .bar-val { font-size: .64rem; color: var(--cyan); letter-spacing: .1em; }
+
+    .bar-track {
+        position: relative; height: 8px;
+        background:
+            repeating-linear-gradient(90deg,
+                rgba(150, 220, 255, .10) 0px,
+                rgba(150, 220, 255, .10) 3px,
+                transparent 3px,
+                transparent 6px);
+        border: 1px solid rgba(150, 220, 255, .12);
+        border-radius: 1px;
+        overflow: hidden;
+    }
+    .bar-fill {
+        position: absolute; inset: 0 auto 0 0; width: 0;
+        background: linear-gradient(90deg, var(--electric), var(--cyan));
+        box-shadow: 0 0 14px rgba(0, 229, 255, .55);
+        display: block;
+    }
+    .bar-fill::after {
+        content: ''; position: absolute; top: 0; bottom: 0; right: 0; width: 2px;
+        background: #fff; box-shadow: 0 0 10px #fff, 0 0 18px var(--cyan);
+    }
+
+    .bars-scale {
+        display: flex; justify-content: space-between;
+        margin-top: 1.4rem; padding-top: .85rem;
+        border-top: 1px solid var(--hair);
+        font-family: var(--mono); font-size: .52rem;
+        letter-spacing: .16em; color: var(--faint);
+    }
+
+    /* ============================================================
+       MOD 02 — PROJECT UNITS
+       ============================================================ */
+    .units { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .unit { display: flex; flex-direction: column; }
+    .unit.wide { grid-column: 1 / -1; }
+
+    .unit-bar {
+        position: relative; z-index: 2;
+        display: flex; align-items: center; gap: .75rem;
+        padding: .7rem 1.1rem;
+        border-bottom: 1px solid var(--hair);
+        background: rgba(0, 12, 22, 0.30);
+        font-family: var(--mono); font-size: .58rem;
+        letter-spacing: .2em; text-transform: uppercase;
+    }
+    .unit-code { color: var(--cyan); }
+    .unit-type { color: var(--faint); }
+    .unit-flag { margin-left: auto; display: flex; align-items: center; gap: .45rem; color: var(--dim); }
+
+    .unit-body { position: relative; z-index: 2; padding: clamp(1.25rem, 2.5vw, 1.9rem); flex: 1; }
+
+    .unit-title {
+        font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+        font-weight: 700; letter-spacing: -.015em;
+        margin-bottom: .4rem;
+    }
+    .unit-meta {
+        font-family: var(--mono); font-size: .6rem;
+        letter-spacing: .18em; text-transform: uppercase;
+        color: var(--faint); margin-bottom: 1.1rem;
+    }
+    .unit-desc { color: var(--dim); font-size: .93rem; margin-bottom: 1.5rem; }
+
+    .block { margin-bottom: 1.5rem; }
+    .block-cap {
+        display: flex; align-items: center; gap: .6rem;
+        font-family: var(--mono); font-size: .56rem;
+        letter-spacing: .22em; text-transform: uppercase;
+        color: var(--faint); margin-bottom: .85rem;
+    }
+    .block-cap::after { content: ''; flex: 1; height: 1px; background: var(--hair); }
+    .block-cap b { color: var(--cyan); font-weight: 500; }
+
+    .chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: .4rem; }
+    .chip {
+        position: relative;
+        display: flex; align-items: center; gap: .5rem;
+        padding: .45rem .65rem;
+        font-family: var(--mono); font-size: .62rem; letter-spacing: .06em;
+        color: var(--dim);
+        background: rgba(140, 200, 255, .035);
+        border: 1px solid rgba(150, 220, 255, .10);
+        border-radius: 2px;
+        transition: color .25s ease, border-color .25s ease, background .25s ease, transform .25s ease;
+    }
+    .chip::before {
+        content: ''; width: 3px; height: 3px; flex: none;
+        background: var(--cyan); opacity: .5;
+        box-shadow: 0 0 6px var(--cyan);
+    }
+    .chip:hover {
+        color: var(--text); transform: translateX(2px);
+        border-color: rgba(0, 229, 255, .35);
+        background: rgba(0, 229, 255, .07);
+    }
+    .chip .tag-dev {
+        margin-left: auto; font-size: .5rem; letter-spacing: .12em;
+        color: var(--amber); text-transform: uppercase;
+    }
+
+    .tags { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .tag {
+        font-family: var(--mono); font-size: .62rem; letter-spacing: .1em;
+        padding: .38rem .7rem;
+        color: var(--ice);
+        border: 1px solid rgba(0, 229, 255, .20);
+        background: linear-gradient(120deg, rgba(0,229,255,.07), rgba(47,123,255,.03));
+        border-radius: 2px;
+        transition: border-color .25s ease, color .25s ease, box-shadow .25s ease;
+    }
+    .tag:hover { border-color: var(--cyan-soft); color: #fff; box-shadow: 0 0 16px rgba(0,229,255,.22); }
+
+    .note {
+        font-size: .85rem; color: var(--dim);
+        border-left: 1px solid rgba(0, 229, 255, .25);
+        padding-left: .9rem; margin-top: .9rem;
+    }
+
+    .unit-link {
+        display: inline-flex; align-items: center; gap: .7rem;
+        font-family: var(--mono); font-size: .64rem;
+        letter-spacing: .2em; text-transform: uppercase;
+        color: var(--cyan); text-decoration: none;
+        padding: .65rem 1.1rem;
+        border: 1px solid rgba(0, 229, 255, .3);
+        background: rgba(0, 229, 255, .05);
+        border-radius: 2px;
+        transition: background .3s ease, box-shadow .3s ease, color .3s ease;
+    }
+    .unit-link:hover {
+        background: rgba(0, 229, 255, .14);
+        box-shadow: 0 0 26px rgba(0, 229, 255, .25);
+        color: #fff;
+    }
+    .unit-link span { transition: transform .3s ease; }
+    .unit-link:hover span { transform: translateX(4px); }
+
+    /* ============================================================
+       MOD 03 / 04 — LOG ENTRIES
+       ============================================================ */
+    .log { position: relative; padding-left: 2.1rem; }
+    .log::before {
+        content: ''; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 1px;
+        background: linear-gradient(180deg, var(--cyan), rgba(47,123,255,.25), transparent);
+    }
+    .log-entry { position: relative; margin-bottom: 1rem; padding: 1.4rem clamp(1.2rem, 2.5vw, 1.8rem); }
+    .log-entry::after {
+        content: ''; position: absolute; left: -2.1rem; top: 1.7rem;
+        width: 13px; height: 13px; margin-left: -6px;
+        border: 1px solid var(--cyan);
+        background: #020a12;
+        box-shadow: 0 0 12px rgba(0, 229, 255, .55);
+        transform: rotate(45deg);
+        z-index: 5;
+    }
+    .log-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+    .log-role { font-size: 1.06rem; font-weight: 700; letter-spacing: -.01em; }
+    .log-period {
+        font-family: var(--mono); font-size: .6rem;
+        letter-spacing: .18em; text-transform: uppercase;
+        color: var(--cyan); white-space: nowrap;
+    }
+    .log-org {
+        font-family: var(--mono); font-size: .64rem;
+        letter-spacing: .16em; text-transform: uppercase;
+        color: var(--faint); margin: .35rem 0 .9rem;
+    }
+    .log-desc { color: var(--dim); font-size: .9rem; }
+
+    .edu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; }
+    .edu { padding: 1.4rem 1.35rem; }
+    .edu-idx {
+        font-family: var(--mono); font-size: .55rem; letter-spacing: .24em;
+        color: var(--cyan); margin-bottom: .9rem;
+    }
+    .edu-name { font-size: .98rem; font-weight: 700; margin-bottom: .4rem; }
+    .edu-org { font-family: var(--mono); font-size: .6rem; letter-spacing: .16em;
+               text-transform: uppercase; color: var(--faint); margin-bottom: .9rem; }
+    .edu-bar { height: 4px; background: rgba(150,220,255,.10); overflow: hidden; margin-bottom: .6rem; }
+    .edu-bar i { display: block; height: 100%; width: 0;
+                 background: linear-gradient(90deg, var(--electric), var(--cyan));
+                 box-shadow: 0 0 10px rgba(0,229,255,.5); }
+    .edu-period { font-family: var(--mono); font-size: .58rem; letter-spacing: .16em;
+                  text-transform: uppercase; color: var(--dim); }
+
+    /* ============================================================
+       MOD 05 — COMMS
+       ============================================================ */
+    .comms { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
+    .comm {
+        display: block; text-decoration: none; color: inherit;
+        padding: 1.6rem 1.4rem;
+        transition: transform .35s ease, background .35s ease;
+    }
+    .comm:hover { transform: translateY(-3px); background: rgba(0, 229, 255, .05); }
+    .comm:hover > i.bk { opacity: 1; width: 18px; height: 18px; }
+
+    .comm-top { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.25rem; position: relative; z-index: 2; }
+    .comm-ch { font-family: var(--mono); font-size: .55rem; letter-spacing: .24em; color: var(--faint); }
+    .comm-ico { margin-left: auto; width: 22px; height: 22px; fill: var(--cyan); transition: filter .3s ease; }
+    .comm:hover .comm-ico { filter: drop-shadow(0 0 8px var(--cyan)); }
+    .comm-name { position: relative; z-index: 2; font-family: var(--mono); font-size: .82rem;
+                 letter-spacing: .1em; color: var(--text); margin-bottom: .35rem; word-break: break-all; }
+    .comm-hint { position: relative; z-index: 2; font-family: var(--mono); font-size: .55rem;
+                 letter-spacing: .2em; text-transform: uppercase; color: var(--cyan); }
+
+    .sign-off {
+        margin-top: 2.5rem; padding-top: 1.25rem;
+        border-top: 1px solid var(--hair);
+        display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+        font-family: var(--mono); font-size: .56rem;
+        letter-spacing: .2em; text-transform: uppercase; color: var(--faint);
+    }
+
+    /* entrance states (GSAP-driven; visible if JS is unavailable) */
+    .fade-up { will-change: transform, opacity; }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1100px) {
+        .skills-grid { grid-template-columns: 1fr; }
+        .radar-stage { max-width: 300px; }
+    }
+    @media (max-width: 960px) {
+        .hero { grid-template-columns: 1fr; }
+        .units { grid-template-columns: 1fr; }
+        .unit.wide { grid-column: auto; }
+        .bars-grid { grid-template-columns: 1fr; }
+        .vpc { display: none; }
+    }
+    @media (max-width: 780px) {
+        :root { --rail: 0px; }
+        .rail { display: none; }
+        .readouts .ro.opt { display: none; }
+        .mod-head { flex-wrap: wrap; gap: .65rem; }
+        .mod-line { display: none; }
+        .reticle { display: none; }
+    }
+    @media (max-width: 560px) {
+        :root { --botbar: 0px; }
+        .botbar { display: none; }
+        .stats { grid-template-columns: 1fr; }
+        .sig { letter-spacing: .16em; font-size: .58rem; }
+        .glass { backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+            animation-duration: .001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .001ms !important;
+        }
+    }
     </style>
 </head>
 <body>
-    <div class="container">
-        <section class="hero">
-            <div class="status-badge fade-in">
-                <span class="status-dot"></span>
-                Disponible para trabajar
-            </div>
-            
-            <h1 class="name">Tadeo Rimoli</h1>
-            <p class="role">Full Stack Developer</p>
-            <div class="accent-line"></div>
-            <p class="tagline">Desarrollo de software escalable y soluciones web modernas</p>
-            
-            <div class="tech-badge">
-                Especialista Java & Spring
-            </div>
-            
-            <div class="hero-scroll-indicator">
-                <div class="hero-scroll-line"></div>
-                <span class="hero-scroll-text">Scroll</span>
-            </div>
-        </section>
 
-        <section class="content-section">
-            <p class="section-subtitle fade-up">01. Stack</p>
-            <h2 class="section-title fade-up">Tecnologías</h2>
-            
-            <div class="tech-grid fade-up">
-                <span class="tech-tag">Java</span>
-                <span class="tech-tag">Spring Framework</span>
-                <span class="tech-tag">Hibernate</span>
-                <span class="tech-tag">SQL</span>
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">GitHub</span>
-                <span class="tech-tag">Docker</span>
-            </div>
-        </section>
+<!-- ambient field: the light source the glass refracts -->
+<div class="field" aria-hidden="true">
+    <div class="orb orb-1" data-depth="0.020"></div>
+    <div class="orb orb-2" data-depth="0.034"></div>
+    <div class="orb orb-3" data-depth="0.014"></div>
+    <div class="grid-layer"></div>
+    <div class="grid-layer fine"></div>
+    <div class="scanlines"></div>
+    <div class="sweep"></div>
+    <div class="vignette"></div>
+</div>
 
-        <section class="content-section">
-            <p class="section-subtitle fade-up">02. Proyectos</p>
-            <h2 class="section-title fade-up">Trabajos Destacados</h2>
-            
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">Sistema</span>
-                            <div class="project-badges" style="margin-top: 0.5rem;">
-                                <span class="project-status-badge">En Desarrollo</span>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Sistema Administrativo Hotelero</h3>
-                    <p class="project-year">2025</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            Sistema completo de gestión hotelera para administrar operaciones del hotel de manera eficiente. Gestiona reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.
-                        </p>
+<div class="reticle" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
 
-                        <div class="project-section">
-                            <h4 class="project-section-title">Módulos del Sistema</h4>
-                            <div class="project-modules-grid">
-                                <span class="project-module-item">Novedades</span>
-                                <span class="project-module-item">Reservas</span>
-                                <span class="project-module-item">Calendario</span>
-                                <span class="project-module-item">Bar</span>
-                                <span class="project-module-item">Mucamas</span>
-                                <span class="project-module-item">Habitaciones</span>
-                                <span class="project-module-item">Huéspedes</span>
-                                <span class="project-module-item">Financiero</span>
-                                <span class="project-module-item">Gastos</span>
-                                <span class="project-module-item">Estacionamiento</span>
-                                <span class="project-module-item">Tarifas</span>
-                                <span class="project-module-item project-module-item-dev">Stock <span class="dev-badge">en desarrollo</span></span>
-                                <span class="project-module-item">Mensajería</span>
-                                <span class="project-module-item">Configuración</span>
-                            </div>
-                        </div>
+<!-- ============ TOP TELEMETRY BAR ============ -->
+<header class="topbar">
+    <span class="sig">TADEO<b>//</b>RIMOLI</span>
+    <span class="sep">|</span>
+    <span>FULL STACK DEV</span>
+    <div class="readouts">
+        <span class="ro opt">SYS <var id="ro-sys">BOOT</var></span>
+        <span class="ro opt">LAT <var>-34.60</var> LON <var>-58.38</var></span>
+        <span class="ro">T <var id="ro-clock">--:--:--</var></span>
+        <span class="ro"><i class="led"></i> ONLINE</span>
+    </div>
+</header>
 
-                        <div class="project-section">
-                            <h4 class="project-section-title">Tecnologías</h4>
-                            <div class="project-tech-list">
-                                <span class="project-tech-item">Spring Boot</span>
-                                <span class="project-tech-item">Hibernate</span>
-                                <span class="project-tech-item">MySQL</span>
-                                <span class="project-tech-item">React</span>
-                                <span class="project-tech-item">TailwindCSS</span>
-                                <span class="project-tech-item">REST APIs</span>
-                            </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
-                                Backend con Spring Boot y JPA/Hibernate. Frontend con React. Diseño responsive y optimizado.
-                            </p>
-                        </div>
-                    </div>
+<!-- ============ NAV RAIL ============ -->
+<nav class="rail" aria-label="Navegación de módulos">
+    <span class="rail-cap top">NAV</span>
+    <a class="rail-link" href="#mod-00"><span class="rail-tick"></span><span class="rail-num">00</span></a>
+    <a class="rail-link" href="#mod-01"><span class="rail-tick"></span><span class="rail-num">01</span></a>
+    <a class="rail-link" href="#mod-02"><span class="rail-tick"></span><span class="rail-num">02</span></a>
+    <a class="rail-link" href="#mod-03"><span class="rail-tick"></span><span class="rail-num">03</span></a>
+    <a class="rail-link" href="#mod-04"><span class="rail-tick"></span><span class="rail-num">04</span></a>
+    <a class="rail-link" href="#mod-05"><span class="rail-tick"></span><span class="rail-num">05</span></a>
+    <span class="rail-cap bot">v2.5</span>
+</nav>
+
+<i class="vpc vp-tl" aria-hidden="true"></i>
+<i class="vpc vp-tr" aria-hidden="true"></i>
+<i class="vpc vp-bl" aria-hidden="true"></i>
+<i class="vpc vp-br" aria-hidden="true"></i>
+
+<main class="main">
+<div class="wrap">
+
+    <!-- ================= MOD 00 — OPERADOR ================= -->
+    <section id="mod-00" class="hero">
+        <div class="hero-main glass brackets">
+            <span class="spec"></span>
+            <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+            <div class="hero-inner">
+                <div class="status-chip"><i class="led"></i> Disponible para trabajar</div>
+                <p class="callsign">OPERADOR // MOD.00</p>
+                <h1 class="name">Tadeo Rimoli</h1>
+                <div class="role-row">
+                    <span class="role">Full Stack Developer</span>
+                    <span class="role-bar"></span>
                 </div>
+                <p class="tagline">Desarrollo de software escalable y soluciones web modernas.</p>
+                <span class="spec-badge"><i class="led cyan"></i> Especialista Java &amp; Spring</span>
+                <div class="cue"><span class="cue-line"></span> Desplazar para telemetría</div>
+            </div>
+        </div>
 
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">Landing Page</span>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Hotel Estrellas de Mar</h3>
-                    <p class="project-year">2025</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            Sitio web para Hotel Estrellas de Mar con reserva de habitaciones, información de amenidades, galería y opciones de contacto.
-                        </p>
-                        <a href="https://hotelestrellasdemar.com.ar" target="_blank" class="project-link">
-                            Ver Proyecto →
-                        </a>
-                    </div>
+        <div class="hero-side">
+            <div class="vitals glass brackets">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <p class="panel-cap">Estado del sistema</p>
+                <dl>
+                    <div class="vital-row"><dt>Estado</dt><dd>OPERATIVO</dd></div>
+                    <div class="vital-row"><dt>Base</dt><dd>Argentina</dd></div>
+                    <div class="vital-row"><dt>Modo</dt><dd>Freelance / Full-time</dd></div>
+                    <div class="vital-row"><dt>Núcleo</dt><dd>Java · Spring Boot</dd></div>
+                    <div class="vital-row"><dt>Uplink</dt><dd>Remoto / Híbrido</dd></div>
+                </dl>
+            </div>
+
+            <div class="stats">
+                <div class="stat glass brackets">
+                    <span class="spec"></span>
+                    <i class="bk tl"></i><i class="bk br"></i>
+                    <p class="stat-val" data-count="3">0<sup>+</sup></p>
+                    <p class="stat-key">Años en campo</p>
                 </div>
-
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">App Móvil</span>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Entrena+ Atletismo</h3>
-                    <p class="project-year">2023-2024 | Proyecto Final Universitario</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            App móvil creada en React Native para el proyecto final de Tecnicatura en Programación. La aplicación permite consultar datos actualizados de la CADA (Confederación Argentina de Atletismo) y gestionar entrenamientos, ejercicios y grupos de entrenamiento para atletas y entrenadores.
-                        </p>
-
-                        <div class="project-section">
-                            <h4 class="project-section-title">Funcionalidades</h4>
-                            <div class="project-modules-grid">
-                                <span class="project-module-item">Rankings CADA</span>
-                                <span class="project-module-item">Resultados de Torneos</span>
-                                <span class="project-module-item">Calendario Anual</span>
-                                <span class="project-module-item">Crear Ejercicios</span>
-                                <span class="project-module-item">Crear Entrenamientos</span>
-                                <span class="project-module-item">Grupos de Entrenamiento</span>
-                                <span class="project-module-item">Calendario Grupal</span>
-                                <span class="project-module-item">Calendario Individual</span>
-                                <span class="project-module-item">Agendar Entrenamientos</span>
-                                <span class="project-module-item">Agendar Competencias</span>
-                                <span class="project-module-item">Gestión de Administrador</span>
-                                <span class="project-module-item">Resultados de Entrenos</span>
-                            </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
-                                La app permite consultar información actualizada de la CADA incluyendo rankings, resultados de torneos y calendario anual. Los usuarios pueden crear ejercicios y entrenamientos, formar grupos de entrenamiento, y gestionar calendarios grupales e individuales para agendar entrenamientos y competencias. Los administradores de grupo pueden agendar entrenos y completar resultados de entrenos de los participantes.
-                            </p>
-                        </div>
-
-                        <div class="project-section">
-                            <h4 class="project-section-title">Tecnologías</h4>
-                            <div class="project-tech-list">
-                                <span class="project-tech-item">React Native</span>
-                                <span class="project-tech-item">Java</span>
-                                <span class="project-tech-item">Spring Boot</span>
-                                <span class="project-tech-item">REST APIs</span>
-                            </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
-                                Frontend móvil construido con React Native para iOS y Android. Backend desarrollado con Java y Spring Boot para gestionar la comunicación con la API de la CADA y las funcionalidades de entrenamiento y grupos.
-                            </p>
-                        </div>
-
-                        <a href="https://entrenamas.ar" target="_blank" class="project-link" style="margin-top: 2rem;">
-                            Ver Proyecto →
-                        </a>
-                    </div>
+                <div class="stat glass brackets">
+                    <span class="spec"></span>
+                    <i class="bk tl"></i><i class="bk br"></i>
+                    <p class="stat-val" data-count="4">0</p>
+                    <p class="stat-key">Unidades desplegadas</p>
                 </div>
-
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">Landing Page</span>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Entrena+ Web</h3>
-                    <p class="project-year">2024 | Proyecto Final Universitario</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            Landing page para la aplicación móvil Entrena+ Atletismo, mostrando características como gestión de entrenamientos y seguimiento de resultados.
-                        </p>
-                        <a href="https://entrenamas.ar" target="_blank" class="project-link">
-                            Ver Proyecto →
-                        </a>
-                    </div>
+                <div class="stat glass brackets">
+                    <span class="spec"></span>
+                    <i class="bk tl"></i><i class="bk br"></i>
+                    <p class="stat-val" data-count="14">0</p>
+                    <p class="stat-key">Módulos en producción</p>
+                </div>
+                <div class="stat glass brackets">
+                    <span class="spec"></span>
+                    <i class="bk tl"></i><i class="bk br"></i>
+                    <p class="stat-val" data-count="7">0</p>
+                    <p class="stat-key">Tecnologías núcleo</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="content-section">
-            <p class="section-subtitle fade-up">03. Trayectoria</p>
-            <h2 class="section-title fade-up">Experiencia</h2>
-            
-            <div class="experience-timeline">
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Desarrollador Freelance</h3>
-                        <p class="experience-company">Independiente</p>
+    <!-- ================= MOD 01 — STACK ================= -->
+    <section id="mod-01">
+        <header class="mod-head fade-up">
+            <span class="mod-id">MOD // 01</span>
+            <h2 class="mod-title">Stack</h2>
+            <span class="mod-line"></span>
+            <span class="mod-flag"><i class="led cyan"></i> Análisis de capacidad</span>
+        </header>
+
+        <div class="skills-grid">
+            <div class="radar-panel glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <p class="panel-cap">Perfil de dominio</p>
+                <div class="radar-stage">
+                    <div class="radar-sweep"></div>
+                    <svg id="radar" viewBox="0 0 340 340" role="img" aria-label="Gráfico de radar de dominio por área"></svg>
+                </div>
+                <div class="radar-foot">
+                    <span>EJES <em>06</em></span>
+                    <span>ESCALA <em>0–100</em></span>
+                    <span>SCAN <em>ACTIVO</em></span>
+                </div>
+            </div>
+
+            <div class="bars-panel glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <p class="panel-cap">Índice de tecnologías</p>
+                <div class="bars-grid">
+                    <div class="bar" data-value="95">
+                        <div class="bar-head"><span class="bar-label">Java</span><span class="bar-val">95</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
                     </div>
-                    <p class="experience-period">2024 - Actualidad</p>
-                    <p class="experience-description">
-                        Desarrollo y mantenimiento de software para gestión hotelera. Desarrollo de páginas web personalizadas.
+                    <div class="bar" data-value="92">
+                        <div class="bar-head"><span class="bar-label">Spring Framework</span><span class="bar-val">92</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
+                    </div>
+                    <div class="bar" data-value="88">
+                        <div class="bar-head"><span class="bar-label">Hibernate / JPA</span><span class="bar-val">88</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
+                    </div>
+                    <div class="bar" data-value="86">
+                        <div class="bar-head"><span class="bar-label">SQL</span><span class="bar-val">86</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
+                    </div>
+                    <div class="bar" data-value="80">
+                        <div class="bar-head"><span class="bar-label">React</span><span class="bar-val">80</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
+                    </div>
+                    <div class="bar" data-value="88">
+                        <div class="bar-head"><span class="bar-label">GitHub</span><span class="bar-val">88</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
+                    </div>
+                    <div class="bar" data-value="74">
+                        <div class="bar-head"><span class="bar-label">Docker</span><span class="bar-val">74</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
+                    </div>
+                    <div class="bar" data-value="76">
+                        <div class="bar-head"><span class="bar-label">TailwindCSS</span><span class="bar-val">76</span></div>
+                        <div class="bar-track"><i class="bar-fill"></i></div>
+                    </div>
+                </div>
+                <div class="bars-scale">
+                    <span>000</span><span>025</span><span>050</span><span>075</span><span>100</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= MOD 02 — PROYECTOS ================= -->
+    <section id="mod-02">
+        <header class="mod-head fade-up">
+            <span class="mod-id">MOD // 02</span>
+            <h2 class="mod-title">Proyectos</h2>
+            <span class="mod-line"></span>
+            <span class="mod-flag"><i class="led cyan"></i> 04 unidades</span>
+        </header>
+
+        <div class="units">
+            <!-- UNIT 01 -->
+            <article class="unit wide glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <div class="unit-bar">
+                    <span class="unit-code">UNIT.01</span>
+                    <span class="unit-type">Sistema</span>
+                    <span class="unit-flag"><i class="led amber"></i> En desarrollo</span>
+                </div>
+                <div class="unit-body">
+                    <h3 class="unit-title">Sistema Administrativo Hotelero</h3>
+                    <p class="unit-meta">Ciclo 2025 · Producción activa</p>
+                    <p class="unit-desc">
+                        Sistema completo de gestión hotelera para administrar operaciones del hotel de manera
+                        eficiente. Gestiona reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.
                     </p>
-                </div>
 
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Full Stack Developer Junior</h3>
-                        <p class="experience-company">Advenio Software</p>
+                    <div class="block">
+                        <p class="block-cap">Módulos del sistema <b>[14]</b></p>
+                        <div class="chips">
+                            <span class="chip">Novedades</span>
+                            <span class="chip">Reservas</span>
+                            <span class="chip">Calendario</span>
+                            <span class="chip">Bar</span>
+                            <span class="chip">Mucamas</span>
+                            <span class="chip">Habitaciones</span>
+                            <span class="chip">Huéspedes</span>
+                            <span class="chip">Financiero</span>
+                            <span class="chip">Gastos</span>
+                            <span class="chip">Estacionamiento</span>
+                            <span class="chip">Tarifas</span>
+                            <span class="chip">Stock <em class="tag-dev">en dev</em></span>
+                            <span class="chip">Mensajería</span>
+                            <span class="chip">Configuración</span>
+                        </div>
                     </div>
-                    <p class="experience-period">Agosto 2022 - Octubre 2023</p>
-                    <p class="experience-description">
-                        Desarrollo de software para sistema de gestión en el sector de salud. 
-                        Desarrollo backend con Spring Boot (Java), JPA/Hibernate, autenticación JWT y APIs REST. 
-                        Desarrollo frontend con React y TailwindCSS, creación de vistas y SPAs. 
-                        Gestión de bases de datos MySQL y PostgreSQL. 
-                        Configuración de despliegue con Nginx y Docker. 
-                        Responsable de actualizar versiones del sistema en producción, solución de bugs y desarrollo de nuevas funcionalidades.
+
+                    <div class="block">
+                        <p class="block-cap">Arsenal técnico</p>
+                        <div class="tags">
+                            <span class="tag">Spring Boot</span>
+                            <span class="tag">Hibernate</span>
+                            <span class="tag">MySQL</span>
+                            <span class="tag">React</span>
+                            <span class="tag">TailwindCSS</span>
+                            <span class="tag">REST APIs</span>
+                        </div>
+                        <p class="note">
+                            Backend con Spring Boot y JPA/Hibernate. Frontend con React. Diseño responsive y optimizado.
+                        </p>
+                    </div>
+                </div>
+            </article>
+
+            <!-- UNIT 02 -->
+            <article class="unit wide glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <div class="unit-bar">
+                    <span class="unit-code">UNIT.02</span>
+                    <span class="unit-type">App Móvil</span>
+                    <span class="unit-flag"><i class="led"></i> Desplegado</span>
+                </div>
+                <div class="unit-body">
+                    <h3 class="unit-title">Entrena+ Atletismo</h3>
+                    <p class="unit-meta">Ciclo 2023–2024 · Proyecto final universitario</p>
+                    <p class="unit-desc">
+                        App móvil creada en React Native para el proyecto final de Tecnicatura en Programación.
+                        La aplicación permite consultar datos actualizados de la CADA (Confederación Argentina de
+                        Atletismo) y gestionar entrenamientos, ejercicios y grupos de entrenamiento para atletas
+                        y entrenadores.
                     </p>
+
+                    <div class="block">
+                        <p class="block-cap">Funcionalidades <b>[12]</b></p>
+                        <div class="chips">
+                            <span class="chip">Rankings CADA</span>
+                            <span class="chip">Resultados de Torneos</span>
+                            <span class="chip">Calendario Anual</span>
+                            <span class="chip">Crear Ejercicios</span>
+                            <span class="chip">Crear Entrenamientos</span>
+                            <span class="chip">Grupos de Entrenamiento</span>
+                            <span class="chip">Calendario Grupal</span>
+                            <span class="chip">Calendario Individual</span>
+                            <span class="chip">Agendar Entrenamientos</span>
+                            <span class="chip">Agendar Competencias</span>
+                            <span class="chip">Gestión de Administrador</span>
+                            <span class="chip">Resultados de Entrenos</span>
+                        </div>
+                        <p class="note">
+                            La app permite consultar información actualizada de la CADA incluyendo rankings,
+                            resultados de torneos y calendario anual. Los usuarios pueden crear ejercicios y
+                            entrenamientos, formar grupos de entrenamiento, y gestionar calendarios grupales e
+                            individuales para agendar entrenamientos y competencias. Los administradores de grupo
+                            pueden agendar entrenos y completar resultados de entrenos de los participantes.
+                        </p>
+                    </div>
+
+                    <div class="block">
+                        <p class="block-cap">Arsenal técnico</p>
+                        <div class="tags">
+                            <span class="tag">React Native</span>
+                            <span class="tag">Java</span>
+                            <span class="tag">Spring Boot</span>
+                            <span class="tag">REST APIs</span>
+                        </div>
+                        <p class="note">
+                            Frontend móvil construido con React Native para iOS y Android. Backend desarrollado con
+                            Java y Spring Boot para gestionar la comunicación con la API de la CADA y las
+                            funcionalidades de entrenamiento y grupos.
+                        </p>
+                    </div>
+
+                    <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="unit-link">
+                        Abrir enlace <span>→</span>
+                    </a>
                 </div>
+            </article>
+
+            <!-- UNIT 03 -->
+            <article class="unit glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <div class="unit-bar">
+                    <span class="unit-code">UNIT.03</span>
+                    <span class="unit-type">Landing Page</span>
+                    <span class="unit-flag"><i class="led"></i> Desplegado</span>
+                </div>
+                <div class="unit-body">
+                    <h3 class="unit-title">Hotel Estrellas de Mar</h3>
+                    <p class="unit-meta">Ciclo 2025 · En línea</p>
+                    <p class="unit-desc">
+                        Sitio web para Hotel Estrellas de Mar con reserva de habitaciones, información de
+                        amenidades, galería y opciones de contacto.
+                    </p>
+                    <a href="https://hotelestrellasdemar.com.ar" target="_blank" rel="noopener" class="unit-link">
+                        Abrir enlace <span>→</span>
+                    </a>
+                </div>
+            </article>
+
+            <!-- UNIT 04 -->
+            <article class="unit glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <div class="unit-bar">
+                    <span class="unit-code">UNIT.04</span>
+                    <span class="unit-type">Landing Page</span>
+                    <span class="unit-flag"><i class="led"></i> Desplegado</span>
+                </div>
+                <div class="unit-body">
+                    <h3 class="unit-title">Entrena+ Web</h3>
+                    <p class="unit-meta">Ciclo 2024 · Proyecto final universitario</p>
+                    <p class="unit-desc">
+                        Landing page para la aplicación móvil Entrena+ Atletismo, mostrando características como
+                        gestión de entrenamientos y seguimiento de resultados.
+                    </p>
+                    <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="unit-link">
+                        Abrir enlace <span>→</span>
+                    </a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- ================= MOD 03 — EXPERIENCIA ================= -->
+    <section id="mod-03">
+        <header class="mod-head fade-up">
+            <span class="mod-id">MOD // 03</span>
+            <h2 class="mod-title">Experiencia</h2>
+            <span class="mod-line"></span>
+            <span class="mod-flag"><i class="led cyan"></i> Registro de misiones</span>
+        </header>
+
+        <div class="log">
+            <article class="log-entry glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk br"></i>
+                <div class="log-head">
+                    <h3 class="log-role">Desarrollador Freelance</h3>
+                    <span class="log-period">2024 — Actualidad</span>
+                </div>
+                <p class="log-org">Independiente</p>
+                <p class="log-desc">
+                    Desarrollo y mantenimiento de software para gestión hotelera. Desarrollo de páginas web
+                    personalizadas.
+                </p>
+            </article>
+
+            <article class="log-entry glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk br"></i>
+                <div class="log-head">
+                    <h3 class="log-role">Full Stack Developer Junior</h3>
+                    <span class="log-period">Ago 2022 — Oct 2023</span>
+                </div>
+                <p class="log-org">Advenio Software</p>
+                <p class="log-desc">
+                    Desarrollo de software para sistema de gestión en el sector de salud. Desarrollo backend con
+                    Spring Boot (Java), JPA/Hibernate, autenticación JWT y APIs REST. Desarrollo frontend con React
+                    y TailwindCSS, creación de vistas y SPAs. Gestión de bases de datos MySQL y PostgreSQL.
+                    Configuración de despliegue con Nginx y Docker. Responsable de actualizar versiones del sistema
+                    en producción, solución de bugs y desarrollo de nuevas funcionalidades.
+                </p>
+            </article>
+        </div>
+    </section>
+
+    <!-- ================= MOD 04 — FORMACIÓN ================= -->
+    <section id="mod-04">
+        <header class="mod-head fade-up">
+            <span class="mod-id">MOD // 04</span>
+            <h2 class="mod-title">Formación</h2>
+            <span class="mod-line"></span>
+            <span class="mod-flag"><i class="led cyan"></i> Certificaciones</span>
+        </header>
+
+        <div class="edu-grid">
+            <div class="edu glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk br"></i>
+                <p class="edu-idx">CERT.01</p>
+                <h3 class="edu-name">Licenciatura en Sistemas</h3>
+                <p class="edu-org">Universidad CAECE</p>
+                <div class="edu-bar"><i data-progress="45"></i></div>
+                <p class="edu-period">2024 — Actualidad · En curso</p>
             </div>
-        </section>
 
-        <section class="content-section">
-            <p class="section-subtitle fade-up">04. Formación</p>
-            <h2 class="section-title fade-up">Educación</h2>
-            
-            <div class="experience-timeline">
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Licenciatura en Sistemas</h3>
-                        <p class="experience-company">Universidad CAECE</p>
-                    </div>
-                    <p class="experience-period">2024 - Actualidad</p>
-                </div>
-
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Tecnicatura Universitaria en Programación</h3>
-                        <p class="experience-company">Universidad CAECE</p>
-                    </div>
-                    <p class="experience-period">2020 - 2023 (Finalizado)</p>
-                </div>
-
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Bachillerato en Ciencias Sociales</h3>
-                    </div>
-                    <p class="experience-period">2014 - 2019 (Finalizado)</p>
-                </div>
+            <div class="edu glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk br"></i>
+                <p class="edu-idx">CERT.02</p>
+                <h3 class="edu-name">Tecnicatura Universitaria en Programación</h3>
+                <p class="edu-org">Universidad CAECE</p>
+                <div class="edu-bar"><i data-progress="100"></i></div>
+                <p class="edu-period">2020 — 2023 · Finalizado</p>
             </div>
-        </section>
 
-        <section class="contact-section">
-            <p class="section-subtitle fade-up">05. Contacto</p>
-            <h2 class="section-title fade-up">Hablemos</h2>
-            
-            <div class="contact-links">
-                <a href="https://github.com/tadeorimoli" target="_blank" class="contact-link fade-up">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <div class="edu glass brackets fade-up">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk br"></i>
+                <p class="edu-idx">CERT.03</p>
+                <h3 class="edu-name">Bachillerato en Ciencias Sociales</h3>
+                <p class="edu-org">Secundario</p>
+                <div class="edu-bar"><i data-progress="100"></i></div>
+                <p class="edu-period">2014 — 2019 · Finalizado</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= MOD 05 — CONTACTO ================= -->
+    <section id="mod-05">
+        <header class="mod-head fade-up">
+            <span class="mod-id">MOD // 05</span>
+            <h2 class="mod-title">Contacto</h2>
+            <span class="mod-line"></span>
+            <span class="mod-flag"><i class="led"></i> Canales abiertos</span>
+        </header>
+
+        <div class="comms">
+            <a class="comm glass brackets fade-up" href="https://github.com/tadeorimoli" target="_blank" rel="noopener">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <div class="comm-top">
+                    <span class="comm-ch">CANAL 01</span>
+                    <svg class="comm-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
                     </svg>
-                </a>
-                <a href="https://ar.linkedin.com/in/tadeo-rimoli-9aa24b1a7" target="_blank" class="contact-link fade-up">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                </div>
+                <p class="comm-name">github.com/tadeorimoli</p>
+                <p class="comm-hint">Repositorios →</p>
+            </a>
+
+            <a class="comm glass brackets fade-up" href="https://ar.linkedin.com/in/tadeo-rimoli-9aa24b1a7" target="_blank" rel="noopener">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <div class="comm-top">
+                    <span class="comm-ch">CANAL 02</span>
+                    <svg class="comm-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
                     </svg>
-                </a>
-                <a href="mailto:tadeorimoli@gmail.com" class="contact-link fade-up">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
+                </div>
+                <p class="comm-name">in/tadeo-rimoli</p>
+                <p class="comm-hint">Red profesional →</p>
+            </a>
+
+            <a class="comm glass brackets fade-up" href="mailto:tadeorimoli@gmail.com">
+                <span class="spec"></span>
+                <i class="bk tl"></i><i class="bk tr"></i><i class="bk bl"></i><i class="bk br"></i>
+                <div class="comm-top">
+                    <span class="comm-ch">CANAL 03</span>
+                    <svg class="comm-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                         fill="none" stroke="currentColor" stroke-width="2" style="stroke: var(--cyan);" aria-hidden="true">
                         <rect width="20" height="16" x="2" y="4" rx="2"/>
                         <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
                     </svg>
-                </a>
-            </div>
-        </section>
-    </div>
+                </div>
+                <p class="comm-name">tadeorimoli@gmail.com</p>
+                <p class="comm-hint">Transmisión directa →</p>
+            </a>
+        </div>
 
-    <script>
-        const lenis = new Lenis({
+        <div class="sign-off">
+            <span>TADEO RIMOLI // FULL STACK DEVELOPER</span>
+            <span>FIN DE TRANSMISIÓN</span>
+        </div>
+    </section>
+
+</div>
+</main>
+
+<!-- ============ BOTTOM TELEMETRY BAR ============ -->
+<footer class="botbar">
+    <span class="sep">//</span>
+    <div class="ticker">
+        <div class="ticker-track" id="ticker"></div>
+    </div>
+    <span class="ro"><i class="led cyan"></i> BUFFER <var id="ro-buf">00%</var></span>
+</footer>
+
+<script>
+(function () {
+    'use strict';
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------------- smooth scroll ---------------- */
+    var lenis = null;
+    if (window.Lenis && !reduced) {
+        lenis = new Lenis({
             duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
             smoothWheel: true,
             wheelMultiplier: 1,
             touchMultiplier: 2
         });
-
-        gsap.registerPlugin(ScrollTrigger);
-        lenis.on('scroll', ScrollTrigger.update);
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
+    }
 
-        gsap.to('.status-badge', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-            delay: 0.2
+    if (window.gsap && window.ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        if (lenis) { lenis.on('scroll', ScrollTrigger.update); }
+    }
+
+    /* ---------------- rail navigation ---------------- */
+    document.querySelectorAll('.rail-link').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            var target = document.querySelector(link.getAttribute('href'));
+            if (!target) { return; }
+            e.preventDefault();
+            if (lenis) { lenis.scrollTo(target, { offset: -70 }); }
+            else { target.scrollIntoView({ behavior: 'smooth' }); }
         });
+    });
 
-        gsap.from('.name', {
-            opacity: 0,
-            y: 100,
-            duration: 1.2,
-            ease: 'power3.out',
-            delay: 0.5
+    var railLinks = Array.prototype.slice.call(document.querySelectorAll('.rail-link'));
+    var sections = railLinks.map(function (l) { return document.querySelector(l.getAttribute('href')); });
+    if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) { return; }
+                var idx = sections.indexOf(entry.target);
+                railLinks.forEach(function (l, i) { l.classList.toggle('active', i === idx); });
+            });
+        }, { rootMargin: '-45% 0px -50% 0px' });
+        sections.forEach(function (s) { if (s) { io.observe(s); } });
+    }
+
+    /* ---------------- radar chart ---------------- */
+    var AXES = [
+        { label: 'BACKEND',      v: 93 },
+        { label: 'DATOS',        v: 86 },
+        { label: 'DEVOPS',       v: 72 },
+        { label: 'MÓVIL',        v: 65 },
+        { label: 'FRONTEND',     v: 80 },
+        { label: 'ARQUITECTURA', v: 78 }
+    ];
+
+    function buildRadar() {
+        var svg = document.getElementById('radar');
+        if (!svg) { return; }
+
+        var NS = 'http://www.w3.org/2000/svg';
+        var cx = 170, cy = 170, R = 108, n = AXES.length;
+
+        function point(i, r) {
+            var a = (Math.PI * 2 * i / n) - Math.PI / 2;
+            return [cx + Math.cos(a) * r, cy + Math.sin(a) * r];
+        }
+        function poly(r) {
+            var pts = [];
+            for (var i = 0; i < n; i++) { pts.push(point(i, r).map(function (v) { return v.toFixed(1); }).join(',')); }
+            return pts.join(' ');
+        }
+        function el(tag, attrs) {
+            var e = document.createElementNS(NS, tag);
+            for (var k in attrs) { e.setAttribute(k, attrs[k]); }
+            return e;
+        }
+
+        /* gradient + glow defs */
+        var defs = el('defs', {});
+        defs.innerHTML =
+            '<linearGradient id="radarFill" x1="0" y1="0" x2="1" y2="1">' +
+              '<stop offset="0%"   stop-color="#00e5ff" stop-opacity="0.42"/>' +
+              '<stop offset="60%"  stop-color="#2f7bff" stop-opacity="0.22"/>' +
+              '<stop offset="100%" stop-color="#2f7bff" stop-opacity="0.08"/>' +
+            '</linearGradient>' +
+            '<linearGradient id="radarStroke" x1="0" y1="0" x2="1" y2="1">' +
+              '<stop offset="0%"   stop-color="#00e5ff"/>' +
+              '<stop offset="100%" stop-color="#2f7bff"/>' +
+            '</linearGradient>' +
+            '<filter id="radarGlow" x="-50%" y="-50%" width="200%" height="200%">' +
+              '<feGaussianBlur stdDeviation="4" result="b"/>' +
+              '<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>' +
+            '</filter>';
+        svg.appendChild(defs);
+
+        /* concentric rings */
+        for (var lvl = 1; lvl <= 4; lvl++) {
+            svg.appendChild(el('polygon', {
+                points: poly(R * lvl / 4),
+                fill: 'none',
+                stroke: 'rgba(150, 220, 255, ' + (lvl === 4 ? 0.22 : 0.10) + ')',
+                'stroke-width': '1'
+            }));
+        }
+
+        /* axes + labels */
+        for (var i = 0; i < n; i++) {
+            var p = point(i, R);
+            svg.appendChild(el('line', {
+                x1: cx, y1: cy, x2: p[0].toFixed(1), y2: p[1].toFixed(1),
+                stroke: 'rgba(150, 220, 255, 0.14)', 'stroke-width': '1'
+            }));
+
+            var lp = point(i, R + 26);
+            var anchor = 'middle';
+            if (lp[0] > cx + 8) { anchor = 'start'; }
+            else if (lp[0] < cx - 8) { anchor = 'end'; }
+
+            var t = el('text', {
+                x: lp[0].toFixed(1), y: (lp[1] + 3).toFixed(1),
+                'text-anchor': anchor,
+                fill: '#7f97a8',
+                'font-family': "'JetBrains Mono', monospace",
+                'font-size': '9',
+                'letter-spacing': '1.6'
+            });
+            t.textContent = AXES[i].label;
+            svg.appendChild(t);
+
+            var vp = point(i, R + 26);
+            var vt = el('text', {
+                x: vp[0].toFixed(1), y: (vp[1] + 15).toFixed(1),
+                'text-anchor': anchor,
+                fill: '#00e5ff',
+                'font-family': "'JetBrains Mono', monospace",
+                'font-size': '9'
+            });
+            vt.textContent = AXES[i].v;
+            svg.appendChild(vt);
+        }
+
+        /* data shape */
+        var dataPts = AXES.map(function (a, i) {
+            return point(i, R * a.v / 100).map(function (v) { return v.toFixed(1); }).join(',');
+        }).join(' ');
+
+        var g = el('g', { 'transform-origin': cx + 'px ' + cy + 'px', filter: 'url(#radarGlow)' });
+
+        g.appendChild(el('polygon', {
+            points: dataPts,
+            fill: 'url(#radarFill)',
+            stroke: 'url(#radarStroke)',
+            'stroke-width': '1.5',
+            'stroke-linejoin': 'round'
+        }));
+
+        AXES.forEach(function (a, i) {
+            var pt = point(i, R * a.v / 100);
+            g.appendChild(el('circle', {
+                cx: pt[0].toFixed(1), cy: pt[1].toFixed(1), r: '3',
+                fill: '#020a12', stroke: '#00e5ff', 'stroke-width': '1.5'
+            }));
         });
+        svg.appendChild(g);
 
-        gsap.to('.hero .accent-line', {
-            opacity: 1,
-            scaleX: 1,
-            duration: 1.5,
-            ease: 'power2.out',
-            delay: 1
-        });
+        /* center reticle */
+        svg.appendChild(el('circle', { cx: cx, cy: cy, r: '2', fill: '#00e5ff' }));
 
-        gsap.to('.hero .role', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 1.3
-        });
+        return g;
+    }
 
-        gsap.to('.hero .tagline', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 1.7
-        });
+    var radarGroup = buildRadar();
 
-        gsap.to('.tech-badge', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 0.5 
-        });
+    /* ---------------- entrance choreography ---------------- */
+    if (window.gsap) {
+        gsap.set('.hero-main .hero-inner > *', { opacity: 0, y: 26 });
+        gsap.set('.hero-side > *', { opacity: 0, y: 26 });
 
-        gsap.to('.hero-scroll-indicator', {
-            opacity: 1,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 2.2
-        });
+        var intro = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        intro.to('.hero-main .hero-inner > *', { opacity: 1, y: 0, duration: 0.9, stagger: 0.09 }, 0.25)
+             .to('.hero-side > *', { opacity: 1, y: 0, duration: 0.8, stagger: 0.12 }, 0.55);
 
-
-        gsap.utils.toArray('.fade-up:not(.project-card)').forEach((element) => {
-            gsap.fromTo(element, 
-                { opacity: 0, y: 60 },
+        gsap.utils.toArray('.fade-up').forEach(function (elm) {
+            gsap.fromTo(elm,
+                { opacity: 0, y: 44 },
                 {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: element,
-                        start: 'top 90%',
-                        toggleActions: 'play none none none',
-                        once: true
-                    }
+                    opacity: 1, y: 0, duration: 0.85, ease: 'power2.out',
+                    scrollTrigger: { trigger: elm, start: 'top 92%', once: true }
                 }
             );
         });
 
-        gsap.utils.toArray('.tech-tag').forEach((tag, index) => {
-            gsap.fromTo(tag,
-                { opacity: 0, scale: 0.8 },
-                {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.5,
-                    ease: 'back.out',
-                    scrollTrigger: {
-                        trigger: '.tech-grid',
-                        start: 'top 80%',
-                        toggleActions: 'play none none reverse'
-                    },
-                    delay: index * 0.05
-                }
-            );
+        /* stat counters */
+        gsap.utils.toArray('.stat-val').forEach(function (node) {
+            var end = parseInt(node.getAttribute('data-count'), 10) || 0;
+            var suffix = node.querySelector('sup') ? '<sup>+</sup>' : '';
+            var obj = { n: 0 };
+            gsap.to(obj, {
+                n: end, duration: 1.6, ease: 'power2.out', delay: 1.1,
+                onUpdate: function () { node.innerHTML = Math.round(obj.n) + suffix; }
+            });
         });
 
-        gsap.utils.toArray('.project-card').forEach((card, index) => {
-            gsap.fromTo(card,
-                { opacity: 0, y: 60 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 90%',
-                        toggleActions: 'play none none none',
-                        once: true
-                    },
-                    delay: index * 0.05
-                }
-            );
+        /* technical bars */
+        gsap.utils.toArray('.bar').forEach(function (bar, i) {
+            var val = parseInt(bar.getAttribute('data-value'), 10) || 0;
+            gsap.to(bar.querySelector('.bar-fill'), {
+                width: val + '%', duration: 1.2, ease: 'power2.inOut', delay: i * 0.06,
+                scrollTrigger: { trigger: bar, start: 'top 92%', once: true }
+            });
         });
 
-        window.addEventListener('load', () => {
-            ScrollTrigger.refresh();
+        /* education progress */
+        gsap.utils.toArray('.edu-bar i').forEach(function (fill) {
+            var val = parseInt(fill.getAttribute('data-progress'), 10) || 0;
+            gsap.to(fill, {
+                width: val + '%', duration: 1.3, ease: 'power2.inOut',
+                scrollTrigger: { trigger: fill, start: 'top 95%', once: true }
+            });
         });
-    </script>
+
+        /* radar deploy */
+        if (radarGroup) {
+            gsap.fromTo(radarGroup,
+                { scale: 0, opacity: 0, rotate: -18 },
+                {
+                    scale: 1, opacity: 1, rotate: 0, duration: 1.4, ease: 'power3.out',
+                    svgOrigin: '170 170',
+                    scrollTrigger: { trigger: '#radar', start: 'top 88%', once: true }
+                }
+            );
+        }
+    }
+
+    /* ---------------- reticle + parallax ---------------- */
+    var reticle = document.querySelector('.reticle');
+    var orbs = Array.prototype.slice.call(document.querySelectorAll('.orb'));
+    var fine = window.matchMedia('(pointer: fine)').matches;
+
+    if (fine && !reduced) {
+        var mx = 0, my = 0, rx = 0, ry = 0;
+        window.addEventListener('mousemove', function (e) {
+            mx = e.clientX; my = e.clientY;
+            if (reticle) { reticle.style.opacity = '1'; }
+        }, { passive: true });
+
+        (function loop() {
+            rx += (mx - rx) * 0.18;
+            ry += (my - ry) * 0.18;
+            if (reticle) { reticle.style.transform = 'translate(' + rx + 'px,' + ry + 'px)'; }
+
+            var ox = (mx / window.innerWidth - 0.5);
+            var oy = (my / window.innerHeight - 0.5);
+            orbs.forEach(function (orb) {
+                var d = parseFloat(orb.getAttribute('data-depth')) || 0.02;
+                orb.style.transform = 'translate(' + (ox * d * 900).toFixed(1) + 'px,' +
+                                                     (oy * d * 900).toFixed(1) + 'px)';
+            });
+            requestAnimationFrame(loop);
+        })();
+    }
+
+    /* ---------------- live readouts ---------------- */
+    var clock = document.getElementById('ro-clock');
+    function tickClock() {
+        if (!clock) { return; }
+        var d = new Date();
+        clock.textContent = [d.getHours(), d.getMinutes(), d.getSeconds()]
+            .map(function (v) { return String(v).padStart(2, '0'); }).join(':');
+    }
+    tickClock();
+    setInterval(tickClock, 1000);
+
+    var sys = document.getElementById('ro-sys');
+    if (sys) {
+        var states = ['BOOT', 'LINK', 'SYNC', 'NOMINAL'];
+        var si = 0;
+        var seq = setInterval(function () {
+            si++;
+            sys.textContent = states[si];
+            if (si >= states.length - 1) { clearInterval(seq); }
+        }, 520);
+    }
+
+    var buf = document.getElementById('ro-buf');
+    if (buf) {
+        window.addEventListener('scroll', function () {
+            var h = document.documentElement.scrollHeight - window.innerHeight;
+            var p = h > 0 ? Math.round(window.scrollY / h * 100) : 0;
+            buf.textContent = String(Math.min(100, Math.max(0, p))).padStart(2, '0') + '%';
+        }, { passive: true });
+    }
+
+    /* ---------------- ticker feed ---------------- */
+    var feed = [
+        'SYS.CORE <em>ONLINE</em>',
+        'STACK <em>JAVA · SPRING BOOT · HIBERNATE</em>',
+        'UNIDADES DESPLEGADAS <em>04</em>',
+        'BASE <em>ARGENTINA</em> // UPLINK <em>REMOTO</em>',
+        'ESTADO <em>DISPONIBLE PARA TRABAJAR</em>',
+        'CANALES <em>GITHUB · LINKEDIN · EMAIL</em>',
+        'RENDER <em>GLASS//HUD v2.5</em>'
+    ];
+    var ticker = document.getElementById('ticker');
+    if (ticker) {
+        var html = feed.map(function (f) { return '<span>' + f + '</span>'; }).join('');
+        ticker.innerHTML = html + html;
+    }
+
+    /* ---------------- keep ScrollTrigger honest ---------------- */
+    window.addEventListener('load', function () {
+        if (window.ScrollTrigger) { ScrollTrigger.refresh(); }
+    });
+})();
+</script>
 </body>
 </html>
