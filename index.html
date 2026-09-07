@@ -300,7 +300,9 @@
 
     .topbar{
         position:absolute;top:0;left:0;right:0;height:var(--hud-top);
-        display:flex;align-items:center;justify-content:space-between;gap:1rem;
+        /* 3 columnas y no space-between: la tercera queda vacía a propósito
+           para que el nav siga centrado ahora que no hay indicador de estado */
+        display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;
         padding:0 14px;
         background:rgba(5,5,6,.86);backdrop-filter:blur(6px);
         border-bottom:1px solid var(--line);
@@ -322,7 +324,6 @@
     .nav a:hover{color:var(--cyan);border-color:rgba(34,224,255,.42);background:rgba(34,224,255,.05)}
     .nav a.is-active{color:var(--orange);border-color:rgba(255,106,18,.45);background:rgba(255,106,18,.07)}
 
-    .hud-status{display:flex;align-items:center;gap:8px;color:var(--ink-2);white-space:nowrap}
     .pulse{width:6px;height:6px;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:blink 1.7s steps(1) infinite}
     @keyframes blink{0%,58%{opacity:1}59%,100%{opacity:.12}}
 
@@ -531,9 +532,9 @@
         background:var(--acc);box-shadow:0 0 14px var(--acc);
     }
     .dossier:hover{border-color:rgba(255,255,255,.2);box-shadow:0 0 40px rgba(0,0,0,.6)}
-    .d-1{grid-column:1/9}
-    .d-2{grid-column:9/13}
-    .d-3{grid-column:4/13}
+    .d-1{grid-column:1/8}
+    .d-2{grid-column:8/13}
+    .d-3{grid-column:6/13}
     .d-4{grid-column:1/6}
 
     .d-bar{
@@ -561,7 +562,16 @@
         text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-bottom:1rem;
     }
     .block-label::before{content:'// ';color:var(--acc)}
-    .d-note{margin-top:1.1rem;font-size:.83rem;line-height:1.65;color:var(--ink-3);font-weight:300;max-width:70ch}
+    /* el alcance se comunica con un número, no con un muro de etiquetas */
+    .d-stat{
+        display:flex;align-items:baseline;gap:11px;margin-bottom:1.2rem;
+        font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+        text-transform:uppercase;color:var(--ink-2);
+    }
+    .d-stat b{
+        font-family:var(--sans);font-size:1.75rem;font-weight:500;
+        letter-spacing:-.01em;line-height:1;color:var(--acc);
+    }
 
     .chips{display:flex;flex-wrap:wrap;gap:6px}
     .chip{
@@ -757,7 +767,6 @@
                 <a href="#formacion" data-idx="04">Formación</a>
                 <a href="#contacto" data-idx="05">Contacto</a>
             </nav>
-            <div class="hud-status"><span class="pulse"></span>Disponible</div>
         </header>
 
         <div class="rail rail-l"><span>Buenos Aires · Archivo personal · v2049</span></div>
@@ -808,7 +817,6 @@
                     <div class="spec-row"><dt>Especialidad</dt><dd class="cy">Java &amp; Spring</dd></div>
                     <div class="spec-row"><dt>Base</dt><dd>Buenos Aires · AR</dd></div>
                     <div class="spec-row"><dt>Función</dt><dd>Backend · Frontend · Deploy</dd></div>
-                    <div class="spec-row"><dt>Estado</dt><dd class="hot">Disponible para trabajar</dd></div>
                 </dl>
                 <div class="spec-foot"><span class="pulse"></span>Prueba base — superada</div>
             </aside>
@@ -861,25 +869,16 @@
                     <div class="d-body">
                         <h3 class="d-title aberr">Sistema Administrativo Hotelero</h3>
                         <p class="d-year">2025 · Producción activa</p>
-                        <p class="d-desc">Sistema completo de gestión hotelera para administrar operaciones del hotel de manera eficiente. Gestiona reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.</p>
+                        <p class="d-desc">Sistema de gestión hotelera para administrar reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.</p>
 
                         <div class="d-block">
-                            <h4 class="block-label">Módulos del sistema</h4>
+                            <h4 class="block-label">Alcance</h4>
+                            <p class="d-stat"><b>14</b> módulos en producción</p>
                             <ul class="chips">
-                                <li class="chip">Novedades</li>
                                 <li class="chip">Reservas</li>
-                                <li class="chip">Calendario</li>
-                                <li class="chip">Bar</li>
-                                <li class="chip">Mucamas</li>
                                 <li class="chip">Habitaciones</li>
                                 <li class="chip">Huéspedes</li>
                                 <li class="chip">Financiero</li>
-                                <li class="chip">Gastos</li>
-                                <li class="chip">Estacionamiento</li>
-                                <li class="chip">Tarifas</li>
-                                <li class="chip chip-dev">Stock <small>en desarrollo</small></li>
-                                <li class="chip">Mensajería</li>
-                                <li class="chip">Configuración</li>
                             </ul>
                         </div>
 
@@ -890,10 +889,7 @@
                                 <li class="chip chip-tech">Hibernate</li>
                                 <li class="chip chip-tech">MySQL</li>
                                 <li class="chip chip-tech">React</li>
-                                <li class="chip chip-tech">TailwindCSS</li>
-                                <li class="chip chip-tech">REST APIs</li>
-                            </ul>
-                            <p class="d-note">Backend con Spring Boot y JPA/Hibernate. Frontend con React. Diseño responsive y optimizado.</p>
+                                </ul>
                         </div>
                     </div>
                 </article>
@@ -921,25 +917,17 @@
                     <div class="d-body">
                         <h3 class="d-title aberr">Entrena+ Atletismo</h3>
                         <p class="d-year">2023 — 2024</p>
-                        <p class="d-desc">App móvil creada en React Native para el proyecto final de Tecnicatura en Programación. La aplicación permite consultar datos actualizados de la CADA (Confederación Argentina de Atletismo) y gestionar entrenamientos, ejercicios y grupos de entrenamiento para atletas y entrenadores.</p>
+                        <p class="d-desc">App móvil para atletas y entrenadores: consulta datos de la CADA (Confederación Argentina de Atletismo) y gestiona entrenamientos, ejercicios y grupos.</p>
 
                         <div class="d-block">
-                            <h4 class="block-label">Funcionalidades</h4>
+                            <h4 class="block-label">Alcance</h4>
+                            <p class="d-stat"><b>12</b> funcionalidades</p>
                             <ul class="chips">
                                 <li class="chip">Rankings CADA</li>
-                                <li class="chip">Resultados de Torneos</li>
-                                <li class="chip">Calendario Anual</li>
-                                <li class="chip">Crear Ejercicios</li>
-                                <li class="chip">Crear Entrenamientos</li>
+                                <li class="chip">Entrenamientos</li>
                                 <li class="chip">Grupos de Entrenamiento</li>
-                                <li class="chip">Calendario Grupal</li>
-                                <li class="chip">Calendario Individual</li>
-                                <li class="chip">Agendar Entrenamientos</li>
-                                <li class="chip">Agendar Competencias</li>
-                                <li class="chip">Gestión de Administrador</li>
-                                <li class="chip">Resultados de Entrenos</li>
+                                <li class="chip">Calendario</li>
                             </ul>
-                            <p class="d-note">La app permite consultar información actualizada de la CADA incluyendo rankings, resultados de torneos y calendario anual. Los usuarios pueden crear ejercicios y entrenamientos, formar grupos de entrenamiento, y gestionar calendarios grupales e individuales para agendar entrenamientos y competencias. Los administradores de grupo pueden agendar entrenos y completar resultados de entrenos de los participantes.</p>
                         </div>
 
                         <div class="d-block">
@@ -948,9 +936,7 @@
                                 <li class="chip chip-tech">React Native</li>
                                 <li class="chip chip-tech">Java</li>
                                 <li class="chip chip-tech">Spring Boot</li>
-                                <li class="chip chip-tech">REST APIs</li>
-                            </ul>
-                            <p class="d-note">Frontend móvil construido con React Native para iOS y Android. Backend desarrollado con Java y Spring Boot para gestionar la comunicación con la API de la CADA y las funcionalidades de entrenamiento y grupos.</p>
+                                </ul>
                         </div>
 
                         <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
