@@ -108,10 +108,15 @@
     }
 
     /* ---------- PROYECCIÓN HOLOGRÁFICA ----------
-       Figura vectorial original dibujada a mano. No hay video ni bitmap:
-       todo el movimiento es CSS sobre un único set de trazos SVG. Se compone
-       en 'screen', o sea que la proyección SUMA luz al fondo en vez de taparlo
-       — por eso se integra con la escena en lugar de flotar encima. */
+       Figura vectorial original: un único set de trazos SVG reutilizado por
+       cada capa del compuesto, y todo el movimiento resuelto en CSS.
+
+       Nota de composición y de costo: la capa entera va en 'screen', así que
+       suma luz al fondo en vez de taparlo. Como screen(x, negro) = x, todo
+       negro que pintemos ADENTRO de la capa desaparece solo — por eso las
+       scanlines y la banda de refresco no llevan blend mode propio. Cada
+       mix-blend-mode extra obliga al navegador a releer el fondo en cada
+       frame, que es lo caro. Acá hay uno solo en toda la escena. */
 
     .layer-holo{
         z-index:2;
@@ -137,15 +142,14 @@
         50%    {transform:translate3d(calc(-50% + var(--px) + 9px),calc(var(--py) - 13px),0) scale(1.016)}
     }
 
-    /* halo de aire alrededor: la luz proyectada no tiene borde duro */
+    /* aire teñido alrededor: la luz proyectada no tiene borde duro */
     .holo-glow{
         position:absolute;left:50%;top:0;width:190%;height:100%;
         transform:translateX(-50%);
         background:
-            radial-gradient(ellipse 34% 30% at 50% 20%,rgba(255,92,184,.20),transparent 72%),
-            radial-gradient(ellipse 52% 40% at 50% 58%,rgba(255,47,156,.13),transparent 74%),
-            radial-gradient(ellipse 62% 26% at 50% 88%,rgba(34,224,255,.07),transparent 78%);
-        filter:blur(6px);
+            radial-gradient(ellipse 30% 26% at 50% 18%,rgba(255,146,206,.20),transparent 74%),
+            radial-gradient(ellipse 50% 40% at 50% 56%,rgba(255,47,156,.14),transparent 76%),
+            radial-gradient(ellipse 60% 26% at 50% 88%,rgba(34,224,255,.06),transparent 80%);
         animation:holoPulse 5.7s ease-in-out infinite;
     }
     @keyframes holoPulse{0%,100%{opacity:.82}50%{opacity:1}}
@@ -174,8 +178,9 @@
     @keyframes abC{0%,100%{transform:translate(-3px,0)}50%{transform:translate(-7px,2px)}}
     @keyframes abM{0%,100%{transform:translate(3px,0)}50%{transform:translate(7px,-2px)}}
 
-    /* líneas de barrido propias del holograma: recorren el cuerpo hacia arriba.
-       El paso de la trama (5px) es exactamente el recorrido, así el loop no tiene costura. */
+    /* líneas de barrido: negro sobre la figura, que el 'screen' de la capa
+       vuelve invisible. El paso de la trama (5px) es exactamente el recorrido,
+       así que el bucle no tiene costura. */
     .holo-lines{
         position:absolute;inset:-3% 0;
         background:repeating-linear-gradient(to bottom,
@@ -183,7 +188,6 @@
             rgba(0,0,0,.6) 1.5px 3px,
             rgba(0,0,0,0) 3px 4px,
             rgba(0,0,0,.3) 4px 5px);
-        mix-blend-mode:multiply;
         animation:holoCrawl 1.15s linear infinite;
         will-change:transform;
     }
@@ -194,7 +198,6 @@
         position:absolute;left:-10%;right:-10%;height:16%;top:-16%;
         background:linear-gradient(to bottom,
             transparent,rgba(210,245,255,.07) 42%,rgba(34,224,255,.11) 54%,transparent);
-        mix-blend-mode:screen;
         animation:holoWipe 6.4s cubic-bezier(.36,0,.5,1) infinite;
         will-change:transform;
     }
@@ -207,50 +210,22 @@
 
     /* salto de señal: una franja del cuerpo se desplaza un instante */
     .holo-band{
-        position:absolute;inset:0;opacity:0;mix-blend-mode:screen;
+        position:absolute;inset:0;opacity:0;
         animation:holoBand 8.6s steps(1,end) infinite;
     }
     .holo-band svg{position:absolute;inset:0;width:100%;height:100%}
     @keyframes holoBand{
         0%,22.9%  {opacity:0}
-        23%       {opacity:.55;clip-path:inset(17% 0 79% 0);transform:translateX(16px)}
+        23%       {opacity:.5;clip-path:inset(17% 0 79% 0);transform:translateX(16px)}
         24.1%     {opacity:0}
         41.3%     {opacity:0}
-        41.6%     {opacity:.4;clip-path:inset(52% 0 44% 0);transform:translateX(-12px)}
+        41.6%     {opacity:.36;clip-path:inset(52% 0 44% 0);transform:translateX(-12px)}
         42.4%     {opacity:0}
         66%       {opacity:0}
-        66.3%     {opacity:.6;clip-path:inset(31% 0 65% 0);transform:translateX(10px)}
+        66.3%     {opacity:.55;clip-path:inset(31% 0 65% 0);transform:translateX(10px)}
         67.2%     {opacity:0}
-        67.9%     {opacity:.35;clip-path:inset(35% 0 61% 0);transform:translateX(-19px)}
+        67.9%     {opacity:.32;clip-path:inset(35% 0 61% 0);transform:translateX(-19px)}
         68.8%,100%{opacity:0}
-    }
-
-    /* ---------- LLUVIA ----------
-       Columnas fijas + máscara de guiones que cae. El paso de la máscara (150px)
-       es el recorrido exacto, así que el bucle es continuo. */
-    .layer-rain{
-        z-index:56;opacity:var(--rain-op,.34);mix-blend-mode:screen;overflow:hidden;
-    }
-    .layer-rain i{
-        position:absolute;inset:-40%;
-        background-image:repeating-linear-gradient(90deg,
-            transparent 0 13px,rgba(198,240,255,.5) 13px 14px,transparent 14px 27px);
-        -webkit-mask-image:repeating-linear-gradient(to bottom,
-            transparent 0 58px,#000 74px 96px,transparent 112px 150px);
-        mask-image:repeating-linear-gradient(to bottom,
-            transparent 0 58px,#000 74px 96px,transparent 112px 150px);
-        will-change:transform;
-    }
-    .layer-rain .r1{animation:rainFall .82s linear infinite}
-    .layer-rain .r2{
-        opacity:.6;
-        background-image:repeating-linear-gradient(90deg,
-            transparent 0 29px,rgba(255,255,255,.34) 29px 30px,transparent 30px 61px);
-        animation:rainFall 1.45s linear infinite;
-    }
-    @keyframes rainFall{
-        from{transform:rotate(5deg) translateY(0)}
-        to  {transform:rotate(5deg) translateY(150px)}
     }
 
     /* retícula de puntero — HUD de spinner */
@@ -664,7 +639,6 @@
         .botbar .hide-sm{display:none}
         .holo-stage{--holo-x:56%;height:84vh;top:16vh}
         .layer-holo{--holo-op:.38}
-        .layer-rain{--rain-op:.2}
         .holo-glow{filter:none}
         .d-body{padding:24px 20px 28px}
     }
@@ -676,7 +650,7 @@
     @media (prefers-reduced-motion:reduce){
         .layer-grain,.layer-scan::after,.baseline-track,.scroll-cue i::after,.pulse{animation:none}
         .holo-stage,.holo-svg,.holo-lines,.holo-wipe,.holo-band,.holo-glow,
-        .ab-c,.ab-m,.layer-rain i{animation:none}
+        .ab-c,.ab-m{animation:none}
         .holo-wipe,.holo-band{display:none}
         .cell:hover,.ccard:hover{animation:none}
         .rv{opacity:1}
@@ -689,8 +663,11 @@
     <div class="layer layer-haze"></div>
 
     <!-- ============ PROYECCIÓN HOLOGRÁFICA ============
-         Silueta vectorial original + animación CSS. Sin video ni imagen:
-         un único <g id="joiBody"> reutilizado por cada capa del compuesto. -->
+         Silueta vectorial original + animación CSS. Sin video ni imagen.
+         La pose es deliberadamente asimétrica (peso en una cadera, pelo
+         peinado a un lado, un brazo flexionado con la mano en la cintura):
+         una figura frontal y simétrica se lee como aparición, no como
+         persona. El hueco entre antebrazo y torso es lo que más ayuda. -->
     <div class="layer layer-holo" aria-hidden="true">
         <div class="holo-stage" id="holoStage">
             <div class="holo-glow"></div>
@@ -698,64 +675,105 @@
             <svg class="holo-svg" viewBox="0 0 600 1000" preserveAspectRatio="xMidYMid meet">
                 <defs>
                     <linearGradient id="holoInk" gradientUnits="userSpaceOnUse" x1="300" y1="30" x2="300" y2="960">
-                        <stop offset="0"   stop-color="#d6f4ff"/>
-                        <stop offset=".13" stop-color="#63d3ff"/>
-                        <stop offset=".33" stop-color="#8f9bff"/>
-                        <stop offset=".55" stop-color="#ff5cb8"/>
-                        <stop offset=".70" stop-color="#ff2f9c" stop-opacity=".6"/>
-                        <stop offset=".88" stop-color="#ff2f9c" stop-opacity="0"/>
+                        <stop offset="0"   stop-color="#ffeef6"/>
+                        <stop offset=".20" stop-color="#ffd2ea"/>
+                        <stop offset=".34" stop-color="#a9dcff"/>
+                        <stop offset=".52" stop-color="#c98cf0"/>
+                        <stop offset=".68" stop-color="#ff5cb8"/>
+                        <stop offset=".80" stop-color="#ff2f9c" stop-opacity=".6"/>
+                        <stop offset=".92" stop-color="#ff2f9c" stop-opacity="0"/>
                     </linearGradient>
-                    <!-- luz de contorno: entra por la izquierda y muere hacia el centro -->
+                    <!-- luz de contorno fría, entra por la izquierda -->
                     <linearGradient id="holoRim" gradientUnits="userSpaceOnUse" x1="150" y1="0" x2="345" y2="0">
-                        <stop offset="0"   stop-color="#f2fdff" stop-opacity=".8"/>
-                        <stop offset=".32" stop-color="#a6e6ff" stop-opacity=".22"/>
-                        <stop offset="1"   stop-color="#a6e6ff" stop-opacity="0"/>
+                        <stop offset="0"   stop-color="#d6f6ff" stop-opacity=".7"/>
+                        <stop offset=".3"  stop-color="#5fd0ff" stop-opacity=".2"/>
+                        <stop offset="1"   stop-color="#5fd0ff" stop-opacity="0"/>
                     </linearGradient>
                     <filter id="holoShade" x="-15%" y="-15%" width="130%" height="130%">
-                        <feGaussianBlur stdDeviation="6"/>
+                        <feGaussianBlur stdDeviation="5"/>
                     </filter>
                     <filter id="holoSoft" x="-30%" y="-18%" width="160%" height="136%">
-                        <feGaussianBlur stdDeviation="24"/>
+                        <feGaussianBlur stdDeviation="18"/>
                     </filter>
 
-                    <g id="joiBody">
-                        <!-- melena: el remate interior se mete detrás del cuello -->
-                        <path id="joiHair" transform="rotate(-4 300 252)" d="M300 42C256 42 226 80 222 128 219 156 208 176 202 200 194 232 194 246 196 270 198 300 199 320 202 340 205 366 207 392 210 412 213 434 216 450 220 462 228 452 235 442 238 430 243 410 246 390 246 370 246 344 242 322 242 300 242 280 243 262 246 250 249 240 252 234 256 230L344 230 C348 234 351 240 354 250 357 262 358 280 358 300 358 322 354 344 354 370 354 390 357 410 362 430 365 442 372 452 380 462 384 450 387 434 390 412 393 392 395 366 398 340 401 320 402 300 404 270 406 246 406 232 398 200 392 176 381 156 378 128 374 80 344 42 300 42Z"/>
-                        <!-- cabeza -->
-                        <path transform="rotate(-4 300 252)" d="M300 66C268 66 249 90 248 128 247 158 255 184 270 197 279 204 290 207 300 207 310 207 321 204 330 197 345 184 353 158 352 128 351 90 332 66 300 66Z"/>
-                        <!-- cuello, hombros, torso: cintura marcada y cadera -->
-                        <path d="M272 198C272 224 266 240 254 248
-                                 226 262 208 276 202 298 197 326 214 354 224 384
-                                 234 422 240 464 242 502 244 542 226 576 218 618
-                                 210 666 210 718 214 770 218 832 222 892 224 950
-                                 L376 950C378 892 382 832 386 770
-                                 390 718 390 666 382 618 374 576 356 542 358 502
-                                 360 464 366 422 376 384 386 354 403 326 398 298
-                                 392 276 374 262 346 248 334 240 328 224 328 198Z"/>
-                        <!-- brazos separados del torso: el hueco de la cintura es
-                             lo que vuelve legible la figura a baja opacidad -->
-                        <path d="M204 300C184 312 174 342 172 378
-                                 170 420 176 462 186 500 194 530 202 556 206 580
-                                 216 570 224 550 226 528 228 500 222 468 218 436
-                                 214 400 212 348 220 314Z"/>
-                        <path d="M396 300C416 312 426 342 428 378
-                                 430 420 424 462 414 500 406 530 398 556 394 580
-                                 384 570 376 550 374 528 372 500 378 468 382 436
-                                 386 400 388 348 380 314Z"/>
+                    <!-- pelo: no es una cortina simétrica. Casquete + un mechón
+                         largo sobre un hombro y uno corto del otro lado. -->
+                    <g id="joiHair" transform="rotate(-5 300 252)">
+                        <path d="M300 38C272 38 246 58 232 90 220 118 214 152 212 206
+                                 211 228 212 242 214 254 224 254 232 252 236 250
+                                 234 226 233 214 234 204 236 172 238 140 250 116
+                                 262 94 278 86 300 86 322 86 338 96 352 120
+                                 360 140 362 172 364 210 366 250 370 280 374 300
+                                 384 300 392 298 398 296 398 262 396 226 392 196
+                                 388 152 382 120 372 92 358 56 330 38 300 38Z"/>
+                        <path d="M368 210C376 258 382 306 390 352 398 400 406 442 416 480
+                                 422 504 428 522 434 538 446 520 452 494 452 462
+                                 452 422 444 378 436 334 428 290 420 246 414 204
+                                 400 198 382 200 368 210Z"/>
+                        <path d="M215 218C211 252 209 286 211 318 213 342 217 360 221 374
+                                 231 360 237 340 239 316 241 288 237 256 237 224
+                                 229 216 221 214 215 218Z"/>
                     </g>
 
-                    <!-- Modelado interno. Va en 'multiply' sobre la figura: el pelo
-                         se oscurece y la cara queda calada en blanco (en multiply el
-                         blanco es la identidad). Sin esto la cabeza es una mancha. -->
+                    <g id="joiBody">
+                        <use href="#joiHair"/>
+                        <!-- cabeza, en tres cuartos -->
+                        <path transform="rotate(-5 300 252)" d="M300 64C270 64 251 88 250 126
+                                 249 154 256 178 269 193 278 203 289 208 300 208
+                                 312 208 323 202 331 191 344 174 352 152 351 124
+                                 350 88 330 64 300 64Z"/>
+                        <!-- torso: cintura marcada y cadera cargada hacia un lado -->
+                        <path d="M280 200C280 226 274 242 262 250
+                                 234 264 214 278 208 294 203 322 218 354 228 384
+                                 238 422 244 464 246 502 248 542 226 574 216 618
+                                 208 666 210 720 216 774 220 834 226 894 228 950
+                                 L380 950C382 894 386 834 390 772
+                                 392 720 392 670 384 618 376 574 360 544 362 502
+                                 364 464 370 422 380 384 390 354 405 328 400 306
+                                 394 282 374 264 346 250 334 242 328 226 328 200Z"/>
+                        <!-- brazo que cuelga -->
+                        <path d="M208 296C188 308 178 338 176 376
+                                 174 418 180 460 188 498 194 526 200 552 204 578
+                                 214 570 222 552 224 530 226 502 220 470 216 438
+                                 212 402 210 350 220 312Z"/>
+                        <!-- brazo flexionado, mano apoyada en la cintura -->
+                        <path d="M398 302C412 314 421 326 424 340
+                                 430 362 434 382 434 404 434 428 432 446 428 462
+                                 420 482 412 498 404 512 394 528 384 538 376 545
+                                 370 551 364 555 360 556 357 550 357 545 358 540
+                                 366 532 374 524 382 516 392 504 397 490 400 478
+                                 404 462 404 446 404 430 404 412 402 394 400 378
+                                 397 360 394 344 392 330 390 318 389 310 388 306Z"/>
+                    </g>
+
+                    <!-- Modelado interno, en 'multiply' sobre la figura: oscurece
+                         el pelo y deja la cara calada (en multiply el blanco es la
+                         identidad). Los rasgos y el escote son lo que separa una
+                         persona de una silueta luminosa. -->
                     <g id="joiShade" filter="url(#holoShade)">
                         <use href="#joiHair" fill="#1d0725"/>
-                        <g transform="rotate(-4 300 252)">
-                            <path fill="#ffffff" d="M300 90C275 90 259 108 258 136 257 162 265 184 278 196 285 202 293 205 300 205 307 205 315 202 322 196 335 184 343 162 342 136 341 108 325 90 300 90Z"/>
-                            <ellipse cx="278" cy="140" rx="13" ry="5" fill="#7a3a68"/>
-                            <ellipse cx="323" cy="140" rx="13" ry="5" fill="#7a3a68"/>
-                            <ellipse cx="300" cy="180" rx="10" ry="3.5" fill="#8a4468"/>
-                            <path fill="#40142f" d="M270 198c9 11 19 16 30 16s21-5 30-16c-2 20-13 31-30 31s-28-11-30-31z"/>
+                        <g transform="rotate(-5 300 252)">
+                            <path fill="#fff2f6" d="M300 84C274 84 256 102 252 132
+                                 249 158 256 182 270 196 279 205 290 210 300 210
+                                 311 210 322 205 331 195 345 180 352 156 349 130
+                                 345 100 326 84 300 84Z"/>
+                            <path fill="none" stroke="#7a3a68" stroke-width="3.5" stroke-linecap="round"
+                                  d="M267 130C275 124 285 123 293 126"/>
+                            <path fill="none" stroke="#7a3a68" stroke-width="3.5" stroke-linecap="round"
+                                  d="M311 125C319 122 329 123 336 128"/>
+                            <ellipse cx="278" cy="144" rx="11" ry="4.5" fill="#6c2f5b"/>
+                            <ellipse cx="322" cy="141" rx="10" ry="4.2" fill="#6c2f5b"/>
+                            <path fill="#8a4468" d="M302 152c2 12 4 19 8 25-4 3-9 3-13 1 3-8 4-17 5-26z"/>
+                            <ellipse cx="302" cy="184" rx="11" ry="4" fill="#93406a"/>
+                            <path fill="#40142f" d="M272 198c9 11 18 16 28 16s19-5 28-16c-2 20-12 32-28 32s-26-12-28-32z"/>
                         </g>
+                        <!-- escote del vestido y clavículas -->
+                        <path fill="none" stroke="#5a1f43" stroke-width="7" stroke-linecap="round"
+                              d="M236 274C260 318 279 338 301 338 323 338 343 318 366 274"/>
+                        <path fill="none" stroke="#6b2a4e" stroke-width="4" stroke-linecap="round"
+                              d="M262 268C276 277 288 281 298 282"/>
+                        <path fill="none" stroke="#6b2a4e" stroke-width="4" stroke-linecap="round"
+                              d="M342 266C328 276 316 280 306 281"/>
                     </g>
                 </defs>
 
@@ -785,7 +803,7 @@
         </div>
     </div>
 
-    <div class="layer layer-rain" aria-hidden="true"><i class="r1"></i><i class="r2"></i></div>
+
     <div class="layer layer-vignette"></div>
     <div class="layer layer-grain"></div>
     <div class="layer layer-scan"></div>
