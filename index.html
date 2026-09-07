@@ -93,9 +93,18 @@
     }
     @keyframes sweep{0%{transform:translateY(-30vh)}100%{transform:translateY(125vh)}}
 
+    /* Sin mix-blend-mode. Estaba en z-index 59, o sea ENCIMA del spinner,
+       del holograma y del contenido: cada frame que cualquiera de ellos se
+       movía, Chrome tenía que recomponer el grano contra el fondo en todo el
+       viewport. Era la fuente principal de tirones.
+
+       Para que siga leyéndose como grano sin el blend, el feColorMatrix fija
+       el RGB en blanco y saca el alfa del ruido: quedan destellos sobre
+       transparente que suman luz, en vez de un campo gris que necesitaba
+       'overlay' para no velar la página. */
     .layer-grain{
-        z-index:59;opacity:.15;mix-blend-mode:overlay;
-        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.6'/></svg>");
+        z-index:59;opacity:.055;
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 1 0 0 0 0'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>");
         animation:grain .55s steps(1) infinite;
     }
     @keyframes grain{
@@ -222,9 +231,9 @@
         88.7%{opacity:.85}
     }
 
-    /* líneas de barrido: negro sobre la figura, que el 'screen' vuelve
-       invisible. Suaves, porque la imagen ya trae trama propia; lo que
-       aportan es el arrastre. El paso (5px) es exactamente el recorrido,
+    /* líneas de barrido: negro semitransparente encima de la figura, que la
+       oscurece en franjas. Suaves, porque la imagen ya trae trama propia; lo
+       que aportan es el arrastre. El paso (5px) es exactamente el recorrido,
        así que el bucle no tiene costura. */
     .holo-lines{
         position:absolute;inset:-3% 0;
@@ -234,7 +243,6 @@
             rgba(0,0,0,0) 3px 4px,
             rgba(0,0,0,.2) 4px 5px);
         animation:holoCrawl 1.15s linear infinite;
-        will-change:transform;
     }
     @keyframes holoCrawl{to{transform:translate3d(0,-5px,0)}}
 
@@ -244,7 +252,6 @@
         background:linear-gradient(to bottom,
             transparent,rgba(210,245,255,.06) 42%,rgba(34,224,255,.1) 54%,transparent);
         animation:holoWipe 6.4s cubic-bezier(.36,0,.5,1) infinite;
-        will-change:transform;
     }
     @keyframes holoWipe{
         0%  {transform:translateY(0);opacity:0}
@@ -791,8 +798,7 @@
             <div>
                 <div class="hero-id">
                     <span class="bar"></span>
-                    <span class="kicker">Exp. date <b>—</b> sin límite</span>
-                </div>
+                    </div>
 
                 <h1 class="name glitch" id="heroName" data-text="TADEO">
                     <span class="l1">Tadeo</span>
@@ -813,19 +819,19 @@
                 </div>
                 <dl>
                     <div class="spec-row"><dt>Designación</dt><dd>Tadeo Rimoli</dd></div>
-                    <div class="spec-row"><dt>Clase</dt><dd>Full Stack / JVM</dd></div>
-                    <div class="spec-row"><dt>Especialidad</dt><dd class="cy">Java &amp; Spring</dd></div>
-                    <div class="spec-row"><dt>Base</dt><dd>Buenos Aires · AR</dd></div>
-                    <div class="spec-row"><dt>Función</dt><dd>Backend · Frontend · Deploy</dd></div>
+                    <div class="spec-row"><dt>Clase</dt><dd>Full Stack</dd></div>
+                    <div class="spec-row"><dt>Especialidad</dt><dd class="cy">Java · Spring · React</dd></div>
+                    <div class="spec-row"><dt>Base</dt><dd>Mar del Plata · Buenos Aires</dd></div>
+                    <div class="spec-row"><dt>Función</dt><dd>Backend · Frontend · Deploy · Automatización</dd></div>
                 </dl>
-                <div class="spec-foot"><span class="pulse"></span>Prueba base — superada</div>
+                <div class="spec-foot"><span class="pulse"></span>Registro verificado</div>
             </aside>
         </section>
 
         <div class="baseline">
             <div class="baseline-track">
-                <span>Células · <b>Interconectadas</b> · dentro de células · interconectadas · dentro de una sola línea · <b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · sistemas que resisten ·</span>
-                <span>Células · <b>Interconectadas</b> · dentro de células · interconectadas · dentro de una sola línea · <b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · sistemas que resisten ·</span>
+                <span><b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · <b>Node</b> · <b>Supabase</b> · sistemas que resisten · automatización de procesos ·</span>
+                <span><b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · <b>Node</b> · <b>Supabase</b> · sistemas que resisten · automatización de procesos ·</span>
             </div>
         </div>
 
@@ -835,7 +841,7 @@
                 <span class="sec-idx">01</span>
                 <h2 class="sec-title aberr" data-scramble>Tecnologías</h2>
                 <div class="sec-line"></div>
-                <span class="sec-meta">07 unidades / operativas</span>
+                <span class="sec-meta">11 unidades / operativas</span>
             </div>
 
             <div class="stack rv">
@@ -846,6 +852,10 @@
                 <div class="cell"><span class="cell-idx">005</span><div><h3 class="cell-name">React</h3><p class="cell-cat">Interfaz · Frontend</p></div></div>
                 <div class="cell"><span class="cell-idx">006</span><div><h3 class="cell-name">GitHub</h3><p class="cell-cat">Control de versiones</p></div></div>
                 <div class="cell"><span class="cell-idx">007</span><div><h3 class="cell-name">Docker</h3><p class="cell-cat">Contenedores · Deploy</p></div></div>
+                <div class="cell"><span class="cell-idx">008</span><div><h3 class="cell-name">Node</h3><p class="cell-cat">Runtime · Backend</p></div></div>
+                <div class="cell"><span class="cell-idx">009</span><div><h3 class="cell-name">Supabase</h3><p class="cell-cat">Datos · Backend as a Service</p></div></div>
+                <div class="cell"><span class="cell-idx">010</span><div><h3 class="cell-name">Claude Code</h3><p class="cell-cat">Agentes · Terminal</p></div></div>
+                <div class="cell"><span class="cell-idx">011</span><div><h3 class="cell-name">Cursor</h3><p class="cell-cat">Agentes · Editor</p></div></div>
             </div>
         </section>
 
@@ -966,11 +976,20 @@
                 <span class="sec-idx">03</span>
                 <h2 class="sec-title aberr" data-scramble>Experiencia</h2>
                 <div class="sec-line"></div>
-                <span class="sec-meta">02 registros / verificados</span>
+                <span class="sec-meta">03 registros / verificados</span>
             </div>
 
             <div class="ledger">
                 <article class="rec rv">
+                <div class="rec-time">2026 — Actualidad<small>Registro activo</small></div>
+                <div>
+                    <h3 class="rec-role">Práctica Profesional Supervisada</h3>
+                    <p class="rec-org">Luleamindful · Mar del Plata</p>
+                    <p class="rec-desc">Automatización del análisis de ventas y desarrollo de un sistema central de manejo de datos: sucursales, gastos, ventas y balance. Trabajo en equipo con Node, Supabase y React.</p>
+                </div>
+            </article>
+
+            <article class="rec rv">
                     <div class="rec-time">2024 — Actualidad<small>Registro activo</small></div>
                     <div>
                         <h3 class="rec-role">Desarrollador Freelance</h3>
@@ -1120,7 +1139,7 @@
             }
             if (holo){
                 const fade = Math.min(1, window.scrollY / (window.innerHeight * 0.75));
-                holo.style.setProperty('--holo-op', (0.62 - fade * 0.46).toFixed(3));
+                holo.style.setProperty('--holo-op', (0.62 - fade * 0.50).toFixed(3));
             }
 
             railRead.textContent = current ? current.dataset.sec : 'SEC 00 — INICIO';
