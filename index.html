@@ -107,6 +107,152 @@
         background:radial-gradient(ellipse 78% 66% at 50% 45%,transparent 38%,rgba(0,0,0,.75) 100%);
     }
 
+    /* ---------- PROYECCIÓN HOLOGRÁFICA ----------
+       Figura vectorial original dibujada a mano. No hay video ni bitmap:
+       todo el movimiento es CSS sobre un único set de trazos SVG. Se compone
+       en 'screen', o sea que la proyección SUMA luz al fondo en vez de taparlo
+       — por eso se integra con la escena en lugar de flotar encima. */
+
+    .layer-holo{
+        z-index:2;
+        mix-blend-mode:screen;
+        opacity:var(--holo-op,.62);
+        overflow:hidden;
+        transition:opacity 400ms linear;
+    }
+    .holo-stage{
+        --px:0px; --py:0px;
+        position:absolute;
+        left:var(--holo-x,60%);
+        top:4vh;
+        height:108vh;
+        aspect-ratio:600/1000;
+        transform:translate3d(calc(-50% + var(--px)),var(--py),0);
+        will-change:transform;
+        animation:holoDrift 23s ease-in-out infinite;
+    }
+    /* la proyección nunca se queda del todo quieta */
+    @keyframes holoDrift{
+        0%,100%{transform:translate3d(calc(-50% + var(--px)),var(--py),0) scale(1)}
+        50%    {transform:translate3d(calc(-50% + var(--px) + 9px),calc(var(--py) - 13px),0) scale(1.016)}
+    }
+
+    /* halo de aire alrededor: la luz proyectada no tiene borde duro */
+    .holo-glow{
+        position:absolute;left:50%;top:0;width:190%;height:100%;
+        transform:translateX(-50%);
+        background:
+            radial-gradient(ellipse 34% 30% at 50% 20%,rgba(255,92,184,.20),transparent 72%),
+            radial-gradient(ellipse 52% 40% at 50% 58%,rgba(255,47,156,.13),transparent 74%),
+            radial-gradient(ellipse 62% 26% at 50% 88%,rgba(34,224,255,.07),transparent 78%);
+        filter:blur(6px);
+        animation:holoPulse 5.7s ease-in-out infinite;
+    }
+    @keyframes holoPulse{0%,100%{opacity:.82}50%{opacity:1}}
+
+    .holo-svg{
+        position:absolute;inset:0;width:100%;height:100%;
+        /* se disuelve hacia los bordes: nunca hay un recorte duro */
+        -webkit-mask-image:radial-gradient(ellipse 64% 72% at 50% 34%,#000 30%,rgba(0,0,0,.62) 64%,transparent 92%);
+        mask-image:radial-gradient(ellipse 64% 72% at 50% 34%,#000 30%,rgba(0,0,0,.62) 64%,transparent 92%);
+        animation:holoFlicker 8.3s steps(1,end) infinite;
+    }
+    /* parpadeo eléctrico: intervalos irregulares para que no suene a metrónomo */
+    @keyframes holoFlicker{
+        0%,6.4%,7.1%,19.4%,20.1%,42.9%,43.7%,57%,71.8%,72.6%,88.4%,89%,100%{opacity:1}
+        6.7%{opacity:.5}
+        19.7%{opacity:.76}
+        43.2%{opacity:.38}
+        72.1%{opacity:.63}
+        88.7%{opacity:.85}
+    }
+
+    /* aberración cromática: el proyector no alinea del todo los canales */
+    .holo-ab use{mix-blend-mode:screen;opacity:.5}
+    .ab-c{animation:abC 6.2s ease-in-out infinite}
+    .ab-m{animation:abM 6.2s ease-in-out infinite}
+    @keyframes abC{0%,100%{transform:translate(-3px,0)}50%{transform:translate(-7px,2px)}}
+    @keyframes abM{0%,100%{transform:translate(3px,0)}50%{transform:translate(7px,-2px)}}
+
+    /* líneas de barrido propias del holograma: recorren el cuerpo hacia arriba.
+       El paso de la trama (5px) es exactamente el recorrido, así el loop no tiene costura. */
+    .holo-lines{
+        position:absolute;inset:-3% 0;
+        background:repeating-linear-gradient(to bottom,
+            rgba(0,0,0,0) 0 1.5px,
+            rgba(0,0,0,.6) 1.5px 3px,
+            rgba(0,0,0,0) 3px 4px,
+            rgba(0,0,0,.3) 4px 5px);
+        mix-blend-mode:multiply;
+        animation:holoCrawl 1.15s linear infinite;
+        will-change:transform;
+    }
+    @keyframes holoCrawl{to{transform:translate3d(0,-5px,0)}}
+
+    /* banda de refresco que baja por la figura */
+    .holo-wipe{
+        position:absolute;left:-10%;right:-10%;height:16%;top:-16%;
+        background:linear-gradient(to bottom,
+            transparent,rgba(210,245,255,.07) 42%,rgba(34,224,255,.11) 54%,transparent);
+        mix-blend-mode:screen;
+        animation:holoWipe 6.4s cubic-bezier(.36,0,.5,1) infinite;
+        will-change:transform;
+    }
+    @keyframes holoWipe{
+        0%  {transform:translateY(0);opacity:0}
+        7%  {opacity:1}
+        62% {opacity:1}
+        70%,100%{transform:translateY(740%);opacity:0}
+    }
+
+    /* salto de señal: una franja del cuerpo se desplaza un instante */
+    .holo-band{
+        position:absolute;inset:0;opacity:0;mix-blend-mode:screen;
+        animation:holoBand 8.6s steps(1,end) infinite;
+    }
+    .holo-band svg{position:absolute;inset:0;width:100%;height:100%}
+    @keyframes holoBand{
+        0%,22.9%  {opacity:0}
+        23%       {opacity:.55;clip-path:inset(17% 0 79% 0);transform:translateX(16px)}
+        24.1%     {opacity:0}
+        41.3%     {opacity:0}
+        41.6%     {opacity:.4;clip-path:inset(52% 0 44% 0);transform:translateX(-12px)}
+        42.4%     {opacity:0}
+        66%       {opacity:0}
+        66.3%     {opacity:.6;clip-path:inset(31% 0 65% 0);transform:translateX(10px)}
+        67.2%     {opacity:0}
+        67.9%     {opacity:.35;clip-path:inset(35% 0 61% 0);transform:translateX(-19px)}
+        68.8%,100%{opacity:0}
+    }
+
+    /* ---------- LLUVIA ----------
+       Columnas fijas + máscara de guiones que cae. El paso de la máscara (150px)
+       es el recorrido exacto, así que el bucle es continuo. */
+    .layer-rain{
+        z-index:56;opacity:var(--rain-op,.34);mix-blend-mode:screen;overflow:hidden;
+    }
+    .layer-rain i{
+        position:absolute;inset:-40%;
+        background-image:repeating-linear-gradient(90deg,
+            transparent 0 13px,rgba(198,240,255,.5) 13px 14px,transparent 14px 27px);
+        -webkit-mask-image:repeating-linear-gradient(to bottom,
+            transparent 0 58px,#000 74px 96px,transparent 112px 150px);
+        mask-image:repeating-linear-gradient(to bottom,
+            transparent 0 58px,#000 74px 96px,transparent 112px 150px);
+        will-change:transform;
+    }
+    .layer-rain .r1{animation:rainFall .82s linear infinite}
+    .layer-rain .r2{
+        opacity:.6;
+        background-image:repeating-linear-gradient(90deg,
+            transparent 0 29px,rgba(255,255,255,.34) 29px 30px,transparent 30px 61px);
+        animation:rainFall 1.45s linear infinite;
+    }
+    @keyframes rainFall{
+        from{transform:rotate(5deg) translateY(0)}
+        to  {transform:rotate(5deg) translateY(150px)}
+    }
+
     /* retícula de puntero — HUD de spinner */
     .reticle{position:fixed;inset:0;z-index:57;pointer-events:none;opacity:0;transition:opacity 160ms steps(3)}
     .reticle.on{opacity:1}
@@ -499,6 +645,10 @@
         .d-1,.d-2,.d-3,.d-4{grid-column:1/-1}
         .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:span 4}
     }
+    @media (max-width:1180px){
+        .holo-stage{--holo-x:74%;height:96vh;top:10vh}
+        .layer-holo{--holo-op:.5}
+    }
     @media (max-width:860px){
         :root{--rail:0px}
         .rail{display:none}
@@ -512,6 +662,10 @@
         .rec-time{padding-top:0}
         .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:1/-1;min-height:0}
         .botbar .hide-sm{display:none}
+        .holo-stage{--holo-x:56%;height:84vh;top:16vh}
+        .layer-holo{--holo-op:.38}
+        .layer-rain{--rain-op:.2}
+        .holo-glow{filter:none}
         .d-body{padding:24px 20px 28px}
     }
     @media (max-width:520px){
@@ -521,6 +675,9 @@
 
     @media (prefers-reduced-motion:reduce){
         .layer-grain,.layer-scan::after,.baseline-track,.scroll-cue i::after,.pulse{animation:none}
+        .holo-stage,.holo-svg,.holo-lines,.holo-wipe,.holo-band,.holo-glow,
+        .ab-c,.ab-m,.layer-rain i{animation:none}
+        .holo-wipe,.holo-band{display:none}
         .cell:hover,.ccard:hover{animation:none}
         .rv{opacity:1}
     }
@@ -530,6 +687,105 @@
 
     <div class="layer layer-grid"></div>
     <div class="layer layer-haze"></div>
+
+    <!-- ============ PROYECCIÓN HOLOGRÁFICA ============
+         Silueta vectorial original + animación CSS. Sin video ni imagen:
+         un único <g id="joiBody"> reutilizado por cada capa del compuesto. -->
+    <div class="layer layer-holo" aria-hidden="true">
+        <div class="holo-stage" id="holoStage">
+            <div class="holo-glow"></div>
+
+            <svg class="holo-svg" viewBox="0 0 600 1000" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <linearGradient id="holoInk" gradientUnits="userSpaceOnUse" x1="300" y1="30" x2="300" y2="960">
+                        <stop offset="0"   stop-color="#d6f4ff"/>
+                        <stop offset=".13" stop-color="#63d3ff"/>
+                        <stop offset=".33" stop-color="#8f9bff"/>
+                        <stop offset=".55" stop-color="#ff5cb8"/>
+                        <stop offset=".70" stop-color="#ff2f9c" stop-opacity=".6"/>
+                        <stop offset=".88" stop-color="#ff2f9c" stop-opacity="0"/>
+                    </linearGradient>
+                    <!-- luz de contorno: entra por la izquierda y muere hacia el centro -->
+                    <linearGradient id="holoRim" gradientUnits="userSpaceOnUse" x1="150" y1="0" x2="345" y2="0">
+                        <stop offset="0"   stop-color="#f2fdff" stop-opacity=".8"/>
+                        <stop offset=".32" stop-color="#a6e6ff" stop-opacity=".22"/>
+                        <stop offset="1"   stop-color="#a6e6ff" stop-opacity="0"/>
+                    </linearGradient>
+                    <filter id="holoShade" x="-15%" y="-15%" width="130%" height="130%">
+                        <feGaussianBlur stdDeviation="6"/>
+                    </filter>
+                    <filter id="holoSoft" x="-30%" y="-18%" width="160%" height="136%">
+                        <feGaussianBlur stdDeviation="24"/>
+                    </filter>
+
+                    <g id="joiBody">
+                        <!-- melena: el remate interior se mete detrás del cuello -->
+                        <path id="joiHair" transform="rotate(-4 300 252)" d="M300 42C256 42 226 80 222 128 219 156 208 176 202 200 194 232 194 246 196 270 198 300 199 320 202 340 205 366 207 392 210 412 213 434 216 450 220 462 228 452 235 442 238 430 243 410 246 390 246 370 246 344 242 322 242 300 242 280 243 262 246 250 249 240 252 234 256 230L344 230 C348 234 351 240 354 250 357 262 358 280 358 300 358 322 354 344 354 370 354 390 357 410 362 430 365 442 372 452 380 462 384 450 387 434 390 412 393 392 395 366 398 340 401 320 402 300 404 270 406 246 406 232 398 200 392 176 381 156 378 128 374 80 344 42 300 42Z"/>
+                        <!-- cabeza -->
+                        <path transform="rotate(-4 300 252)" d="M300 66C268 66 249 90 248 128 247 158 255 184 270 197 279 204 290 207 300 207 310 207 321 204 330 197 345 184 353 158 352 128 351 90 332 66 300 66Z"/>
+                        <!-- cuello, hombros, torso: cintura marcada y cadera -->
+                        <path d="M272 198C272 224 266 240 254 248
+                                 226 262 208 276 202 298 197 326 214 354 224 384
+                                 234 422 240 464 242 502 244 542 226 576 218 618
+                                 210 666 210 718 214 770 218 832 222 892 224 950
+                                 L376 950C378 892 382 832 386 770
+                                 390 718 390 666 382 618 374 576 356 542 358 502
+                                 360 464 366 422 376 384 386 354 403 326 398 298
+                                 392 276 374 262 346 248 334 240 328 224 328 198Z"/>
+                        <!-- brazos separados del torso: el hueco de la cintura es
+                             lo que vuelve legible la figura a baja opacidad -->
+                        <path d="M204 300C184 312 174 342 172 378
+                                 170 420 176 462 186 500 194 530 202 556 206 580
+                                 216 570 224 550 226 528 228 500 222 468 218 436
+                                 214 400 212 348 220 314Z"/>
+                        <path d="M396 300C416 312 426 342 428 378
+                                 430 420 424 462 414 500 406 530 398 556 394 580
+                                 384 570 376 550 374 528 372 500 378 468 382 436
+                                 386 400 388 348 380 314Z"/>
+                    </g>
+
+                    <!-- Modelado interno. Va en 'multiply' sobre la figura: el pelo
+                         se oscurece y la cara queda calada en blanco (en multiply el
+                         blanco es la identidad). Sin esto la cabeza es una mancha. -->
+                    <g id="joiShade" filter="url(#holoShade)">
+                        <use href="#joiHair" fill="#1d0725"/>
+                        <g transform="rotate(-4 300 252)">
+                            <path fill="#ffffff" d="M300 90C275 90 259 108 258 136 257 162 265 184 278 196 285 202 293 205 300 205 307 205 315 202 322 196 335 184 343 162 342 136 341 108 325 90 300 90Z"/>
+                            <ellipse cx="278" cy="140" rx="13" ry="5" fill="#7a3a68"/>
+                            <ellipse cx="323" cy="140" rx="13" ry="5" fill="#7a3a68"/>
+                            <ellipse cx="300" cy="180" rx="10" ry="3.5" fill="#8a4468"/>
+                            <path fill="#40142f" d="M270 198c9 11 19 16 30 16s21-5 30-16c-2 20-13 31-30 31s-28-11-30-31z"/>
+                        </g>
+                    </g>
+                </defs>
+
+                <!-- 1. sangrado: la proyección tiñe el aire que la rodea -->
+                <use href="#joiBody" fill="url(#holoInk)" filter="url(#holoSoft)" opacity=".7"/>
+
+                <!-- 2. canales desalineados -->
+                <g class="holo-ab">
+                    <use href="#joiBody" fill="#1fd8ff" class="ab-c"/>
+                    <use href="#joiBody" fill="#ff2f9c" class="ab-m"/>
+                </g>
+
+                <!-- 3. núcleo, modelado y luz de contorno -->
+                <use href="#joiBody" fill="url(#holoInk)" opacity=".72"/>
+                <use href="#joiShade" opacity=".8" style="mix-blend-mode:multiply"/>
+                <use href="#joiBody" fill="url(#holoRim)"/>
+            </svg>
+
+            <div class="holo-band">
+                <svg viewBox="0 0 600 1000" preserveAspectRatio="xMidYMid meet">
+                    <use href="#joiBody" fill="#cdf3ff"/>
+                </svg>
+            </div>
+
+            <div class="holo-lines"></div>
+            <div class="holo-wipe"></div>
+        </div>
+    </div>
+
+    <div class="layer layer-rain" aria-hidden="true"><i class="r1"></i><i class="r2"></i></div>
     <div class="layer layer-vignette"></div>
     <div class="layer layer-grain"></div>
     <div class="layer layer-scan"></div>
@@ -910,6 +1166,8 @@
         const navLinks = Array.from(document.querySelectorAll('.nav a'));
         const sections = Array.from(document.querySelectorAll('.sec[data-sec]'));
         let ticking = false;
+        const holo = document.getElementById('holoStage');
+        const holoLayer = document.querySelector('.layer-holo');
 
         function onScroll(){
             const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -923,6 +1181,16 @@
                 const r = s.getBoundingClientRect();
                 if (r.top <= probe && r.bottom > probe) current = s;
             }
+            /* la proyección está lejos: se desplaza a ~1/8 del contenido y se
+               apaga al entrar en las secciones, para no pelear con el texto */
+            if (holo && !reduced){
+                holo.style.setProperty('--py', (-Math.min(window.scrollY * 0.08, 90)).toFixed(1)+'px');
+            }
+            if (holoLayer){
+                const fade = Math.min(1, window.scrollY / (window.innerHeight * 0.75));
+                holoLayer.style.setProperty('--holo-op', (0.62 - fade * 0.46).toFixed(3));
+            }
+
             railRead.textContent = current ? current.dataset.sec : 'SEC 00 — INICIO';
             navLinks.forEach(a => a.classList.toggle('is-active', !!current && a.getAttribute('href') === '#'+current.id));
             ticking = false;
@@ -948,6 +1216,9 @@
                         ry.style.left = mx+'px';
                         rdot.style.left = mx+'px';
                         rdot.style.top = my+'px';
+                        if (holo && !reduced){
+                            holo.style.setProperty('--px', ((mx / window.innerWidth - 0.5) * -26).toFixed(1)+'px');
+                        }
                         queued = false;
                     });
                 }
