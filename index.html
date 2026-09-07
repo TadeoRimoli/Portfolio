@@ -108,39 +108,91 @@
         background:radial-gradient(ellipse 78% 66% at 50% 45%,transparent 38%,rgba(0,0,0,.75) 100%);
     }
 
-    /* ---------- PROYECCIÓN HOLOGRÁFICA ----------
-       La figura es un WebP sobre negro puro. La capa entera va en 'screen',
-       así que el negro de la imagen desaparece solo: no hace falta recortarla
-       ni darle transparencia, y la luz se SUMA al fondo en vez de taparlo.
-       Por eso mismo el negro que pintamos ADENTRO (scanlines, banda de
-       refresco) tampoco se ve: screen(x, negro) = x. Un solo mix-blend-mode
-       en toda la escena — cada uno extra obliga a releer el fondo por frame.
+    /* ---------- SPINNER Y PROYECCIÓN HOLOGRÁFICA ----------
+       Las dos imágenes van sobre negro puro y se componen SIN blend.
 
-       La imagen ya trae su propia trama y su fringe cromático. Lo que aporta
-       el CSS es el movimiento: sin eso se lee como una foto pegada. */
+       Hubo una versión con mix-blend-mode:screen. Se descartó: Chrome
+       descarta el blend cuando el subárbol contiene una capa promovida, y
+       adentro hay transforms animados que se promueven solos — la figura
+       desaparecía de forma intermitente y sin ningún error. Además obliga a
+       recomponer toda la superficie del elemento contra el fondo en cada
+       frame, que era buena parte de la lentitud.
 
-    .layer-holo{
-        z-index:2;
-        mix-blend-mode:screen;
-        opacity:var(--holo-op,.72);
-        overflow:hidden;
-        transition:opacity 400ms linear;
+       Como el negro del archivo es #000 contra un fondo #050506, componer
+       normal es indistinguible: lo único que tapa es la grilla, y la máscara
+       radial de cada elemento disuelve el borde para que no quede un
+       rectángulo recortado. De paso el negro que pintamos ADENTRO (las
+       barras de barrido) sigue funcionando como oscurecedor.
+
+       El que compone tampoco es el que se anima: el hijo lleva el transform
+       y el padre la máscara, así la máscara no se mueve con la animación. */
+    .spinner{
+        position:fixed;
+        top:var(--spin-y,6vh);
+        left:0;right:0;
+        height:calc(var(--spin-w,18vw) * 310 / 900);
+        z-index:1;
+        pointer-events:none;
+        opacity:var(--spin-op,.55);
     }
+    .spinner-move{
+        position:absolute;top:0;left:0;
+        width:var(--spin-w,18vw);height:100%;
+        opacity:0;
+        will-change:transform;
+        animation:spinnerPass 46s linear 6s infinite;
+    }
+    .spinner img{
+        width:100%;height:100%;object-fit:contain;display:block;
+        -webkit-mask-image:radial-gradient(ellipse 60% 62% at 50% 50%,#000 46%,transparent 96%);
+        mask-image:radial-gradient(ellipse 60% 62% at 50% 50%,#000 46%,transparent 96%);
+    }
+    /* entra por izquierda y se aleja subiendo: la trompa y los rastros de luz
+       de la imagen ya apuntan en ese sentido. El ciclo es largo a propósito:
+       es un evento que pasa cada tanto, no una decoración permanente. */
+    @keyframes spinnerPass{
+        0%      {transform:translate3d(-30vw,0,0) scale(.94);opacity:0}
+        4%      {opacity:1}
+        50%     {opacity:1}
+        58%     {transform:translate3d(114vw,0,0) scale(1.06);opacity:0}
+        100%    {transform:translate3d(114vw,0,0) scale(1.06);opacity:0}
+    }
+
     .holo-stage{
         --px:0px; --py:0px;
-        position:absolute;
-        left:var(--holo-x,60%);
+        --holo-h:120vh;
+        --holo-w:calc(var(--holo-h) * 662 / 1635);
+        position:fixed;
         top:3vh;
-        height:120vh;
-        aspect-ratio:662/1635;
-        transform:translate3d(calc(-50% + var(--px)),var(--py),0);
+        left:calc(var(--holo-x,60%) - var(--holo-w) / 2);
+        width:var(--holo-w);
+        height:var(--holo-h);
+        z-index:2;
+        pointer-events:none;
+        opacity:var(--holo-op,.62);
+        transition:opacity 400ms linear;
+        overflow:hidden;
+        /* Sin mix-blend-mode: el negro del archivo es #000 contra un fondo
+           #050506, imperceptible. Lo único que tapa es la grilla, y esta
+           máscara disuelve todo el borde para que no quede un rectángulo
+           recortado. Va en el contenedor y no en la imagen porque también
+           tiene que alcanzar a las barras de barrido. */
+        -webkit-mask-image:radial-gradient(ellipse 72% 60% at 50% 46%,#000 42%,rgba(0,0,0,.55) 76%,transparent 97%);
+        mask-image:radial-gradient(ellipse 72% 60% at 50% 46%,#000 42%,rgba(0,0,0,.55) 76%,transparent 97%);
+        -webkit-mask-repeat:no-repeat;
+        mask-repeat:no-repeat;
+    }
+    /* --px y --py se heredan del stage, así que el JS los sigue escribiendo ahí */
+    .holo-move{
+        position:absolute;inset:0;
+        transform:translate3d(var(--px),var(--py),0);
         will-change:transform;
         animation:holoDrift 23s ease-in-out infinite;
     }
     /* la proyección nunca se queda del todo quieta */
     @keyframes holoDrift{
-        0%,100%{transform:translate3d(calc(-50% + var(--px)),var(--py),0) scale(1)}
-        50%    {transform:translate3d(calc(-50% + var(--px) + 9px),calc(var(--py) - 13px),0) scale(1.016)}
+        0%,100%{transform:translate3d(var(--px),var(--py),0) scale(1)}
+        50%    {transform:translate3d(calc(var(--px) + 9px),calc(var(--py) - 13px),0) scale(1.016)}
     }
 
     /* aire teñido alrededor: la luz proyectada no tiene borde duro */
@@ -158,9 +210,6 @@
     .holo-img{
         position:absolute;inset:0;width:100%;height:100%;
         object-fit:contain;
-        /* se disuelve por abajo en vez de terminar en el borde del archivo */
-        -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 99%);
-        mask-image:linear-gradient(to bottom,#000 78%,transparent 99%);
         animation:holoFlicker 8.3s steps(1,end) infinite;
     }
     /* parpadeo eléctrico: intervalos irregulares para que no suene a metrónomo */
@@ -173,10 +222,10 @@
         88.7%{opacity:.85}
     }
 
-    /* líneas de barrido: negro sobre la figura, que el 'screen' de la capa
-       vuelve invisible. Suaves, porque la imagen ya trae trama propia; lo que
-       aportan es el arrastre. El paso (5px) es exactamente el recorrido, así
-       que el bucle no tiene costura. */
+    /* líneas de barrido: negro sobre la figura, que el 'screen' vuelve
+       invisible. Suaves, porque la imagen ya trae trama propia; lo que
+       aportan es el arrastre. El paso (5px) es exactamente el recorrido,
+       así que el bucle no tiene costura. */
     .holo-lines{
         position:absolute;inset:-3% 0;
         background:repeating-linear-gradient(to bottom,
@@ -619,7 +668,7 @@
     }
     @media (max-width:1180px){
         .holo-stage{--holo-x:74%;height:96vh;top:10vh}
-        .layer-holo{--holo-op:.5}
+        .holo-stage{--holo-op:.5}
     }
     @media (max-width:860px){
         :root{--rail:0px}
@@ -635,7 +684,8 @@
         .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:1/-1;min-height:0}
         .botbar .hide-sm{display:none}
         .holo-stage{--holo-x:56%;height:84vh;top:16vh}
-        .layer-holo{--holo-op:.38}
+        .holo-stage{--holo-op:.38}
+        .spinner{display:none}
         .holo-glow{filter:none}
         .d-body{padding:24px 20px 28px}
     }
@@ -646,7 +696,8 @@
 
     @media (prefers-reduced-motion:reduce){
         .layer-grain,.layer-scan::after,.baseline-track,.scroll-cue i::after,.pulse{animation:none}
-        .holo-stage,.holo-img,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
+        .holo-move,.holo-img,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
+        .spinner{display:none}
         .holo-wipe,.holo-band{display:none}
         .cell:hover,.ccard:hover{animation:none}
         .rv{opacity:1}
@@ -658,27 +709,29 @@
     <div class="layer layer-grid"></div>
     <div class="layer layer-haze"></div>
 
-    <!-- ============ PROYECCIÓN HOLOGRÁFICA ============
-         La imagen va sobre negro puro, sin recortar ni transparencia: la capa
-         compone en 'screen' y el negro se descarta solo. El movimiento lo pone
-         el CSS (parpadeo, arrastre de barrido, banda de refresco, saltos de
-         señal, paralaje) — sin eso se leería como una foto pegada al fondo. -->
-    <div class="layer layer-holo" aria-hidden="true">
-        <div class="holo-stage" id="holoStage">
-            <div class="holo-glow"></div>
-
-            <img class="holo-img" src="holograma.webp" alt=""
-                 width="662" height="1635" decoding="async">
-
-            <div class="holo-band">
-                <img src="holograma.webp" alt="" width="662" height="1635" decoding="async">
-            </div>
-
-            <div class="holo-lines"></div>
-            <div class="holo-wipe"></div>
+    <!-- spinner de fondo: pasa cada tanto, por detrás de la proyección -->
+    <div class="spinner" aria-hidden="true">
+        <div class="spinner-move">
+            <img src="spinner.webp" alt="" width="900" height="310" decoding="async">
         </div>
     </div>
 
+    <!-- proyección holográfica -->
+    <div class="holo-stage" id="holoStage" aria-hidden="true">
+      <div class="holo-move">
+        <div class="holo-glow"></div>
+
+        <img class="holo-img" src="holograma.webp" alt=""
+             width="662" height="1635" decoding="async">
+
+        <div class="holo-band">
+            <img src="holograma.webp" alt="" width="662" height="1635" decoding="async">
+        </div>
+
+        <div class="holo-lines"></div>
+        <div class="holo-wipe"></div>
+      </div>
+    </div>
 
     <div class="layer layer-vignette"></div>
     <div class="layer layer-grain"></div>
@@ -1061,7 +1114,6 @@
         const sections = Array.from(document.querySelectorAll('.sec[data-sec]'));
         let ticking = false;
         const holo = document.getElementById('holoStage');
-        const holoLayer = document.querySelector('.layer-holo');
 
         function onScroll(){
             const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -1080,9 +1132,9 @@
             if (holo && !reduced){
                 holo.style.setProperty('--py', (-Math.min(window.scrollY * 0.08, 90)).toFixed(1)+'px');
             }
-            if (holoLayer){
+            if (holo){
                 const fade = Math.min(1, window.scrollY / (window.innerHeight * 0.75));
-                holoLayer.style.setProperty('--holo-op', (0.62 - fade * 0.46).toFixed(3));
+                holo.style.setProperty('--holo-op', (0.62 - fade * 0.46).toFixed(3));
             }
 
             railRead.textContent = current ? current.dataset.sec : 'SEC 00 — INICIO';
