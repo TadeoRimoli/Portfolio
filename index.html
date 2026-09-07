@@ -4,1379 +4,1055 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tadeo Rimoli</title>
-    
+    <meta name="description" content="Tadeo Rimoli — Full Stack Developer. Java, Spring, React.">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="code.svg">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1/bundled/lenis.min.js"></script>
 
     <style>
-        :root {
-            --bg-primary: #050505;
-            --bg-secondary: #0a0a0a;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --accent-cyan: #00f3ff;
-            --accent-orange: #ff6b35;
-            --accent-glow: rgba(0, 243, 255, 0.3);
-            --grid-color: rgba(255, 255, 255, 0.03);
-            --border-color: rgba(255, 255, 255, 0.1);
-            
-            --font-display: 'Inter', sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: auto;
-        }
-
-        body {
-            font-family: var(--font-display);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--grid-color) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: 0;
-            opacity: 0.5;
-        }
-
-        .container {
-            position: relative;
-            z-index: 1;
-        }
-
-        section {
-            position: relative;
-            min-height: 100vh;
-            padding: 120px 5vw;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-neon-lines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .neon-line {
-            position: absolute;
-            height: 2px;
-            width: 150%;
-            background: linear-gradient(to right, 
-                transparent 0%, 
-                rgba(0, 243, 255, 0.3) 10%, 
-                rgba(0, 243, 255, 0.5) 20%,
-                rgba(0, 243, 255, 0.4) 30%,
-                rgba(0, 243, 255, 0.6) 40%,
-                rgba(0, 243, 255, 0.3) 50%,
-                rgba(0, 243, 255, 0.5) 60%,
-                rgba(0, 243, 255, 0.4) 70%,
-                rgba(0, 243, 255, 0.3) 80%,
-                transparent 100%);
-            box-shadow: 
-                0 0 10px rgba(0, 243, 255, 0.4),
-                0 0 20px rgba(0, 243, 255, 0.2),
-                0 0 30px rgba(0, 243, 255, 0.1);
-            filter: blur(0.5px);
-            border-radius: 50%;
-        }
-
-        .neon-line-1 {
-            top: 30%;
-            animation: neonMove1 25s linear infinite;
-            transform-origin: center;
-        }
-
-        @keyframes neonMove1 {
-            0% {
-                transform: translateX(-100%) scaleY(0.8);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            50% {
-                transform: translateX(0%) scaleY(1.2);
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(100%) scaleY(0.8);
-                opacity: 0;
-            }
-        }
-
-
-        .hero-scroll-indicator {
-            position: absolute;
-            bottom: 3rem;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-            opacity: 0;
-            z-index: 10;
-        }
-
-        .hero-scroll-line {
-            width: 2px;
-            height: 60px;
-            background: linear-gradient(to bottom, var(--accent-cyan), transparent);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            animation: scrollPulse 2s ease-in-out infinite;
-        }
-
-        .hero-scroll-text {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            opacity: 0.7;
-        }
-
-        @keyframes scrollPulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: translateY(0);
-            }
-            50% {
-                opacity: 1;
-                transform: translateY(10px);
-            }
-        }
-
-        .hero h1,
-        .hero .role,
-        .hero .tagline,
-        .hero .accent-line {
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            line-height: 1.3;
-            margin-bottom: 1.5rem;
-            letter-spacing: 0.05em;
-            color: var(--text-primary);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-weight: 300;
-            letter-spacing: 0.05em;
-        }
-
-        .hero .role {
-            font-family: var(--font-mono);
-            font-size: clamp(1rem, 3vw, 1.5rem);
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-        }
-
-        .hero .tagline {
-            font-family: var(--font-display);
-            font-size: clamp(0.875rem, 2vw, 1rem);
-            font-weight: 300;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0;
-            letter-spacing: 0.05em;
-        }
-
-
-        .accent-line {
-            width: 200px;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            margin: 2rem 0;
-            opacity: 0;
-        }
-
-        .content-section {
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .tech-grid {
-            justify-content: center;
-        }
-
-        .projects-grid {
-            margin: 3rem auto;
-            max-width: 1400px;
-        }
-
-        .experience-timeline {
-            margin: 3rem auto;
-            text-align: left;
-        }
-
-        .section-title {
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-
-        .section-subtitle {
-            font-family: var(--font-mono);
-            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.3em;
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-
-        .tech-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 3rem 0;
-        }
-
-        .tech-tag {
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            padding: 1rem 2rem;
-            background: transparent;
-            border: none;
-            border-bottom: 2px solid var(--border-color);
-            color: var(--text-secondary);
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-        }
-
-        .tech-tag::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-cyan), transparent);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tech-tag::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 4px;
-            height: 0;
-            background: var(--accent-cyan);
-            transform: translateY(-50%);
-            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .tech-tag:hover {
-            color: var(--accent-cyan);
-            padding-left: 2.5rem;
-        }
-
-        .tech-tag:hover::before {
-            width: 100%;
-        }
-
-        .tech-tag:hover::after {
-            height: 60%;
-        }
-
-        .projects-grid {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 3rem;
-            margin: 3rem 0;
-            max-width: 1000px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .project-card {
-            border: 1px solid var(--border-color);
-            background: rgba(10, 10, 10, 0.8);
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            will-change: transform;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
-            transition: left 0.4s ease;
-            pointer-events: none;
-        }
-
-        .project-card:hover::before {
-            left: 100%;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translate3d(0, -3px, 0);
-        }
-
-        .project-card {
-            text-align: left;
-            border-left: 3px solid var(--border-color);
-            padding: 3rem;
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        .project-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .project-badges {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .project-status-badge {
-            font-family: var(--font-mono);
-            font-size: 0.625rem;
-            padding: 0.25rem 0.75rem;
-            background: rgba(255, 107, 53, 0.1);
-            border: 1px solid rgba(255, 107, 53, 0.3);
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            border-radius: 12px;
-        }
-
-        .project-info-btn {
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border-color);
-            background: rgba(10, 10, 10, 0.5);
-            color: var(--text-secondary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            flex-shrink: 0;
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-        }
-
-        .project-info-btn:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .project-card::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: var(--accent-cyan);
-            transform: scaleY(0);
-            transform-origin: top;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .project-card:hover::after {
-            transform: scaleY(1);
-        }
-
-        .project-type {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-
-        .project-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .project-section {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .project-section-title {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 1rem;
-        }
-
-        .project-modules-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.6rem;
-            margin-top: 0.75rem;
-        }
-
-        .project-module-item {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.5rem 0.75rem;
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.15);
-            color: var(--text-secondary);
-            transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
-            text-align: center;
-        }
-
-        .project-module-item:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            background: rgba(0, 243, 255, 0.1);
-        }
-
-        .project-module-item-dev {
-            border-color: rgba(255, 107, 53, 0.3);
-            background: rgba(255, 107, 53, 0.05);
-        }
-
-        .project-tech-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-        }
-
-        .project-tech-item {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            color: var(--accent-cyan);
-            border-radius: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .project-modules-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .project-card {
-                padding: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .project-modules-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            overflow: hidden;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            max-width: min(95vw, 1000px);
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            position: relative;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-content::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .modal-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .modal-content::-webkit-scrollbar-thumb {
-            background: var(--accent-cyan);
-            border-radius: 3px;
-            opacity: 0.3;
-        }
-
-        .modal-content::-webkit-scrollbar-thumb:hover {
-            opacity: 0.6;
-        }
-
-        .modal-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            width: 32px;
-            height: 32px;
-            border: 1px solid var(--border-color);
-            background: rgba(10, 10, 10, 0.5);
-            color: var(--text-secondary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: var(--font-mono);
-            font-size: 1.25rem;
-            line-height: 1;
-        }
-
-        .modal-close:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            transform: rotate(90deg);
-        }
-
-        .modal-header {
-            flex-shrink: 0;
-            margin-bottom: 1.25rem;
-            padding-right: 2rem;
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-            color: var(--text-primary);
-        }
-
-        .modal-subtitle {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 0;
-        }
-
-        .modal-section {
-            flex-shrink: 0;
-        }
-
-        .modal-sections-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            flex: 1;
-        }
-
-        .modal-section-title {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            margin-bottom: 0.6rem;
-            padding-bottom: 0.4rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .modal-section-content {
-            font-size: 0.8125rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .modal-tech-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
-
-        .modal-tech-item {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            padding: 0.4rem 0.8rem;
-            background: rgba(0, 243, 255, 0.1);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            color: var(--accent-cyan);
-            border-radius: 4px;
-        }
-
-        .modal-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .modal-list li {
-            padding-left: 1.25rem;
-            position: relative;
-            margin-bottom: 0.4rem;
-            color: var(--text-secondary);
-            font-size: 0.8125rem;
-            line-height: 1.5;
-        }
-
-        .modal-list li::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--accent-cyan);
-        }
-
-        .modal-modules-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .modal-module-item {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            padding: 0.45rem 0.6rem;
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.15);
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-        }
-
-        .modal-module-item:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            background: rgba(0, 243, 255, 0.1);
-        }
-
-        .modal-module-item-dev {
-            border-color: rgba(255, 107, 53, 0.3);
-            background: rgba(255, 107, 53, 0.05);
-        }
-
-        .dev-badge {
-            font-size: 0.65rem;
-            color: var(--accent-orange);
-            margin-left: 0.4rem;
-            opacity: 0.8;
-        }
-
-        @media (max-width: 768px) {
-            .modal-modules-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .project-title {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            line-height: 1.3;
-        }
-
-        .project-year {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            opacity: 0.7;
-        }
-
-        .project-description {
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            flex: 1;
-            line-height: 1.7;
-        }
-
-        .project-link {
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-        }
-
-        .project-link:hover {
-            gap: 1rem;
-        }
-
-        .experience-timeline {
-            max-width: 900px;
-            margin: 3rem 0;
-        }
-
-        .experience-item {
-            border-left: 2px solid var(--border-color);
-            padding-left: 2rem;
-            margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .experience-item::before {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 0;
-            width: 10px;
-            height: 10px;
-            background: var(--accent-cyan);
-            border-radius: 50%;
-        }
-
-        .experience-header {
-            margin-bottom: 1rem;
-        }
-
-        .experience-role {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .experience-company {
-            font-family: var(--font-mono);
-            font-size: 0.875rem;
-            color: var(--accent-orange);
-        }
-
-        .experience-period {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .experience-description {
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .contact-section {
-            text-align: center;
-        }
-
-        .contact-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .contact-link {
-            width: 60px;
-            height: 60px;
-            border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-            background: rgba(10, 10, 10, 0.5);
-            backdrop-filter: blur(10px);
-        }
-
-        .contact-link:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px var(--accent-glow);
-            transform: translateY(-5px);
-        }
-
-        .contact-link svg {
-            width: 24px;
-            height: 24px;
-            fill: var(--text-primary);
-        }
-
-        .fade-up {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-
-        @media (max-width: 768px) {
-            section {
-                padding: 80px 5vw;
-            }
-
-            .contact-links {
-                flex-wrap: wrap;
-            }
-        }
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.5rem 1rem;
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            border-radius: 100px;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
-            margin-bottom: 3rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            backdrop-filter: blur(5px);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            background-color: var(--accent-cyan);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-cyan);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 1; box-shadow: 0 0 0 0 rgba(0, 243, 255, 0.7); }
-            70% { transform: scale(1); opacity: 1; box-shadow: 0 0 0 10px rgba(0, 243, 255, 0); }
-            100% { transform: scale(0.95); opacity: 1; box-shadow: 0 0 0 0 rgba(0, 243, 255, 0); }
-        }
-        .tech-badge {
-            display: inline-block;
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--accent-cyan);
-            background: rgba(0, 243, 255, 0.05);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            margin-top: 2.5rem;
-            margin-bottom: 0;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            backdrop-filter: blur(5px);
-            opacity: 0;
-        }
-
-.syntax-gray { color: #6b7280; margin-right: 0.5rem; }
-.syntax-white { color: #e5e7eb; margin-right: 0.5rem; }
-.syntax-cyan { color: var(--accent-cyan); }
-.syntax-orange { color: var(--accent-orange); }
+    /* =========================================================
+       INTERFACE SPEC — LOS ANGELES 2049 / DIALECTO TERMINAL
+       Negro profundo · hormigón · naranja radiactivo · cian · magenta
+       ========================================================= */
+    :root{
+        --bg:#050506;
+        --panel:#0c0e10;
+        --panel-2:#111417;
+        --concrete:#191d21;
+        --line:#22272c;
+        --line-soft:rgba(255,255,255,.075);
+        --grid:rgba(255,255,255,.026);
+
+        --ink:#eceff1;
+        --ink-2:#969ca2;
+        --ink-3:#5a6167;
+
+        --orange:#ff6a12;
+        --cyan:#22e0ff;
+        --magenta:#ff2f9c;
+
+        --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+        --sans:'Archivo','Helvetica Neue',Arial,sans-serif;
+
+        --hud-top:38px;
+        --hud-bot:30px;
+        --rail:30px;
+        --snap:70ms;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:auto;-webkit-text-size-adjust:100%}
+    body{
+        font-family:var(--sans);
+        background:var(--bg);
+        color:var(--ink);
+        line-height:1.6;
+        overflow-x:hidden;
+        font-synthesis:none;
+        -webkit-font-smoothing:antialiased;
+    }
+    ::selection{background:var(--orange);color:#000}
+    a{color:inherit;text-decoration:none}
+    ul{list-style:none}
+    svg{display:block}
+
+    /* ---------- CAPAS AMBIENTALES ---------- */
+    .layer{position:fixed;inset:0;pointer-events:none}
+
+    .layer-grid{
+        z-index:0;
+        background-image:
+            linear-gradient(var(--grid) 1px,transparent 1px),
+            linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+        background-size:64px 64px;
+        -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 40%,#000 30%,transparent 100%);
+        mask-image:radial-gradient(ellipse 90% 70% at 50% 40%,#000 30%,transparent 100%);
+    }
+    .layer-haze{
+        z-index:1;
+        background:
+            radial-gradient(ellipse 60% 40% at 82% 10%,rgba(255,106,18,.11),transparent 70%),
+            radial-gradient(ellipse 50% 40% at 6% 76%,rgba(34,224,255,.06),transparent 70%),
+            radial-gradient(ellipse 44% 32% at 62% 98%,rgba(255,47,156,.05),transparent 70%);
+    }
+    .layer-scan{
+        z-index:60;opacity:.55;overflow:hidden;
+        background:repeating-linear-gradient(to bottom,
+            rgba(255,255,255,.03) 0 1px, transparent 1px 3px);
+    }
+    .layer-scan::after{
+        content:'';position:absolute;left:0;right:0;height:24vh;
+        background:linear-gradient(to bottom,transparent,rgba(34,224,255,.045),transparent);
+        animation:sweep 9s linear infinite;
+    }
+    @keyframes sweep{0%{transform:translateY(-30vh)}100%{transform:translateY(125vh)}}
+
+    .layer-grain{
+        z-index:59;opacity:.15;mix-blend-mode:overlay;
+        background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.6'/></svg>");
+        animation:grain .55s steps(1) infinite;
+    }
+    @keyframes grain{
+        0%{transform:translate(0,0)}25%{transform:translate(-3px,2px)}
+        50%{transform:translate(2px,-3px)}75%{transform:translate(-2px,-1px)}
+        100%{transform:translate(1px,3px)}
+    }
+    .layer-vignette{
+        z-index:58;
+        background:radial-gradient(ellipse 78% 66% at 50% 45%,transparent 38%,rgba(0,0,0,.75) 100%);
+    }
+
+    /* retícula de puntero — HUD de spinner */
+    .reticle{position:fixed;inset:0;z-index:57;pointer-events:none;opacity:0;transition:opacity 160ms steps(3)}
+    .reticle.on{opacity:1}
+    .reticle i{position:absolute;background:rgba(34,224,255,.13)}
+    .reticle .rx{left:0;right:0;height:1px}
+    .reticle .ry{top:0;bottom:0;width:1px}
+    .reticle .dot{
+        width:13px;height:13px;background:none;
+        border:1px solid rgba(34,224,255,.4);transform:translate(-50%,-50%);
+    }
+
+    /* ---------- HUD FIJO ---------- */
+    .hud{position:fixed;inset:0;z-index:70;pointer-events:none}
+    .hud a{pointer-events:auto}
+
+    .mark{position:absolute;width:18px;height:18px;opacity:.7}
+    .mark::before,.mark::after{content:'';position:absolute;background:var(--orange)}
+    .mark::before{width:100%;height:1px}
+    .mark::after{width:1px;height:100%}
+    .m-tl{top:6px;left:6px}
+    .m-tr{top:6px;right:6px}.m-tr::before{right:0}.m-tr::after{right:0}
+    .m-bl{bottom:6px;left:6px}.m-bl::before{bottom:0}.m-bl::after{bottom:0}
+    .m-br{bottom:6px;right:6px}.m-br::before{bottom:0;right:0}.m-br::after{bottom:0;right:0}
+
+    .topbar{
+        position:absolute;top:0;left:0;right:0;height:var(--hud-top);
+        display:flex;align-items:center;justify-content:space-between;gap:1rem;
+        padding:0 14px;
+        background:rgba(5,5,6,.86);backdrop-filter:blur(6px);
+        border-bottom:1px solid var(--line);
+        font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+    }
+    .brand{display:flex;align-items:center;gap:10px;color:var(--ink-2);white-space:nowrap}
+    .brand-mark{
+        display:grid;place-items:center;width:22px;height:22px;
+        border:1px solid var(--orange);color:var(--orange);
+        font-size:10px;font-weight:700;letter-spacing:0;
+    }
+    .nav{display:flex;gap:2px}
+    .nav a{
+        display:flex;align-items:baseline;gap:6px;padding:5px 10px;
+        color:var(--ink-3);border:1px solid transparent;
+        transition:color var(--snap) steps(2),border-color var(--snap) steps(2),background-color var(--snap) steps(2);
+    }
+    .nav a::before{content:attr(data-idx);font-size:8px;opacity:.75}
+    .nav a:hover{color:var(--cyan);border-color:rgba(34,224,255,.42);background:rgba(34,224,255,.05)}
+    .nav a.is-active{color:var(--orange);border-color:rgba(255,106,18,.45);background:rgba(255,106,18,.07)}
+
+    .hud-status{display:flex;align-items:center;gap:8px;color:var(--ink-2);white-space:nowrap}
+    .pulse{width:6px;height:6px;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:blink 1.7s steps(1) infinite}
+    @keyframes blink{0%,58%{opacity:1}59%,100%{opacity:.12}}
+
+    .botbar{
+        position:absolute;bottom:0;left:0;right:0;height:var(--hud-bot);
+        display:flex;align-items:center;gap:14px;padding:0 14px;
+        background:rgba(5,5,6,.86);backdrop-filter:blur(6px);
+        border-top:1px solid var(--line);
+        font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--ink-3);white-space:nowrap;
+    }
+    .botbar .sep{width:1px;height:11px;background:var(--line)}
+    .botbar .grow{flex:1}
+    .progress{position:relative;width:160px;height:3px;background:var(--concrete)}
+    .progress i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--orange);box-shadow:0 0 10px rgba(255,106,18,.7)}
+    #clock{color:var(--cyan)}
+    #scrollPct{color:var(--orange);min-width:36px;text-align:right}
+
+    .rail{
+        position:absolute;top:var(--hud-top);bottom:var(--hud-bot);width:var(--rail);
+        display:flex;align-items:center;justify-content:center;
+        font-family:var(--mono);font-size:9px;letter-spacing:.34em;
+        text-transform:uppercase;color:var(--ink-3);
+    }
+    .rail span{writing-mode:vertical-rl;white-space:nowrap}
+    .rail-l{left:0;border-right:1px solid var(--line-soft)}
+    .rail-r{right:0;border-left:1px solid var(--line-soft)}
+    .rail-r span{transform:rotate(180deg)}
+
+    /* ---------- ESTRUCTURA ---------- */
+    .shell{
+        position:relative;z-index:3;
+        max-width:1560px;margin:0 auto;
+        padding:var(--hud-top) calc(var(--rail) + 4vw) var(--hud-bot);
+    }
+    .sec{padding:11vh 0;position:relative}
+    .sec + .sec{border-top:1px solid var(--line-soft)}
+
+    .mono{font-family:var(--mono)}
+    .kicker{
+        font-family:var(--mono);font-size:10px;letter-spacing:.3em;
+        text-transform:uppercase;color:var(--ink-3);
+    }
+    .kicker b{color:var(--orange);font-weight:400}
+
+    /* marcadores de calibración */
+    .brk{position:relative}
+    .brk::before,.brk::after{
+        content:'';position:absolute;width:9px;height:9px;
+        border:1px solid var(--orange);opacity:.85;
+        transition:border-color var(--snap) steps(2);
+    }
+    .brk::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+    .brk::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+    /* ---------- GLITCH / ABERRACIÓN CROMÁTICA ---------- */
+    .glitch{position:relative;display:inline-block}
+    .glitch::before,.glitch::after{
+        content:attr(data-text);position:absolute;top:0;left:0;
+        opacity:0;pointer-events:none;white-space:pre;
+    }
+    .glitch.on::before{
+        color:var(--magenta);opacity:.9;transform:translate(-2px,1px);
+        clip-path:inset(6% 0 64% 0);
+    }
+    .glitch.on::after{
+        color:var(--cyan);opacity:.9;transform:translate(2px,-1px);
+        clip-path:inset(60% 0 12% 0);
+    }
+    .aberr:hover{text-shadow:-1px 0 rgba(255,47,156,.85),1px 0 rgba(34,224,255,.85)}
+
+    /* ---------- HERO ---------- */
+    .hero{
+        position:relative;
+        min-height:100vh;display:grid;align-items:center;gap:5vw;
+        grid-template-columns:minmax(0,1.3fr) minmax(270px,.7fr);
+        padding:16vh 0 9vh;
+    }
+    .hero-id{display:flex;align-items:center;gap:12px;margin-bottom:2.4rem}
+    .hero-id .bar{height:1px;width:70px;background:var(--orange)}
+
+    .name{
+        font-size:clamp(2.9rem,11vw,9rem);
+        font-weight:800;font-stretch:125%;
+        letter-spacing:.06em;line-height:.86;
+        text-transform:uppercase;
+    }
+    .name .l2{display:block;padding-left:.14em;color:var(--ink-2);font-weight:300}
+    .role{
+        margin-top:2.2rem;font-family:var(--mono);
+        font-size:clamp(.72rem,1.5vw,.95rem);
+        letter-spacing:.44em;text-transform:uppercase;color:var(--cyan);
+        text-shadow:0 0 14px rgba(34,224,255,.35);
+    }
+    .rule{height:1px;background:var(--line);margin:1.8rem 0;position:relative}
+    .rule::before{content:'';position:absolute;left:0;top:0;width:96px;height:1px;background:var(--orange);box-shadow:0 0 10px rgba(255,106,18,.6)}
+    .tagline{max-width:44ch;color:var(--ink-2);font-size:1rem;font-weight:300;letter-spacing:.02em}
+
+    .spec{
+        background:linear-gradient(180deg,rgba(17,20,23,.92),rgba(7,8,10,.8));
+        border:1px solid var(--line);
+    }
+    .spec-head{
+        display:flex;justify-content:space-between;gap:10px;padding:9px 13px;
+        border-bottom:1px solid var(--line);background:rgba(255,255,255,.02);
+        font-family:var(--mono);font-size:9px;letter-spacing:.22em;
+        text-transform:uppercase;color:var(--ink-3);
+    }
+    .spec dl{margin:0}
+    .spec-row{
+        display:grid;grid-template-columns:96px 1fr;gap:12px;
+        padding:10px 13px;border-bottom:1px solid rgba(255,255,255,.045);
+        font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+    }
+    .spec-row:last-child{border-bottom:0}
+    .spec-row dt{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3);padding-top:2px}
+    .spec-row dd{color:var(--ink)}
+    .spec-row dd.hot{color:var(--orange)}
+    .spec-row dd.cy{color:var(--cyan)}
+    .spec-foot{
+        padding:11px 13px;border-top:1px solid var(--line);
+        font-family:var(--mono);font-size:9px;letter-spacing:.2em;
+        text-transform:uppercase;color:var(--ink-3);
+        display:flex;align-items:center;gap:8px;
+    }
+
+    .scroll-cue{
+        position:absolute;left:0;bottom:6vh;display:flex;align-items:center;gap:12px;
+        font-family:var(--mono);font-size:9px;letter-spacing:.3em;
+        text-transform:uppercase;color:var(--ink-3);
+    }
+    .scroll-cue i{display:block;width:54px;height:1px;background:var(--line);position:relative;overflow:hidden}
+    .scroll-cue i::after{
+        content:'';position:absolute;top:0;left:0;width:18px;height:1px;background:var(--orange);
+        animation:cue 2.2s steps(9) infinite;
+    }
+    @keyframes cue{0%{transform:translateX(-20px)}100%{transform:translateX(56px)}}
+
+    /* banda baseline */
+    .baseline{
+        border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft);
+        background:rgba(0,0,0,.45);overflow:hidden;padding:9px 0;
+    }
+    .baseline-track{
+        display:flex;gap:2.6rem;white-space:nowrap;width:max-content;
+        font-family:var(--mono);font-size:9px;letter-spacing:.42em;
+        text-transform:uppercase;color:var(--ink-3);
+        animation:marq 42s linear infinite;
+    }
+    .baseline-track b{color:var(--orange);font-weight:400}
+    @keyframes marq{to{transform:translateX(-50%)}}
+
+    /* ---------- ENCABEZADO DE SECCIÓN ---------- */
+    .sec-head{
+        display:grid;grid-template-columns:auto auto 1fr auto;
+        align-items:end;gap:18px;margin-bottom:4.6rem;
+    }
+    .sec-idx{
+        font-family:var(--mono);font-size:11px;letter-spacing:.2em;
+        color:var(--orange);padding-bottom:.55rem;
+    }
+    .sec-title{
+        font-size:clamp(1.7rem,5.4vw,4rem);font-weight:800;font-stretch:125%;
+        letter-spacing:.13em;line-height:.9;text-transform:uppercase;
+    }
+    .sec-line{height:1px;background:var(--line);margin-bottom:1rem}
+    .sec-meta{
+        font-family:var(--mono);font-size:9px;letter-spacing:.2em;
+        text-transform:uppercase;color:var(--ink-3);
+        padding-bottom:.7rem;text-align:right;
+    }
+
+    /* ---------- STACK ---------- */
+    .stack{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+    .cell{
+        background:var(--panel);padding:22px 18px 18px;min-height:148px;
+        display:flex;flex-direction:column;justify-content:space-between;
+        position:relative;
+        transition:background-color var(--snap) steps(2),color var(--snap) steps(2),box-shadow var(--snap) steps(2);
+    }
+    .cell-idx{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-3)}
+    .cell-name{font-size:1.05rem;font-weight:600;font-stretch:112%;letter-spacing:.09em;text-transform:uppercase}
+    .cell-cat{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-top:7px}
+    .cell:hover{
+        background:var(--panel-2);color:var(--cyan);
+        box-shadow:inset 0 0 0 1px rgba(34,224,255,.55),inset 0 0 26px rgba(34,224,255,.09),0 0 22px rgba(34,224,255,.13);
+        animation:ignite .26s steps(3) 1;
+    }
+    .cell:hover .cell-idx,.cell:hover .cell-cat{color:var(--cyan)}
+    @keyframes ignite{
+        0%{filter:brightness(.5)}18%{filter:brightness(1.5)}34%{filter:brightness(.7)}
+        58%{filter:brightness(1.35)}76%{filter:brightness(.9)}100%{filter:brightness(1)}
+    }
+
+    /* ---------- PROYECTOS ---------- */
+    .work{display:grid;grid-template-columns:repeat(12,1fr);gap:26px}
+    .dossier{
+        --acc:var(--orange);
+        position:relative;align-self:start;
+        border:1px solid var(--line);
+        background:linear-gradient(180deg,var(--panel),#07080a);
+        transition:border-color var(--snap) steps(2),box-shadow var(--snap) steps(2);
+    }
+    .dossier::before{
+        content:'';position:absolute;top:-1px;left:-1px;width:54px;height:2px;
+        background:var(--acc);box-shadow:0 0 14px var(--acc);
+    }
+    .dossier:hover{border-color:rgba(255,255,255,.2);box-shadow:0 0 40px rgba(0,0,0,.6)}
+    .d-1{grid-column:1/9}
+    .d-2{grid-column:9/13}
+    .d-3{grid-column:4/13}
+    .d-4{grid-column:1/6}
+
+    .d-bar{
+        display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+        padding:10px 16px;border-bottom:1px solid var(--line);
+        background:rgba(255,255,255,.018);
+        font-family:var(--mono);font-size:9px;letter-spacing:.2em;
+        text-transform:uppercase;color:var(--ink-3);
+    }
+    .d-bar .file{color:var(--acc)}
+    .d-bar .push{margin-left:auto}
+    .stat{display:inline-flex;align-items:center;gap:6px;color:var(--ink-2)}
+    .stat::before{content:'';width:5px;height:5px;background:var(--acc);box-shadow:0 0 7px var(--acc)}
+
+    .d-body{padding:30px 30px 34px}
+    .d-title{
+        font-size:clamp(1.15rem,2.5vw,1.95rem);font-weight:700;font-stretch:115%;
+        letter-spacing:.09em;line-height:1.08;text-transform:uppercase;
+    }
+    .d-year{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-3);margin-top:.8rem;text-transform:uppercase}
+    .d-desc{margin-top:1.6rem;color:var(--ink-2);font-weight:300;max-width:62ch}
+    .d-block{margin-top:2.2rem;padding-top:1.5rem;border-top:1px solid var(--line-soft)}
+    .block-label{
+        font-family:var(--mono);font-size:9px;letter-spacing:.26em;
+        text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-bottom:1rem;
+    }
+    .block-label::before{content:'// ';color:var(--acc)}
+    .d-note{margin-top:1.1rem;font-size:.83rem;line-height:1.65;color:var(--ink-3);font-weight:300;max-width:70ch}
+
+    .chips{display:flex;flex-wrap:wrap;gap:6px}
+    .chip{
+        font-family:var(--mono);font-size:9px;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--ink-2);
+        border:1px solid var(--line);padding:7px 10px;background:rgba(255,255,255,.012);
+        transition:color var(--snap) steps(2),border-color var(--snap) steps(2),box-shadow var(--snap) steps(2);
+    }
+    .chip:hover{color:var(--cyan);border-color:rgba(34,224,255,.5);box-shadow:inset 0 0 14px rgba(34,224,255,.12)}
+    .chip-tech{color:var(--ink);border-color:rgba(255,255,255,.18)}
+    .chip-dev{color:var(--orange);border-color:rgba(255,106,18,.45)}
+    .chip-dev small{font-size:7.5px;opacity:.65;margin-left:6px;letter-spacing:.1em}
+
+    .btn{
+        --c:var(--acc);
+        position:relative;display:inline-flex;align-items:center;gap:14px;
+        margin-top:2.2rem;padding:13px 22px;background:var(--c);
+        font-family:var(--mono);font-size:9.5px;letter-spacing:.28em;text-transform:uppercase;color:var(--c);
+        clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+        transition:color var(--snap) steps(2);
+    }
+    .btn::before{
+        content:'';position:absolute;inset:1px;background:#0a0c0e;
+        clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
+        transition:opacity var(--snap) steps(2);
+    }
+    .btn span{position:relative;z-index:1}
+    .btn:hover{color:#000}
+    .btn:hover::before{opacity:0}
+
+    /* ---------- REGISTROS ---------- */
+    .ledger{border-bottom:1px solid var(--line)}
+    .rec{
+        position:relative;display:grid;grid-template-columns:200px 1fr;gap:34px;
+        padding:32px 4px;border-top:1px solid var(--line);
+    }
+    .rec::before{
+        content:'';position:absolute;left:0;top:-1px;width:0;height:1px;
+        background:var(--acc,var(--orange));box-shadow:0 0 10px var(--acc,var(--orange));
+        transition:width 150ms steps(7);
+    }
+    .rec:hover::before{width:100%}
+    .rec-time{
+        font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+        text-transform:uppercase;color:var(--ink-3);padding-top:.55rem;
+        transition:color var(--snap) steps(2);
+    }
+    .rec:hover .rec-time{color:var(--acc,var(--orange))}
+    .rec-time small{display:block;margin-top:6px;font-size:8.5px;opacity:.6;letter-spacing:.18em}
+    .rec-role{
+        font-size:clamp(1.05rem,2.3vw,1.55rem);font-weight:700;font-stretch:112%;
+        letter-spacing:.08em;text-transform:uppercase;line-height:1.15;
+    }
+    .rec-org{
+        font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+        text-transform:uppercase;color:var(--cyan);margin-top:.6rem;
+    }
+    .rec-desc{margin-top:1.2rem;color:var(--ink-2);font-weight:300;max-width:78ch;font-size:.94rem}
+    .edu{--acc:var(--cyan)}
+    .edu .rec-org{color:var(--ink-2)}
+
+    /* ---------- CONTACTO ---------- */
+    .contact{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
+    .ccard{
+        position:relative;display:flex;flex-direction:column;justify-content:space-between;gap:2.6rem;
+        padding:26px 24px;min-height:190px;
+        border:1px solid var(--line);background:var(--panel);
+        transition:color var(--snap) steps(2),border-color var(--snap) steps(2),background-color var(--snap) steps(2),box-shadow var(--snap) steps(2);
+    }
+    .ccard:nth-child(1){grid-column:1/6;--c:var(--cyan)}
+    .ccard:nth-child(2){grid-column:6/10;--c:var(--magenta)}
+    .ccard:nth-child(3){grid-column:10/13;--c:var(--orange)}
+    .ccard svg{width:22px;height:22px;fill:currentColor;color:var(--ink-3);transition:color var(--snap) steps(2)}
+    .ccard-label{font-family:var(--mono);font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3)}
+    .ccard-name{
+        font-size:1.15rem;font-weight:600;font-stretch:112%;
+        letter-spacing:.12em;text-transform:uppercase;margin-top:.5rem;
+    }
+    .ccard-meta{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--ink-3);margin-top:.7rem;word-break:break-all}
+    .ccard:hover{
+        color:var(--c);border-color:var(--c);background:var(--panel-2);
+        box-shadow:inset 0 0 30px rgba(255,255,255,.03),0 0 26px -6px var(--c);
+        animation:ignite .26s steps(3) 1;
+    }
+    .ccard:hover svg,.ccard:hover .ccard-label,.ccard:hover .ccard-meta{color:var(--c)}
+    .ccard:hover.brk::before,.ccard:hover.brk::after{border-color:var(--c)}
+
+    .endline{
+        display:flex;align-items:center;gap:16px;margin-top:5rem;padding-top:1.4rem;
+        border-top:1px solid var(--line-soft);
+        font-family:var(--mono);font-size:9px;letter-spacing:.24em;
+        text-transform:uppercase;color:var(--ink-3);
+    }
+    .endline .grow{flex:1;height:1px;background:var(--line)}
+
+    /* ---------- REVEAL ---------- */
+    .rv{opacity:0}
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width:1180px){
+        .hero{grid-template-columns:1fr;gap:3.5rem;padding-top:14vh}
+        .d-1,.d-2,.d-3,.d-4{grid-column:1/-1}
+        .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:span 4}
+    }
+    @media (max-width:860px){
+        :root{--rail:0px}
+        .rail{display:none}
+        .nav{display:none}
+        .shell{padding-left:6vw;padding-right:6vw}
+        .sec-head{grid-template-columns:auto 1fr;row-gap:10px}
+        .sec-title{grid-column:1/-1;order:3}
+        .sec-line{display:none}
+        .sec-meta{text-align:left}
+        .rec{grid-template-columns:1fr;gap:14px}
+        .rec-time{padding-top:0}
+        .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:1/-1;min-height:0}
+        .botbar .hide-sm{display:none}
+        .d-body{padding:24px 20px 28px}
+    }
+    @media (max-width:520px){
+        .brand-id{display:none}
+        .progress{width:84px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+        .layer-grain,.layer-scan::after,.baseline-track,.scroll-cue i::after,.pulse{animation:none}
+        .cell:hover,.ccard:hover{animation:none}
+        .rv{opacity:1}
+    }
     </style>
 </head>
 <body>
-    <div class="container">
-        <section class="hero">
-            <div class="status-badge fade-in">
-                <span class="status-dot"></span>
-                Disponible para trabajar
-            </div>
-            
-            <h1 class="name">Tadeo Rimoli</h1>
-            <p class="role">Full Stack Developer</p>
-            <div class="accent-line"></div>
-            <p class="tagline">Desarrollo de software escalable y soluciones web modernas</p>
-            
-            <div class="tech-badge">
-                Especialista Java & Spring
-            </div>
-            
-            <div class="hero-scroll-indicator">
-                <div class="hero-scroll-line"></div>
-                <span class="hero-scroll-text">Scroll</span>
-            </div>
-        </section>
 
-        <section class="content-section">
-            <p class="section-subtitle fade-up">01. Stack</p>
-            <h2 class="section-title fade-up">Tecnologías</h2>
-            
-            <div class="tech-grid fade-up">
-                <span class="tech-tag">Java</span>
-                <span class="tech-tag">Spring Framework</span>
-                <span class="tech-tag">Hibernate</span>
-                <span class="tech-tag">SQL</span>
-                <span class="tech-tag">React</span>
-                <span class="tech-tag">GitHub</span>
-                <span class="tech-tag">Docker</span>
-            </div>
-        </section>
+    <div class="layer layer-grid"></div>
+    <div class="layer layer-haze"></div>
+    <div class="layer layer-vignette"></div>
+    <div class="layer layer-grain"></div>
+    <div class="layer layer-scan"></div>
 
-        <section class="content-section">
-            <p class="section-subtitle fade-up">02. Proyectos</p>
-            <h2 class="section-title fade-up">Trabajos Destacados</h2>
-            
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">Sistema</span>
-                            <div class="project-badges" style="margin-top: 0.5rem;">
-                                <span class="project-status-badge">En Desarrollo</span>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Sistema Administrativo Hotelero</h3>
-                    <p class="project-year">2025</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            Sistema completo de gestión hotelera para administrar operaciones del hotel de manera eficiente. Gestiona reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.
-                        </p>
-
-                        <div class="project-section">
-                            <h4 class="project-section-title">Módulos del Sistema</h4>
-                            <div class="project-modules-grid">
-                                <span class="project-module-item">Novedades</span>
-                                <span class="project-module-item">Reservas</span>
-                                <span class="project-module-item">Calendario</span>
-                                <span class="project-module-item">Bar</span>
-                                <span class="project-module-item">Mucamas</span>
-                                <span class="project-module-item">Habitaciones</span>
-                                <span class="project-module-item">Huéspedes</span>
-                                <span class="project-module-item">Financiero</span>
-                                <span class="project-module-item">Gastos</span>
-                                <span class="project-module-item">Estacionamiento</span>
-                                <span class="project-module-item">Tarifas</span>
-                                <span class="project-module-item project-module-item-dev">Stock <span class="dev-badge">en desarrollo</span></span>
-                                <span class="project-module-item">Mensajería</span>
-                                <span class="project-module-item">Configuración</span>
-                            </div>
-                        </div>
-
-                        <div class="project-section">
-                            <h4 class="project-section-title">Tecnologías</h4>
-                            <div class="project-tech-list">
-                                <span class="project-tech-item">Spring Boot</span>
-                                <span class="project-tech-item">Hibernate</span>
-                                <span class="project-tech-item">MySQL</span>
-                                <span class="project-tech-item">React</span>
-                                <span class="project-tech-item">TailwindCSS</span>
-                                <span class="project-tech-item">REST APIs</span>
-                            </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
-                                Backend con Spring Boot y JPA/Hibernate. Frontend con React. Diseño responsive y optimizado.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">Landing Page</span>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Hotel Estrellas de Mar</h3>
-                    <p class="project-year">2025</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            Sitio web para Hotel Estrellas de Mar con reserva de habitaciones, información de amenidades, galería y opciones de contacto.
-                        </p>
-                        <a href="https://hotelestrellasdemar.com.ar" target="_blank" class="project-link">
-                            Ver Proyecto →
-                        </a>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">App Móvil</span>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Entrena+ Atletismo</h3>
-                    <p class="project-year">2023-2024 | Proyecto Final Universitario</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            App móvil creada en React Native para el proyecto final de Tecnicatura en Programación. La aplicación permite consultar datos actualizados de la CADA (Confederación Argentina de Atletismo) y gestionar entrenamientos, ejercicios y grupos de entrenamiento para atletas y entrenadores.
-                        </p>
-
-                        <div class="project-section">
-                            <h4 class="project-section-title">Funcionalidades</h4>
-                            <div class="project-modules-grid">
-                                <span class="project-module-item">Rankings CADA</span>
-                                <span class="project-module-item">Resultados de Torneos</span>
-                                <span class="project-module-item">Calendario Anual</span>
-                                <span class="project-module-item">Crear Ejercicios</span>
-                                <span class="project-module-item">Crear Entrenamientos</span>
-                                <span class="project-module-item">Grupos de Entrenamiento</span>
-                                <span class="project-module-item">Calendario Grupal</span>
-                                <span class="project-module-item">Calendario Individual</span>
-                                <span class="project-module-item">Agendar Entrenamientos</span>
-                                <span class="project-module-item">Agendar Competencias</span>
-                                <span class="project-module-item">Gestión de Administrador</span>
-                                <span class="project-module-item">Resultados de Entrenos</span>
-                            </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
-                                La app permite consultar información actualizada de la CADA incluyendo rankings, resultados de torneos y calendario anual. Los usuarios pueden crear ejercicios y entrenamientos, formar grupos de entrenamiento, y gestionar calendarios grupales e individuales para agendar entrenamientos y competencias. Los administradores de grupo pueden agendar entrenos y completar resultados de entrenos de los participantes.
-                            </p>
-                        </div>
-
-                        <div class="project-section">
-                            <h4 class="project-section-title">Tecnologías</h4>
-                            <div class="project-tech-list">
-                                <span class="project-tech-item">React Native</span>
-                                <span class="project-tech-item">Java</span>
-                                <span class="project-tech-item">Spring Boot</span>
-                                <span class="project-tech-item">REST APIs</span>
-                            </div>
-                            <p style="margin-top: 1rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.6;">
-                                Frontend móvil construido con React Native para iOS y Android. Backend desarrollado con Java y Spring Boot para gestionar la comunicación con la API de la CADA y las funcionalidades de entrenamiento y grupos.
-                            </p>
-                        </div>
-
-                        <a href="https://entrenamas.ar" target="_blank" class="project-link" style="margin-top: 2rem;">
-                            Ver Proyecto →
-                        </a>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-card-header">
-                        <div>
-                            <span class="project-type">Landing Page</span>
-                        </div>
-                    </div>
-                    <h3 class="project-title">Entrena+ Web</h3>
-                    <p class="project-year">2024 | Proyecto Final Universitario</p>
-                    <div class="project-content">
-                        <p class="project-description">
-                            Landing page para la aplicación móvil Entrena+ Atletismo, mostrando características como gestión de entrenamientos y seguimiento de resultados.
-                        </p>
-                        <a href="https://entrenamas.ar" target="_blank" class="project-link">
-                            Ver Proyecto →
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="content-section">
-            <p class="section-subtitle fade-up">03. Trayectoria</p>
-            <h2 class="section-title fade-up">Experiencia</h2>
-            
-            <div class="experience-timeline">
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Desarrollador Freelance</h3>
-                        <p class="experience-company">Independiente</p>
-                    </div>
-                    <p class="experience-period">2024 - Actualidad</p>
-                    <p class="experience-description">
-                        Desarrollo y mantenimiento de software para gestión hotelera. Desarrollo de páginas web personalizadas.
-                    </p>
-                </div>
-
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Full Stack Developer Junior</h3>
-                        <p class="experience-company">Advenio Software</p>
-                    </div>
-                    <p class="experience-period">Agosto 2022 - Octubre 2023</p>
-                    <p class="experience-description">
-                        Desarrollo de software para sistema de gestión en el sector de salud. 
-                        Desarrollo backend con Spring Boot (Java), JPA/Hibernate, autenticación JWT y APIs REST. 
-                        Desarrollo frontend con React y TailwindCSS, creación de vistas y SPAs. 
-                        Gestión de bases de datos MySQL y PostgreSQL. 
-                        Configuración de despliegue con Nginx y Docker. 
-                        Responsable de actualizar versiones del sistema en producción, solución de bugs y desarrollo de nuevas funcionalidades.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <section class="content-section">
-            <p class="section-subtitle fade-up">04. Formación</p>
-            <h2 class="section-title fade-up">Educación</h2>
-            
-            <div class="experience-timeline">
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Licenciatura en Sistemas</h3>
-                        <p class="experience-company">Universidad CAECE</p>
-                    </div>
-                    <p class="experience-period">2024 - Actualidad</p>
-                </div>
-
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Tecnicatura Universitaria en Programación</h3>
-                        <p class="experience-company">Universidad CAECE</p>
-                    </div>
-                    <p class="experience-period">2020 - 2023 (Finalizado)</p>
-                </div>
-
-                <div class="experience-item fade-up">
-                    <div class="experience-header">
-                        <h3 class="experience-role">Bachillerato en Ciencias Sociales</h3>
-                    </div>
-                    <p class="experience-period">2014 - 2019 (Finalizado)</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="contact-section">
-            <p class="section-subtitle fade-up">05. Contacto</p>
-            <h2 class="section-title fade-up">Hablemos</h2>
-            
-            <div class="contact-links">
-                <a href="https://github.com/tadeorimoli" target="_blank" class="contact-link fade-up">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
-                    </svg>
-                </a>
-                <a href="https://ar.linkedin.com/in/tadeo-rimoli-9aa24b1a7" target="_blank" class="contact-link fade-up">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                </a>
-                <a href="mailto:tadeorimoli@gmail.com" class="contact-link fade-up">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect width="20" height="16" x="2" y="4" rx="2"/>
-                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                    </svg>
-                </a>
-            </div>
-        </section>
+    <div class="reticle" id="reticle" aria-hidden="true">
+        <i class="rx" id="rx"></i><i class="ry" id="ry"></i><i class="dot" id="rdot"></i>
     </div>
 
+    <div class="hud">
+        <span class="mark m-tl"></span><span class="mark m-tr"></span>
+        <span class="mark m-bl"></span><span class="mark m-br"></span>
+
+        <header class="topbar">
+            <div class="brand">
+                <span class="brand-mark">TR</span>
+                <span class="brand-id">RIMOLI·T — UNIDAD DE DESARROLLO</span>
+            </div>
+            <nav class="nav">
+                <a href="#stack" data-idx="01">Stack</a>
+                <a href="#proyectos" data-idx="02">Proyectos</a>
+                <a href="#experiencia" data-idx="03">Trayectoria</a>
+                <a href="#formacion" data-idx="04">Formación</a>
+                <a href="#contacto" data-idx="05">Contacto</a>
+            </nav>
+            <div class="hud-status"><span class="pulse"></span>Disponible</div>
+        </header>
+
+        <div class="rail rail-l"><span>Buenos Aires · Archivo personal · v2049</span></div>
+        <div class="rail rail-r"><span id="railRead">SEC 00 — INICIO</span></div>
+
+        <footer class="botbar">
+            <span id="clock">--:--:--</span>
+            <span class="sep"></span>
+            <span class="hide-sm">LAT -34.6037 / LON -58.3816</span>
+            <span class="sep hide-sm"></span>
+            <span class="hide-sm">Señal estable</span>
+            <span class="grow"></span>
+            <div class="progress"><i id="bar"></i></div>
+            <span id="scrollPct">000%</span>
+        </footer>
+    </div>
+
+    <main class="shell">
+
+        <!-- ============ HERO ============ -->
+        <section class="hero" id="inicio">
+            <div>
+                <div class="hero-id">
+                    <span class="bar"></span>
+                    <span class="kicker">Exp. date <b>—</b> sin límite</span>
+                </div>
+
+                <h1 class="name glitch" id="heroName" data-text="TADEO">
+                    <span class="l1">Tadeo</span>
+                    <span class="l2">Rimoli</span>
+                </h1>
+
+                <p class="role">Full Stack Developer</p>
+                <div class="rule"></div>
+                <p class="tagline">Desarrollo de software escalable y soluciones web modernas.</p>
+
+                <div class="scroll-cue"><i></i><span>Desplazar</span></div>
+            </div>
+
+            <aside class="spec brk">
+                <div class="spec-head">
+                    <span>Registro de unidad</span>
+                    <span>ID·2049</span>
+                </div>
+                <dl>
+                    <div class="spec-row"><dt>Designación</dt><dd>Tadeo Rimoli</dd></div>
+                    <div class="spec-row"><dt>Clase</dt><dd>Full Stack / JVM</dd></div>
+                    <div class="spec-row"><dt>Especialidad</dt><dd class="cy">Java &amp; Spring</dd></div>
+                    <div class="spec-row"><dt>Base</dt><dd>Buenos Aires · AR</dd></div>
+                    <div class="spec-row"><dt>Función</dt><dd>Backend · Frontend · Deploy</dd></div>
+                    <div class="spec-row"><dt>Estado</dt><dd class="hot">Disponible para trabajar</dd></div>
+                </dl>
+                <div class="spec-foot"><span class="pulse"></span>Prueba base — superada</div>
+            </aside>
+        </section>
+
+        <div class="baseline">
+            <div class="baseline-track">
+                <span>Células · <b>Interconectadas</b> · dentro de células · interconectadas · dentro de una sola línea · <b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · sistemas que resisten ·</span>
+                <span>Células · <b>Interconectadas</b> · dentro de células · interconectadas · dentro de una sola línea · <b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · sistemas que resisten ·</span>
+            </div>
+        </div>
+
+        <!-- ============ 01 STACK ============ -->
+        <section class="sec" id="stack" data-sec="01 — STACK">
+            <div class="sec-head rv">
+                <span class="sec-idx">01</span>
+                <h2 class="sec-title aberr" data-scramble>Tecnologías</h2>
+                <div class="sec-line"></div>
+                <span class="sec-meta">07 unidades / operativas</span>
+            </div>
+
+            <div class="stack rv">
+                <div class="cell"><span class="cell-idx">001</span><div><h3 class="cell-name">Java</h3><p class="cell-cat">Lenguaje · Núcleo</p></div></div>
+                <div class="cell"><span class="cell-idx">002</span><div><h3 class="cell-name">Spring</h3><p class="cell-cat">Framework · Backend</p></div></div>
+                <div class="cell"><span class="cell-idx">003</span><div><h3 class="cell-name">Hibernate</h3><p class="cell-cat">ORM · Persistencia</p></div></div>
+                <div class="cell"><span class="cell-idx">004</span><div><h3 class="cell-name">SQL</h3><p class="cell-cat">Datos · Consultas</p></div></div>
+                <div class="cell"><span class="cell-idx">005</span><div><h3 class="cell-name">React</h3><p class="cell-cat">Interfaz · Frontend</p></div></div>
+                <div class="cell"><span class="cell-idx">006</span><div><h3 class="cell-name">GitHub</h3><p class="cell-cat">Control de versiones</p></div></div>
+                <div class="cell"><span class="cell-idx">007</span><div><h3 class="cell-name">Docker</h3><p class="cell-cat">Contenedores · Deploy</p></div></div>
+            </div>
+        </section>
+
+        <!-- ============ 02 PROYECTOS ============ -->
+        <section class="sec" id="proyectos" data-sec="02 — PROYECTOS">
+            <div class="sec-head rv">
+                <span class="sec-idx">02</span>
+                <h2 class="sec-title aberr" data-scramble>Trabajos destacados</h2>
+                <div class="sec-line"></div>
+                <span class="sec-meta">04 archivos / desclasificados</span>
+            </div>
+
+            <div class="work">
+
+                <article class="dossier d-1 rv" style="--acc:var(--orange)">
+                    <div class="d-bar">
+                        <span class="file">Archivo 001</span>
+                        <span>Sistema</span>
+                        <span class="stat push">En desarrollo</span>
+                    </div>
+                    <div class="d-body">
+                        <h3 class="d-title aberr">Sistema Administrativo Hotelero</h3>
+                        <p class="d-year">2025 · Producción activa</p>
+                        <p class="d-desc">Sistema completo de gestión hotelera para administrar operaciones del hotel de manera eficiente. Gestiona reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.</p>
+
+                        <div class="d-block">
+                            <h4 class="block-label">Módulos del sistema</h4>
+                            <ul class="chips">
+                                <li class="chip">Novedades</li>
+                                <li class="chip">Reservas</li>
+                                <li class="chip">Calendario</li>
+                                <li class="chip">Bar</li>
+                                <li class="chip">Mucamas</li>
+                                <li class="chip">Habitaciones</li>
+                                <li class="chip">Huéspedes</li>
+                                <li class="chip">Financiero</li>
+                                <li class="chip">Gastos</li>
+                                <li class="chip">Estacionamiento</li>
+                                <li class="chip">Tarifas</li>
+                                <li class="chip chip-dev">Stock <small>en desarrollo</small></li>
+                                <li class="chip">Mensajería</li>
+                                <li class="chip">Configuración</li>
+                            </ul>
+                        </div>
+
+                        <div class="d-block">
+                            <h4 class="block-label">Tecnologías</h4>
+                            <ul class="chips">
+                                <li class="chip chip-tech">Spring Boot</li>
+                                <li class="chip chip-tech">Hibernate</li>
+                                <li class="chip chip-tech">MySQL</li>
+                                <li class="chip chip-tech">React</li>
+                                <li class="chip chip-tech">TailwindCSS</li>
+                                <li class="chip chip-tech">REST APIs</li>
+                            </ul>
+                            <p class="d-note">Backend con Spring Boot y JPA/Hibernate. Frontend con React. Diseño responsive y optimizado.</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="dossier d-2 rv" style="--acc:var(--cyan)">
+                    <div class="d-bar">
+                        <span class="file">Archivo 002</span>
+                        <span>Landing</span>
+                        <span class="stat push">En línea</span>
+                    </div>
+                    <div class="d-body">
+                        <h3 class="d-title aberr">Hotel Estrellas de Mar</h3>
+                        <p class="d-year">2025</p>
+                        <p class="d-desc">Sitio web para Hotel Estrellas de Mar con reserva de habitaciones, información de amenidades, galería y opciones de contacto.</p>
+                        <a href="https://hotelestrellasdemar.com.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
+                    </div>
+                </article>
+
+                <article class="dossier d-3 rv" style="--acc:var(--magenta)">
+                    <div class="d-bar">
+                        <span class="file">Archivo 003</span>
+                        <span>App móvil</span>
+                        <span class="stat push">Proyecto final universitario</span>
+                    </div>
+                    <div class="d-body">
+                        <h3 class="d-title aberr">Entrena+ Atletismo</h3>
+                        <p class="d-year">2023 — 2024</p>
+                        <p class="d-desc">App móvil creada en React Native para el proyecto final de Tecnicatura en Programación. La aplicación permite consultar datos actualizados de la CADA (Confederación Argentina de Atletismo) y gestionar entrenamientos, ejercicios y grupos de entrenamiento para atletas y entrenadores.</p>
+
+                        <div class="d-block">
+                            <h4 class="block-label">Funcionalidades</h4>
+                            <ul class="chips">
+                                <li class="chip">Rankings CADA</li>
+                                <li class="chip">Resultados de Torneos</li>
+                                <li class="chip">Calendario Anual</li>
+                                <li class="chip">Crear Ejercicios</li>
+                                <li class="chip">Crear Entrenamientos</li>
+                                <li class="chip">Grupos de Entrenamiento</li>
+                                <li class="chip">Calendario Grupal</li>
+                                <li class="chip">Calendario Individual</li>
+                                <li class="chip">Agendar Entrenamientos</li>
+                                <li class="chip">Agendar Competencias</li>
+                                <li class="chip">Gestión de Administrador</li>
+                                <li class="chip">Resultados de Entrenos</li>
+                            </ul>
+                            <p class="d-note">La app permite consultar información actualizada de la CADA incluyendo rankings, resultados de torneos y calendario anual. Los usuarios pueden crear ejercicios y entrenamientos, formar grupos de entrenamiento, y gestionar calendarios grupales e individuales para agendar entrenamientos y competencias. Los administradores de grupo pueden agendar entrenos y completar resultados de entrenos de los participantes.</p>
+                        </div>
+
+                        <div class="d-block">
+                            <h4 class="block-label">Tecnologías</h4>
+                            <ul class="chips">
+                                <li class="chip chip-tech">React Native</li>
+                                <li class="chip chip-tech">Java</li>
+                                <li class="chip chip-tech">Spring Boot</li>
+                                <li class="chip chip-tech">REST APIs</li>
+                            </ul>
+                            <p class="d-note">Frontend móvil construido con React Native para iOS y Android. Backend desarrollado con Java y Spring Boot para gestionar la comunicación con la API de la CADA y las funcionalidades de entrenamiento y grupos.</p>
+                        </div>
+
+                        <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
+                    </div>
+                </article>
+
+                <article class="dossier d-4 rv" style="--acc:var(--cyan)">
+                    <div class="d-bar">
+                        <span class="file">Archivo 004</span>
+                        <span>Landing</span>
+                        <span class="stat push">En línea</span>
+                    </div>
+                    <div class="d-body">
+                        <h3 class="d-title aberr">Entrena+ Web</h3>
+                        <p class="d-year">2024 · Proyecto final universitario</p>
+                        <p class="d-desc">Landing page para la aplicación móvil Entrena+ Atletismo, mostrando características como gestión de entrenamientos y seguimiento de resultados.</p>
+                        <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ============ 03 EXPERIENCIA ============ -->
+        <section class="sec" id="experiencia" data-sec="03 — TRAYECTORIA">
+            <div class="sec-head rv">
+                <span class="sec-idx">03</span>
+                <h2 class="sec-title aberr" data-scramble>Experiencia</h2>
+                <div class="sec-line"></div>
+                <span class="sec-meta">02 registros / verificados</span>
+            </div>
+
+            <div class="ledger">
+                <article class="rec rv">
+                    <div class="rec-time">2024 — Actualidad<small>Registro activo</small></div>
+                    <div>
+                        <h3 class="rec-role">Desarrollador Freelance</h3>
+                        <p class="rec-org">Independiente</p>
+                        <p class="rec-desc">Desarrollo y mantenimiento de software para gestión hotelera. Desarrollo de páginas web personalizadas.</p>
+                    </div>
+                </article>
+
+                <article class="rec rv">
+                    <div class="rec-time">Ago 2022 — Oct 2023<small>Registro cerrado</small></div>
+                    <div>
+                        <h3 class="rec-role">Full Stack Developer Junior</h3>
+                        <p class="rec-org">Advenio Software</p>
+                        <p class="rec-desc">Desarrollo de software para sistema de gestión en el sector de salud. Desarrollo backend con Spring Boot (Java), JPA/Hibernate, autenticación JWT y APIs REST. Desarrollo frontend con React y TailwindCSS, creación de vistas y SPAs. Gestión de bases de datos MySQL y PostgreSQL. Configuración de despliegue con Nginx y Docker. Responsable de actualizar versiones del sistema en producción, solución de bugs y desarrollo de nuevas funcionalidades.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ============ 04 FORMACIÓN ============ -->
+        <section class="sec edu" id="formacion" data-sec="04 — FORMACIÓN">
+            <div class="sec-head rv">
+                <span class="sec-idx">04</span>
+                <h2 class="sec-title aberr" data-scramble>Educación</h2>
+                <div class="sec-line"></div>
+                <span class="sec-meta">03 registros / archivados</span>
+            </div>
+
+            <div class="ledger">
+                <article class="rec rv">
+                    <div class="rec-time">2024 — Actualidad<small>En curso</small></div>
+                    <div>
+                        <h3 class="rec-role">Licenciatura en Sistemas</h3>
+                        <p class="rec-org">Universidad CAECE</p>
+                    </div>
+                </article>
+                <article class="rec rv">
+                    <div class="rec-time">2020 — 2023<small>Finalizado</small></div>
+                    <div>
+                        <h3 class="rec-role">Tecnicatura Universitaria en Programación</h3>
+                        <p class="rec-org">Universidad CAECE</p>
+                    </div>
+                </article>
+                <article class="rec rv">
+                    <div class="rec-time">2014 — 2019<small>Finalizado</small></div>
+                    <div>
+                        <h3 class="rec-role">Bachillerato en Ciencias Sociales</h3>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- ============ 05 CONTACTO ============ -->
+        <section class="sec" id="contacto" data-sec="05 — CONTACTO">
+            <div class="sec-head rv">
+                <span class="sec-idx">05</span>
+                <h2 class="sec-title aberr" data-scramble>Hablemos</h2>
+                <div class="sec-line"></div>
+                <span class="sec-meta">canal abierto / respuesta &lt; 24h</span>
+            </div>
+
+            <div class="contact">
+                <a href="https://github.com/tadeorimoli" target="_blank" rel="noopener" class="ccard brk rv">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                    </svg>
+                    <div>
+                        <p class="ccard-label">Canal 01 · Repositorio</p>
+                        <h3 class="ccard-name">GitHub</h3>
+                        <p class="ccard-meta">github.com/tadeorimoli</p>
+                    </div>
+                </a>
+
+                <a href="https://ar.linkedin.com/in/tadeo-rimoli-9aa24b1a7" target="_blank" rel="noopener" class="ccard brk rv">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                    <div>
+                        <p class="ccard-label">Canal 02 · Red</p>
+                        <h3 class="ccard-name">LinkedIn</h3>
+                        <p class="ccard-meta">tadeo-rimoli</p>
+                    </div>
+                </a>
+
+                <a href="mailto:tadeorimoli@gmail.com" class="ccard brk rv">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <rect width="20" height="16" x="2" y="4"/>
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                    <div>
+                        <p class="ccard-label">Canal 03 · Directo</p>
+                        <h3 class="ccard-name">Email</h3>
+                        <p class="ccard-meta">tadeorimoli@gmail.com</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="endline">
+                <span>Fin de transmisión</span>
+                <span class="grow"></span>
+                <span>Tadeo Rimoli · <span id="year">2025</span></span>
+            </div>
+        </section>
+
+    </main>
+
     <script>
-        const lenis = new Lenis({
-            duration: 1.2,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothWheel: true,
-            wheelMultiplier: 1,
-            touchMultiplier: 2
-        });
+    (function(){
+        'use strict';
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-        gsap.registerPlugin(ScrollTrigger);
-        lenis.on('scroll', ScrollTrigger.update);
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
+        /* ---------- RELOJ ---------- */
+        const clock = document.getElementById('clock');
+        function tick(){
+            const d = new Date();
+            const p = n => String(n).padStart(2,'0');
+            clock.textContent = p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds());
         }
-        requestAnimationFrame(raf);
+        tick(); setInterval(tick,1000);
+        document.getElementById('year').textContent = new Date().getFullYear();
 
-        gsap.to('.status-badge', {
-            opacity: 1,
-            y: 0,
-            duration: 0.8,
-            ease: 'power2.out',
-            delay: 0.2
-        });
+        /* ---------- PROGRESO / LECTURA DE SECCIÓN ---------- */
+        const bar = document.getElementById('bar');
+        const pct = document.getElementById('scrollPct');
+        const railRead = document.getElementById('railRead');
+        const navLinks = Array.from(document.querySelectorAll('.nav a'));
+        const sections = Array.from(document.querySelectorAll('.sec[data-sec]'));
+        let ticking = false;
 
-        gsap.from('.name', {
-            opacity: 0,
-            y: 100,
-            duration: 1.2,
-            ease: 'power3.out',
-            delay: 0.5
-        });
+        function onScroll(){
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+            bar.style.width = (p*100).toFixed(1)+'%';
+            pct.textContent = String(Math.round(p*100)).padStart(3,'0')+'%';
 
-        gsap.to('.hero .accent-line', {
-            opacity: 1,
-            scaleX: 1,
-            duration: 1.5,
-            ease: 'power2.out',
-            delay: 1
-        });
+            let current = null;
+            const probe = window.innerHeight * 0.42;
+            for (const s of sections){
+                const r = s.getBoundingClientRect();
+                if (r.top <= probe && r.bottom > probe) current = s;
+            }
+            railRead.textContent = current ? current.dataset.sec : 'SEC 00 — INICIO';
+            navLinks.forEach(a => a.classList.toggle('is-active', !!current && a.getAttribute('href') === '#'+current.id));
+            ticking = false;
+        }
+        window.addEventListener('scroll', () => {
+            if (!ticking){ ticking = true; requestAnimationFrame(onScroll); }
+        }, {passive:true});
+        window.addEventListener('resize', onScroll);
+        onScroll();
 
-        gsap.to('.hero .role', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 1.3
-        });
-
-        gsap.to('.hero .tagline', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 1.7
-        });
-
-        gsap.to('.tech-badge', {
-            opacity: 1,
-            y: 0,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 0.5 
-        });
-
-        gsap.to('.hero-scroll-indicator', {
-            opacity: 1,
-            duration: 1,
-            ease: 'power2.out',
-            delay: 2.2
-        });
-
-
-        gsap.utils.toArray('.fade-up:not(.project-card)').forEach((element) => {
-            gsap.fromTo(element, 
-                { opacity: 0, y: 60 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: element,
-                        start: 'top 90%',
-                        toggleActions: 'play none none none',
-                        once: true
-                    }
+        /* ---------- RETÍCULA DE PUNTERO ---------- */
+        if (window.matchMedia('(pointer:fine)').matches){
+            const ret = document.getElementById('reticle');
+            const rx = document.getElementById('rx'), ry = document.getElementById('ry'), rdot = document.getElementById('rdot');
+            let mx = 0, my = 0, queued = false;
+            window.addEventListener('mousemove', e => {
+                mx = e.clientX; my = e.clientY;
+                if (!ret.classList.contains('on')) ret.classList.add('on');
+                if (!queued){
+                    queued = true;
+                    requestAnimationFrame(() => {
+                        rx.style.top = my+'px';
+                        ry.style.left = mx+'px';
+                        rdot.style.left = mx+'px';
+                        rdot.style.top = my+'px';
+                        queued = false;
+                    });
                 }
-            );
-        });
+            }, {passive:true});
+            document.addEventListener('mouseleave', () => ret.classList.remove('on'));
+        }
 
-        gsap.utils.toArray('.tech-tag').forEach((tag, index) => {
-            gsap.fromTo(tag,
-                { opacity: 0, scale: 0.8 },
-                {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.5,
-                    ease: 'back.out',
-                    scrollTrigger: {
-                        trigger: '.tech-grid',
-                        start: 'top 80%',
-                        toggleActions: 'play none none reverse'
-                    },
-                    delay: index * 0.05
+        /* ---------- DECODIFICACIÓN DE TÍTULOS ---------- */
+        const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/\\<>#$%&*+=';
+        function decode(el){
+            if (reduced) return;
+            const target = el.dataset.final || el.textContent;
+            el.dataset.final = target;
+            const total = 16;
+            let frame = 0;
+            const id = setInterval(() => {
+                frame++;
+                const revealed = Math.floor((frame/total) * target.length);
+                let out = '';
+                for (let i=0;i<target.length;i++){
+                    const ch = target[i];
+                    if (i < revealed || ch === ' ') out += ch;
+                    else out += GLYPHS[(Math.random()*GLYPHS.length)|0];
                 }
-            );
-        });
+                el.textContent = out;
+                if (frame >= total){ clearInterval(id); el.textContent = target; }
+            }, 34);
+        }
 
-        gsap.utils.toArray('.project-card').forEach((card, index) => {
-            gsap.fromTo(card,
-                { opacity: 0, y: 60 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                    ease: 'power2.out',
-                    scrollTrigger: {
-                        trigger: card,
-                        start: 'top 90%',
-                        toggleActions: 'play none none none',
-                        once: true
-                    },
-                    delay: index * 0.05
+        /* ---------- MICRO-GLITCH ---------- */
+        const heroName = document.getElementById('heroName');
+        function glitchPulse(el, ms){
+            el.classList.add('on');
+            setTimeout(() => el.classList.remove('on'), ms);
+        }
+        if (!reduced){
+            setInterval(() => {
+                if (Math.random() < 0.55){
+                    glitchPulse(heroName, 90);
+                    setTimeout(() => glitchPulse(heroName, 60), 160);
                 }
-            );
-        });
+            }, 4200);
+        }
 
-        window.addEventListener('load', () => {
-            ScrollTrigger.refresh();
-        });
+        /* ---------- REVELADOS MECÁNICOS ---------- */
+        if (window.gsap && window.ScrollTrigger){
+            gsap.registerPlugin(ScrollTrigger);
+
+            if (!reduced && document.visibilityState === 'visible'){
+                const intro = gsap.timeline({defaults:{ease:'steps(5)'}});
+                intro.from('.topbar, .botbar', {opacity:0, duration:.3})
+                     .from('.hero-id', {opacity:0, x:-14, duration:.3}, '-=.1')
+                     .from('.name .l1', {opacity:0, y:26, duration:.4})
+                     .from('.name .l2', {opacity:0, y:26, duration:.4}, '-=.22')
+                     .from('.role', {opacity:0, duration:.3})
+                     .from('.rule', {scaleX:0, transformOrigin:'left center', duration:.45, ease:'steps(7)'}, '-=.15')
+                     .from('.tagline', {opacity:0, y:12, duration:.3})
+                     .from('.spec', {opacity:0, y:18, duration:.4}, '-=.5')
+                     .from('.spec-row', {opacity:0, x:12, duration:.22, stagger:.05}, '-=.3')
+                     .from('.scroll-cue', {opacity:0, duration:.3});
+                intro.call(() => glitchPulse(heroName, 120), null, 0.9);
+
+                /* failsafe: si el rAF se congela (pestaña en segundo plano),
+                   el contenido nunca queda invisible */
+                const settle = () => { if (intro.progress() < 1) intro.progress(1); };
+                document.addEventListener('visibilitychange', () => { if (document.hidden) settle(); });
+                setTimeout(settle, 6000);
+            }
+
+            gsap.utils.toArray('.rv').forEach(el => {
+                gsap.fromTo(el,
+                    {opacity:0, y:22},
+                    {
+                        opacity:1, y:0, duration:.45, ease:'steps(5)',
+                        scrollTrigger:{trigger:el, start:'top 88%', once:true}
+                    });
+            });
+
+            gsap.utils.toArray('.cell').forEach((cell, i) => {
+                gsap.from(cell, {
+                    opacity:0, duration:.22, ease:'steps(2)', delay:i*.045,
+                    scrollTrigger:{trigger:'.stack', start:'top 82%', once:true}
+                });
+            });
+
+            document.querySelectorAll('[data-scramble]').forEach(el => {
+                ScrollTrigger.create({
+                    trigger:el, start:'top 88%', once:true,
+                    onEnter:() => decode(el)
+                });
+            });
+
+            window.addEventListener('load', () => ScrollTrigger.refresh());
+        } else {
+            document.querySelectorAll('.rv').forEach(el => el.style.opacity = 1);
+        }
+
+        /* ---------- NAVEGACIÓN ---------- */
+        navLinks.forEach(a => a.addEventListener('click', e => {
+            const t = document.querySelector(a.getAttribute('href'));
+            if (!t) return;
+            e.preventDefault();
+            window.scrollTo({top: t.offsetTop - 40, behavior:'auto'});
+        }));
+    })();
     </script>
 </body>
 </html>
