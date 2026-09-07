@@ -8,6 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preload" as="image" href="holograma.webp">
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="code.svg">
 
@@ -108,20 +109,20 @@
     }
 
     /* ---------- PROYECCIÓN HOLOGRÁFICA ----------
-       Figura vectorial original: un único set de trazos SVG reutilizado por
-       cada capa del compuesto, y todo el movimiento resuelto en CSS.
+       La figura es un WebP sobre negro puro. La capa entera va en 'screen',
+       así que el negro de la imagen desaparece solo: no hace falta recortarla
+       ni darle transparencia, y la luz se SUMA al fondo en vez de taparlo.
+       Por eso mismo el negro que pintamos ADENTRO (scanlines, banda de
+       refresco) tampoco se ve: screen(x, negro) = x. Un solo mix-blend-mode
+       en toda la escena — cada uno extra obliga a releer el fondo por frame.
 
-       Nota de composición y de costo: la capa entera va en 'screen', así que
-       suma luz al fondo en vez de taparlo. Como screen(x, negro) = x, todo
-       negro que pintemos ADENTRO de la capa desaparece solo — por eso las
-       scanlines y la banda de refresco no llevan blend mode propio. Cada
-       mix-blend-mode extra obliga al navegador a releer el fondo en cada
-       frame, que es lo caro. Acá hay uno solo en toda la escena. */
+       La imagen ya trae su propia trama y su fringe cromático. Lo que aporta
+       el CSS es el movimiento: sin eso se lee como una foto pegada. */
 
     .layer-holo{
         z-index:2;
         mix-blend-mode:screen;
-        opacity:var(--holo-op,.62);
+        opacity:var(--holo-op,.72);
         overflow:hidden;
         transition:opacity 400ms linear;
     }
@@ -129,9 +130,9 @@
         --px:0px; --py:0px;
         position:absolute;
         left:var(--holo-x,60%);
-        top:4vh;
-        height:108vh;
-        aspect-ratio:600/1000;
+        top:3vh;
+        height:120vh;
+        aspect-ratio:662/1635;
         transform:translate3d(calc(-50% + var(--px)),var(--py),0);
         will-change:transform;
         animation:holoDrift 23s ease-in-out infinite;
@@ -144,21 +145,22 @@
 
     /* aire teñido alrededor: la luz proyectada no tiene borde duro */
     .holo-glow{
-        position:absolute;left:50%;top:0;width:190%;height:100%;
+        position:absolute;left:50%;top:0;width:210%;height:100%;
         transform:translateX(-50%);
         background:
-            radial-gradient(ellipse 30% 26% at 50% 18%,rgba(255,146,206,.20),transparent 74%),
-            radial-gradient(ellipse 50% 40% at 50% 56%,rgba(255,47,156,.14),transparent 76%),
-            radial-gradient(ellipse 60% 26% at 50% 88%,rgba(34,224,255,.06),transparent 80%);
+            radial-gradient(ellipse 26% 22% at 50% 16%,rgba(150,120,255,.13),transparent 76%),
+            radial-gradient(ellipse 42% 34% at 50% 44%,rgba(255,47,156,.11),transparent 78%),
+            radial-gradient(ellipse 50% 26% at 50% 76%,rgba(190,60,255,.07),transparent 80%);
         animation:holoPulse 5.7s ease-in-out infinite;
     }
     @keyframes holoPulse{0%,100%{opacity:.82}50%{opacity:1}}
 
-    .holo-svg{
+    .holo-img{
         position:absolute;inset:0;width:100%;height:100%;
-        /* se disuelve hacia los bordes: nunca hay un recorte duro */
-        -webkit-mask-image:radial-gradient(ellipse 64% 72% at 50% 34%,#000 30%,rgba(0,0,0,.62) 64%,transparent 92%);
-        mask-image:radial-gradient(ellipse 64% 72% at 50% 34%,#000 30%,rgba(0,0,0,.62) 64%,transparent 92%);
+        object-fit:contain;
+        /* se disuelve por abajo en vez de terminar en el borde del archivo */
+        -webkit-mask-image:linear-gradient(to bottom,#000 78%,transparent 99%);
+        mask-image:linear-gradient(to bottom,#000 78%,transparent 99%);
         animation:holoFlicker 8.3s steps(1,end) infinite;
     }
     /* parpadeo eléctrico: intervalos irregulares para que no suene a metrónomo */
@@ -171,23 +173,17 @@
         88.7%{opacity:.85}
     }
 
-    /* aberración cromática: el proyector no alinea del todo los canales */
-    .holo-ab use{mix-blend-mode:screen;opacity:.5}
-    .ab-c{animation:abC 6.2s ease-in-out infinite}
-    .ab-m{animation:abM 6.2s ease-in-out infinite}
-    @keyframes abC{0%,100%{transform:translate(-3px,0)}50%{transform:translate(-7px,2px)}}
-    @keyframes abM{0%,100%{transform:translate(3px,0)}50%{transform:translate(7px,-2px)}}
-
     /* líneas de barrido: negro sobre la figura, que el 'screen' de la capa
-       vuelve invisible. El paso de la trama (5px) es exactamente el recorrido,
-       así que el bucle no tiene costura. */
+       vuelve invisible. Suaves, porque la imagen ya trae trama propia; lo que
+       aportan es el arrastre. El paso (5px) es exactamente el recorrido, así
+       que el bucle no tiene costura. */
     .holo-lines{
         position:absolute;inset:-3% 0;
         background:repeating-linear-gradient(to bottom,
             rgba(0,0,0,0) 0 1.5px,
-            rgba(0,0,0,.6) 1.5px 3px,
+            rgba(0,0,0,.42) 1.5px 3px,
             rgba(0,0,0,0) 3px 4px,
-            rgba(0,0,0,.3) 4px 5px);
+            rgba(0,0,0,.2) 4px 5px);
         animation:holoCrawl 1.15s linear infinite;
         will-change:transform;
     }
@@ -197,7 +193,7 @@
     .holo-wipe{
         position:absolute;left:-10%;right:-10%;height:16%;top:-16%;
         background:linear-gradient(to bottom,
-            transparent,rgba(210,245,255,.07) 42%,rgba(34,224,255,.11) 54%,transparent);
+            transparent,rgba(210,245,255,.06) 42%,rgba(34,224,255,.1) 54%,transparent);
         animation:holoWipe 6.4s cubic-bezier(.36,0,.5,1) infinite;
         will-change:transform;
     }
@@ -208,23 +204,24 @@
         70%,100%{transform:translateY(740%);opacity:0}
     }
 
-    /* salto de señal: una franja del cuerpo se desplaza un instante */
+    /* salto de señal: una franja de la figura se desplaza un instante.
+       Es la misma imagen, así que el navegador la decodifica una sola vez. */
     .holo-band{
         position:absolute;inset:0;opacity:0;
         animation:holoBand 8.6s steps(1,end) infinite;
     }
-    .holo-band svg{position:absolute;inset:0;width:100%;height:100%}
+    .holo-band img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
     @keyframes holoBand{
         0%,22.9%  {opacity:0}
-        23%       {opacity:.5;clip-path:inset(17% 0 79% 0);transform:translateX(16px)}
+        23%       {opacity:.7;clip-path:inset(14% 0 82% 0);transform:translateX(16px)}
         24.1%     {opacity:0}
         41.3%     {opacity:0}
-        41.6%     {opacity:.36;clip-path:inset(52% 0 44% 0);transform:translateX(-12px)}
+        41.6%     {opacity:.5;clip-path:inset(46% 0 50% 0);transform:translateX(-12px)}
         42.4%     {opacity:0}
         66%       {opacity:0}
-        66.3%     {opacity:.55;clip-path:inset(31% 0 65% 0);transform:translateX(10px)}
+        66.3%     {opacity:.75;clip-path:inset(27% 0 69% 0);transform:translateX(10px)}
         67.2%     {opacity:0}
-        67.9%     {opacity:.32;clip-path:inset(35% 0 61% 0);transform:translateX(-19px)}
+        67.9%     {opacity:.45;clip-path:inset(31% 0 65% 0);transform:translateX(-19px)}
         68.8%,100%{opacity:0}
     }
 
@@ -649,8 +646,7 @@
 
     @media (prefers-reduced-motion:reduce){
         .layer-grain,.layer-scan::after,.baseline-track,.scroll-cue i::after,.pulse{animation:none}
-        .holo-stage,.holo-svg,.holo-lines,.holo-wipe,.holo-band,.holo-glow,
-        .ab-c,.ab-m{animation:none}
+        .holo-stage,.holo-img,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
         .holo-wipe,.holo-band{display:none}
         .cell:hover,.ccard:hover{animation:none}
         .rv{opacity:1}
@@ -663,139 +659,19 @@
     <div class="layer layer-haze"></div>
 
     <!-- ============ PROYECCIÓN HOLOGRÁFICA ============
-         Silueta vectorial original + animación CSS. Sin video ni imagen.
-         La pose es deliberadamente asimétrica (peso en una cadera, pelo
-         peinado a un lado, un brazo flexionado con la mano en la cintura):
-         una figura frontal y simétrica se lee como aparición, no como
-         persona. El hueco entre antebrazo y torso es lo que más ayuda. -->
+         La imagen va sobre negro puro, sin recortar ni transparencia: la capa
+         compone en 'screen' y el negro se descarta solo. El movimiento lo pone
+         el CSS (parpadeo, arrastre de barrido, banda de refresco, saltos de
+         señal, paralaje) — sin eso se leería como una foto pegada al fondo. -->
     <div class="layer layer-holo" aria-hidden="true">
         <div class="holo-stage" id="holoStage">
             <div class="holo-glow"></div>
 
-            <svg class="holo-svg" viewBox="0 0 600 1000" preserveAspectRatio="xMidYMid meet">
-                <defs>
-                    <linearGradient id="holoInk" gradientUnits="userSpaceOnUse" x1="300" y1="30" x2="300" y2="960">
-                        <stop offset="0"   stop-color="#ffeef6"/>
-                        <stop offset=".20" stop-color="#ffd2ea"/>
-                        <stop offset=".34" stop-color="#a9dcff"/>
-                        <stop offset=".52" stop-color="#c98cf0"/>
-                        <stop offset=".68" stop-color="#ff5cb8"/>
-                        <stop offset=".80" stop-color="#ff2f9c" stop-opacity=".6"/>
-                        <stop offset=".92" stop-color="#ff2f9c" stop-opacity="0"/>
-                    </linearGradient>
-                    <!-- luz de contorno fría, entra por la izquierda -->
-                    <linearGradient id="holoRim" gradientUnits="userSpaceOnUse" x1="150" y1="0" x2="345" y2="0">
-                        <stop offset="0"   stop-color="#d6f6ff" stop-opacity=".7"/>
-                        <stop offset=".3"  stop-color="#5fd0ff" stop-opacity=".2"/>
-                        <stop offset="1"   stop-color="#5fd0ff" stop-opacity="0"/>
-                    </linearGradient>
-                    <filter id="holoShade" x="-15%" y="-15%" width="130%" height="130%">
-                        <feGaussianBlur stdDeviation="5"/>
-                    </filter>
-                    <filter id="holoSoft" x="-30%" y="-18%" width="160%" height="136%">
-                        <feGaussianBlur stdDeviation="18"/>
-                    </filter>
-
-                    <!-- pelo: no es una cortina simétrica. Casquete + un mechón
-                         largo sobre un hombro y uno corto del otro lado. -->
-                    <g id="joiHair" transform="rotate(-5 300 252)">
-                        <path d="M300 38C272 38 246 58 232 90 220 118 214 152 212 206
-                                 211 228 212 242 214 254 224 254 232 252 236 250
-                                 234 226 233 214 234 204 236 172 238 140 250 116
-                                 262 94 278 86 300 86 322 86 338 96 352 120
-                                 360 140 362 172 364 210 366 250 370 280 374 300
-                                 384 300 392 298 398 296 398 262 396 226 392 196
-                                 388 152 382 120 372 92 358 56 330 38 300 38Z"/>
-                        <path d="M368 210C376 258 382 306 390 352 398 400 406 442 416 480
-                                 422 504 428 522 434 538 446 520 452 494 452 462
-                                 452 422 444 378 436 334 428 290 420 246 414 204
-                                 400 198 382 200 368 210Z"/>
-                        <path d="M215 218C211 252 209 286 211 318 213 342 217 360 221 374
-                                 231 360 237 340 239 316 241 288 237 256 237 224
-                                 229 216 221 214 215 218Z"/>
-                    </g>
-
-                    <g id="joiBody">
-                        <use href="#joiHair"/>
-                        <!-- cabeza, en tres cuartos -->
-                        <path transform="rotate(-5 300 252)" d="M300 64C270 64 251 88 250 126
-                                 249 154 256 178 269 193 278 203 289 208 300 208
-                                 312 208 323 202 331 191 344 174 352 152 351 124
-                                 350 88 330 64 300 64Z"/>
-                        <!-- torso: cintura marcada y cadera cargada hacia un lado -->
-                        <path d="M280 200C280 226 274 242 262 250
-                                 234 264 214 278 208 294 203 322 218 354 228 384
-                                 238 422 244 464 246 502 248 542 226 574 216 618
-                                 208 666 210 720 216 774 220 834 226 894 228 950
-                                 L380 950C382 894 386 834 390 772
-                                 392 720 392 670 384 618 376 574 360 544 362 502
-                                 364 464 370 422 380 384 390 354 405 328 400 306
-                                 394 282 374 264 346 250 334 242 328 226 328 200Z"/>
-                        <!-- brazo que cuelga -->
-                        <path d="M208 296C188 308 178 338 176 376
-                                 174 418 180 460 188 498 194 526 200 552 204 578
-                                 214 570 222 552 224 530 226 502 220 470 216 438
-                                 212 402 210 350 220 312Z"/>
-                        <!-- brazo flexionado, mano apoyada en la cintura -->
-                        <path d="M398 302C412 314 421 326 424 340
-                                 430 362 434 382 434 404 434 428 432 446 428 462
-                                 420 482 412 498 404 512 394 528 384 538 376 545
-                                 370 551 364 555 360 556 357 550 357 545 358 540
-                                 366 532 374 524 382 516 392 504 397 490 400 478
-                                 404 462 404 446 404 430 404 412 402 394 400 378
-                                 397 360 394 344 392 330 390 318 389 310 388 306Z"/>
-                    </g>
-
-                    <!-- Modelado interno, en 'multiply' sobre la figura: oscurece
-                         el pelo y deja la cara calada (en multiply el blanco es la
-                         identidad). Los rasgos y el escote son lo que separa una
-                         persona de una silueta luminosa. -->
-                    <g id="joiShade" filter="url(#holoShade)">
-                        <use href="#joiHair" fill="#1d0725"/>
-                        <g transform="rotate(-5 300 252)">
-                            <path fill="#fff2f6" d="M300 84C274 84 256 102 252 132
-                                 249 158 256 182 270 196 279 205 290 210 300 210
-                                 311 210 322 205 331 195 345 180 352 156 349 130
-                                 345 100 326 84 300 84Z"/>
-                            <path fill="none" stroke="#7a3a68" stroke-width="3.5" stroke-linecap="round"
-                                  d="M267 130C275 124 285 123 293 126"/>
-                            <path fill="none" stroke="#7a3a68" stroke-width="3.5" stroke-linecap="round"
-                                  d="M311 125C319 122 329 123 336 128"/>
-                            <ellipse cx="278" cy="144" rx="11" ry="4.5" fill="#6c2f5b"/>
-                            <ellipse cx="322" cy="141" rx="10" ry="4.2" fill="#6c2f5b"/>
-                            <path fill="#8a4468" d="M302 152c2 12 4 19 8 25-4 3-9 3-13 1 3-8 4-17 5-26z"/>
-                            <ellipse cx="302" cy="184" rx="11" ry="4" fill="#93406a"/>
-                            <path fill="#40142f" d="M272 198c9 11 18 16 28 16s19-5 28-16c-2 20-12 32-28 32s-26-12-28-32z"/>
-                        </g>
-                        <!-- escote del vestido y clavículas -->
-                        <path fill="none" stroke="#5a1f43" stroke-width="7" stroke-linecap="round"
-                              d="M236 274C260 318 279 338 301 338 323 338 343 318 366 274"/>
-                        <path fill="none" stroke="#6b2a4e" stroke-width="4" stroke-linecap="round"
-                              d="M262 268C276 277 288 281 298 282"/>
-                        <path fill="none" stroke="#6b2a4e" stroke-width="4" stroke-linecap="round"
-                              d="M342 266C328 276 316 280 306 281"/>
-                    </g>
-                </defs>
-
-                <!-- 1. sangrado: la proyección tiñe el aire que la rodea -->
-                <use href="#joiBody" fill="url(#holoInk)" filter="url(#holoSoft)" opacity=".7"/>
-
-                <!-- 2. canales desalineados -->
-                <g class="holo-ab">
-                    <use href="#joiBody" fill="#1fd8ff" class="ab-c"/>
-                    <use href="#joiBody" fill="#ff2f9c" class="ab-m"/>
-                </g>
-
-                <!-- 3. núcleo, modelado y luz de contorno -->
-                <use href="#joiBody" fill="url(#holoInk)" opacity=".72"/>
-                <use href="#joiShade" opacity=".8" style="mix-blend-mode:multiply"/>
-                <use href="#joiBody" fill="url(#holoRim)"/>
-            </svg>
+            <img class="holo-img" src="holograma.webp" alt=""
+                 width="662" height="1635" decoding="async">
 
             <div class="holo-band">
-                <svg viewBox="0 0 600 1000" preserveAspectRatio="xMidYMid meet">
-                    <use href="#joiBody" fill="#cdf3ff"/>
-                </svg>
+                <img src="holograma.webp" alt="" width="662" height="1635" decoding="async">
             </div>
 
             <div class="holo-lines"></div>
@@ -1217,6 +1093,11 @@
             if (!ticking){ ticking = true; requestAnimationFrame(onScroll); }
         }, {passive:true});
         window.addEventListener('resize', onScroll);
+        /* el navegador puede restaurar la posición de scroll después de que
+           corre onScroll(): sin esto la opacidad del holograma queda pegada
+           en el valor atenuado y la figura no se ve al cargar */
+        window.addEventListener('load', onScroll);
+        window.addEventListener('pageshow', onScroll);
         onScroll();
 
         /* ---------- RETÍCULA DE PUNTERO ---------- */
