@@ -296,6 +296,28 @@
     .hud{position:fixed;inset:0;z-index:70;pointer-events:none}
     .hud a{pointer-events:auto}
 
+    /* control de ambiente sonoro. Ocupa la tercera columna de la barra, que
+       quedo vacia al sacar el indicador de disponibilidad. Apagado por defecto. */
+    .aud{
+        justify-self:end;pointer-events:auto;
+        display:flex;align-items:center;gap:9px;
+        background:none;border:1px solid var(--line);
+        padding:5px 11px 5px 9px;
+        font-family:var(--mono);font-size:9px;letter-spacing:.2em;
+        text-transform:uppercase;color:var(--ink-3);cursor:pointer;
+        transition:color var(--snap) steps(2),border-color var(--snap) steps(2);
+    }
+    .aud:hover{color:var(--ink-2);border-color:rgba(255,255,255,.2)}
+    .aud[aria-pressed="true"]{color:var(--cyan);border-color:rgba(34,224,255,.4)}
+    .aud-bars{display:flex;align-items:flex-end;gap:2px;height:10px}
+    /* scaleY y no height: transform se compone, height dispara layout */
+    .aud-bars i{width:2px;height:10px;background:currentColor;transform:scaleY(.2);transform-origin:bottom}
+    .aud[aria-pressed="true"] .aud-bars i{animation:audBar 1.15s ease-in-out infinite}
+    .aud[aria-pressed="true"] .aud-bars i:nth-child(2){animation-delay:.19s}
+    .aud[aria-pressed="true"] .aud-bars i:nth-child(3){animation-delay:.38s}
+    .aud[aria-pressed="true"] .aud-bars i:nth-child(4){animation-delay:.57s}
+    @keyframes audBar{0%,100%{transform:scaleY(.2)}50%{transform:scaleY(1)}}
+
     .mark{position:absolute;width:18px;height:18px;opacity:.7}
     .mark::before,.mark::after{content:'';position:absolute;background:var(--orange)}
     .mark::before{width:100%;height:1px}
@@ -722,6 +744,7 @@
     }
     @media (max-width:520px){
         .brand-id{display:none}
+        .aud-txt{display:none}
         .progress{width:84px}
     }
 
@@ -788,6 +811,10 @@
                 <a href="#formacion" data-idx="04">Formación</a>
                 <a href="#contacto" data-idx="05">Contacto</a>
             </nav>
+            <button class="aud" id="aud" type="button" aria-pressed="false" aria-label="Ambiente sonoro">
+                <span class="aud-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                <span class="aud-txt">Ambiente</span>
+            </button>
         </header>
 
         <div class="rail rail-l"><span>Buenos Aires · Archivo personal · v2049</span></div>
@@ -836,7 +863,7 @@
                     <div class="spec-row"><dt>Clase</dt><dd>Full Stack</dd></div>
                     <div class="spec-row"><dt>Especialidad</dt><dd class="cy">Java · Spring · React</dd></div>
                     <div class="spec-row"><dt>Base</dt><dd>Mar del Plata · Buenos Aires</dd></div>
-                    <div class="spec-row"><dt>Función</dt><dd>Que el sistema siga en pie sin mí</dd></div>
+                    <div class="spec-row"><dt>Función</dt><dd>Resolver problemas</dd></div>
                 </dl>
                 <div class="spec-foot"><span class="pulse"></span>Registro verificado</div>
             </aside>
@@ -1360,6 +1387,152 @@
             e.preventDefault();
             window.scrollTo({top: t.offsetTop - 40, behavior:'auto'});
         }));
+    })();
+
+    /* ---------- AMBIENTE SONORO ----------
+       Drone sintetizado en el navegador: no hay archivo de audio, ni un byte
+       descargado. Tres osciladores graves apenas desafinados entre sí generan
+       el batido lento característico, un pasabajos barre muy despacio para que
+       nunca suene igual dos veces, y una reverb con impulso generado abre el
+       espacio.
+
+       Arranca SIEMPRE apagado. El audio automático está bloqueado por todos los
+       navegadores (necesita un gesto del usuario), y además sorprender con
+       sonido a alguien que abrió la página entre veinte pestañas es la forma
+       más rápida de que la cierre. */
+    (function(){
+        const btn = document.getElementById('aud');
+        if (!btn || !(window.AudioContext || window.webkitAudioContext)) {
+            if (btn) btn.hidden = true;
+            return;
+        }
+
+        const NIVEL = 0.04;          // casi subliminal: se nota más al apagarlo
+        let ctx = null, master = null, encendido = false;
+
+        /* ruido con caída exponencial. Con caida=0 queda ruido plano, así que
+           sirve tanto de impulso para la reverb como de fuente de aire */
+        function ruido(seg, caida){
+            const n = Math.floor(ctx.sampleRate * seg);
+            const buf = ctx.createBuffer(2, n, ctx.sampleRate);
+            for (let c = 0; c < 2; c++){
+                const d = buf.getChannelData(c);
+                for (let i = 0; i < n; i++){
+                    d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, caida);
+                }
+            }
+            return buf;
+        }
+
+        function construir(){
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+            master = ctx.createGain();
+            master.gain.value = 0;
+            master.connect(ctx.destination);
+
+            const rev = ctx.createConvolver();
+            rev.buffer = ruido(2.6, 2.4);
+            const revNivel = ctx.createGain();
+            revNivel.gain.value = 0.5;
+            rev.connect(revNivel);
+            revNivel.connect(master);
+
+            const filtro = ctx.createBiquadFilter();
+            filtro.type = 'lowpass';
+            filtro.frequency.value = 210;
+            filtro.Q.value = 1.1;
+            filtro.connect(master);
+            filtro.connect(rev);
+
+            /* barrido de 31 segundos: el filtro nunca está dos veces igual */
+            const lfo = ctx.createOscillator();
+            lfo.frequency.value = 0.032;
+            const lfoAmp = ctx.createGain();
+            lfoAmp.gain.value = 115;
+            lfo.connect(lfoAmp);
+            lfoAmp.connect(filtro.frequency);
+            lfo.start();
+
+            /* 55 y 55.3 Hz desafinados dan un batido de ~3 segundos */
+            [[55, 'sawtooth', 0.16],
+             [55.3, 'sawtooth', 0.16],
+             [82.41, 'triangle', 0.085],
+             [27.5, 'sine', 0.2]].forEach(function(v){
+                const o = ctx.createOscillator();
+                o.type = v[1];
+                o.frequency.value = v[0];
+                const g = ctx.createGain();
+                g.gain.value = v[2];
+                o.connect(g);
+                g.connect(filtro);
+                o.start();
+            });
+
+            /* aire: ruido de banda estrecha, muy por debajo de los osciladores */
+            const aire = ctx.createBufferSource();
+            aire.buffer = ruido(3, 0);
+            aire.loop = true;
+            const aireF = ctx.createBiquadFilter();
+            aireF.type = 'bandpass';
+            aireF.frequency.value = 520;
+            aireF.Q.value = 0.7;
+            const aireG = ctx.createGain();
+            aireG.gain.value = 0.03;
+            aire.connect(aireF);
+            aireF.connect(aireG);
+            aireG.connect(master);
+            aire.start();
+        }
+
+        function rampa(destino, seg){
+            const t = ctx.currentTime;
+            master.gain.cancelScheduledValues(t);
+            master.gain.setValueAtTime(master.gain.value, t);
+            master.gain.linearRampToValueAtTime(destino, t + seg);
+        }
+
+        function encender(){
+            if (!ctx) construir();
+            ctx.resume();
+            rampa(NIVEL, 2.5);
+            encendido = true;
+            btn.setAttribute('aria-pressed', 'true');
+        }
+
+        function apagar(){
+            encendido = false;
+            btn.setAttribute('aria-pressed', 'false');
+            if (!ctx) return;
+            rampa(0, 0.8);
+            /* suspender libera el hilo de audio: apagado no cuesta nada */
+            setTimeout(function(){ if (!encendido) ctx.suspend(); }, 900);
+        }
+
+        btn.addEventListener('click', function(){
+            encendido ? apagar() : encender();
+            try { localStorage.setItem('tr-audio', encendido ? '1' : '0'); } catch(e){}
+        });
+
+        /* si lo dejó prendido, se retoma recién con el primer gesto: la política
+           de autoplay lo exige igual */
+        let pref = '0';
+        try { pref = localStorage.getItem('tr-audio') || '0'; } catch(e){}
+        if (pref === '1'){
+            const retomar = function(){
+                document.removeEventListener('pointerdown', retomar);
+                document.removeEventListener('keydown', retomar);
+                encender();
+            };
+            document.addEventListener('pointerdown', retomar, {once:true});
+            document.addEventListener('keydown', retomar, {once:true});
+        }
+
+        document.addEventListener('visibilitychange', function(){
+            if (!ctx) return;
+            if (document.hidden) ctx.suspend();
+            else if (encendido) ctx.resume();
+        });
     })();
     </script>
 </body>
