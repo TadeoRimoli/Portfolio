@@ -366,7 +366,7 @@
         max-width:1560px;margin:0 auto;
         padding:var(--hud-top) calc(var(--rail) + 4vw) var(--hud-bot);
     }
-    .sec{padding:11vh 0;position:relative}
+    .sec{padding:9vh 0;position:relative}
     .sec + .sec{border-top:1px solid var(--line-soft)}
 
     .mono{font-family:var(--mono)}
@@ -504,29 +504,44 @@
     }
 
     /* ---------- STACK ---------- */
-    .stack{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
-    .cell{
-        background:var(--panel);padding:22px 18px 18px;min-height:148px;
-        display:flex;flex-direction:column;justify-content:space-between;
-        position:relative;
-        transition:background-color var(--snap) steps(2),color var(--snap) steps(2),box-shadow var(--snap) steps(2);
+    /* agrupado por area en vez de una celda por herramienta: 5 filas se
+       leen de un vistazo, 13 cuadrados no */
+    .stack{display:grid;gap:1px;background:var(--line);border:1px solid var(--line)}
+    .tgroup{
+        background:var(--panel);
+        display:grid;grid-template-columns:150px 1fr;gap:8px 24px;align-items:baseline;
+        padding:18px 22px;
+        transition:background-color var(--snap) steps(2);
     }
-    .cell-idx{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-3)}
-    .cell-name{font-size:1.05rem;font-weight:600;font-stretch:112%;letter-spacing:.09em;text-transform:uppercase}
-    .cell-cat{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-top:7px}
-    .cell:hover{
-        background:var(--panel-2);color:var(--cyan);
-        box-shadow:inset 0 0 0 1px rgba(34,224,255,.55),inset 0 0 26px rgba(34,224,255,.09),0 0 22px rgba(34,224,255,.13);
-        animation:ignite .26s steps(3) 1;
+    .tgroup:hover{background:var(--panel-2)}
+    .tgroup-label{
+        font-family:var(--mono);font-size:9px;letter-spacing:.26em;
+        text-transform:uppercase;color:var(--ink-3);font-weight:400;
     }
-    .cell:hover .cell-idx,.cell:hover .cell-cat{color:var(--cyan)}
+    .tgroup-label::before{content:'// ';color:var(--orange)}
+    .tgroup-items{display:flex;flex-wrap:wrap;gap:6px 20px}
+    .tgroup-items li{
+        font-size:.98rem;font-weight:500;font-stretch:112%;
+        letter-spacing:.07em;text-transform:uppercase;color:var(--ink);
+    }
     @keyframes ignite{
         0%{filter:brightness(.5)}18%{filter:brightness(1.5)}34%{filter:brightness(.7)}
         58%{filter:brightness(1.35)}76%{filter:brightness(.9)}100%{filter:brightness(1)}
     }
 
     /* ---------- PROYECTOS ---------- */
-    .work{display:grid;grid-template-columns:repeat(12,1fr);gap:26px}
+    .work{display:block}
+    .wgroup + .wgroup{margin-top:4.5vh}
+    .wgroup-head{
+        display:flex;align-items:center;gap:16px;margin-bottom:18px;
+        font-family:var(--mono);font-size:10px;letter-spacing:.26em;
+        text-transform:uppercase;color:var(--ink-2);
+    }
+    .wgroup-head .n{color:var(--ink-3);letter-spacing:.2em}
+    .wgroup-head .line{flex:1;height:1px;background:var(--line-soft)}
+    .wrow{display:grid;grid-template-columns:repeat(12,1fr);gap:22px;align-items:start}
+    .w-lg{grid-column:span 7}
+    .w-md{grid-column:span 5}
     .dossier{
         --acc:var(--orange);
         position:relative;align-self:start;
@@ -539,10 +554,6 @@
         background:var(--acc);box-shadow:0 0 14px var(--acc);
     }
     .dossier:hover{border-color:rgba(255,255,255,.2);box-shadow:0 0 40px rgba(0,0,0,.6)}
-    .d-1{grid-column:1/8}
-    .d-2{grid-column:8/13}
-    .d-3{grid-column:6/13}
-    .d-4{grid-column:1/6}
 
     .d-bar{
         display:flex;align-items:center;gap:14px;flex-wrap:wrap;
@@ -556,22 +567,22 @@
     .stat{display:inline-flex;align-items:center;gap:6px;color:var(--ink-2)}
     .stat::before{content:'';width:5px;height:5px;background:var(--acc);box-shadow:0 0 7px var(--acc)}
 
-    .d-body{padding:30px 30px 34px}
+    .d-body{padding:22px 24px 26px}
     .d-title{
         font-size:clamp(1.15rem,2.5vw,1.95rem);font-weight:700;font-stretch:115%;
         letter-spacing:.09em;line-height:1.08;text-transform:uppercase;
     }
-    .d-year{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-3);margin-top:.8rem;text-transform:uppercase}
-    .d-desc{margin-top:1.6rem;color:var(--ink-2);font-weight:300;max-width:62ch}
-    .d-block{margin-top:2.2rem;padding-top:1.5rem;border-top:1px solid var(--line-soft)}
+    .d-year{font-family:var(--mono);font-size:10px;letter-spacing:.22em;color:var(--ink-3);margin-top:.5rem;text-transform:uppercase}
+    .d-desc{margin-top:1rem;color:var(--ink-2);font-weight:300;max-width:62ch}
+    .d-block{margin-top:1.4rem;padding-top:1.1rem;border-top:1px solid var(--line-soft)}
     .block-label{
         font-family:var(--mono);font-size:9px;letter-spacing:.26em;
-        text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-bottom:1rem;
+        text-transform:uppercase;color:var(--ink-3);font-weight:400;margin-bottom:.7rem;
     }
     .block-label::before{content:'// ';color:var(--acc)}
     /* el alcance se comunica con un número, no con un muro de etiquetas */
     .d-stat{
-        display:flex;align-items:baseline;gap:11px;margin-bottom:1.2rem;
+        display:flex;align-items:baseline;gap:11px;margin-bottom:.8rem;
         font-family:var(--mono);font-size:10px;letter-spacing:.2em;
         text-transform:uppercase;color:var(--ink-2);
     }
@@ -590,6 +601,9 @@
     .chip:hover{color:var(--cyan);border-color:rgba(34,224,255,.5);box-shadow:inset 0 0 14px rgba(34,224,255,.12)}
     .chip-tech{color:var(--ink);border-color:rgba(255,255,255,.18)}
     .chip-dev{color:var(--orange);border-color:rgba(255,106,18,.45)}
+    /* deja ver que la lista esta recortada: el numero de arriba no cuadraba
+       con los chips visibles y quedaba raro */
+    .chip-more{color:var(--ink-3);border-style:dashed;background:none}
     .chip-dev small{font-size:7.5px;opacity:.65;margin-left:6px;letter-spacing:.1em}
 
     .btn{
@@ -680,7 +694,7 @@
     /* ---------- RESPONSIVE ---------- */
     @media (max-width:1180px){
         .hero{grid-template-columns:1fr;gap:3.5rem;padding-top:14vh}
-        .d-1,.d-2,.d-3,.d-4{grid-column:1/-1}
+        .w-lg,.w-md{grid-column:1/-1}
         .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:span 4}
     }
     @media (max-width:1180px){
@@ -704,7 +718,7 @@
         .holo-stage{--holo-op:.38}
         .spinner{display:none}
         .holo-glow{filter:none}
-        .d-body{padding:24px 20px 28px}
+        .d-body{padding:18px 18px 22px}
     }
     @media (max-width:520px){
         .brand-id{display:none}
@@ -822,7 +836,7 @@
                     <div class="spec-row"><dt>Clase</dt><dd>Full Stack</dd></div>
                     <div class="spec-row"><dt>Especialidad</dt><dd class="cy">Java · Spring · React</dd></div>
                     <div class="spec-row"><dt>Base</dt><dd>Mar del Plata · Buenos Aires</dd></div>
-                    <div class="spec-row"><dt>Función</dt><dd>Backend · Frontend · Deploy · Automatización</dd></div>
+                    <div class="spec-row"><dt>Función</dt><dd>Que el sistema siga en pie sin mí</dd></div>
                 </dl>
                 <div class="spec-foot"><span class="pulse"></span>Registro verificado</div>
             </aside>
@@ -830,8 +844,8 @@
 
         <div class="baseline">
             <div class="baseline-track">
-                <span><b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · <b>Node</b> · <b>Supabase</b> · sistemas que resisten · automatización de procesos ·</span>
-                <span><b>Java</b> · <b>Spring</b> · <b>React</b> · <b>Docker</b> · <b>Node</b> · <b>Supabase</b> · sistemas que resisten · automatización de procesos ·</span>
+                <span><b>Java</b> &middot; <b>Spring</b> &middot; <b>React</b> &middot; <b>Docker</b> &middot; <b>Node</b> &middot; <b>Supabase</b> &middot; automatización de procesos &middot; agentes en el flujo de trabajo &middot;</span>
+                <span><b>Java</b> &middot; <b>Spring</b> &middot; <b>React</b> &middot; <b>Docker</b> &middot; <b>Node</b> &middot; <b>Supabase</b> &middot; automatización de procesos &middot; agentes en el flujo de trabajo &middot;</span>
             </div>
         </div>
 
@@ -841,21 +855,31 @@
                 <span class="sec-idx">01</span>
                 <h2 class="sec-title aberr" data-scramble>Tecnologías</h2>
                 <div class="sec-line"></div>
-                <span class="sec-meta">11 unidades / operativas</span>
+                <span class="sec-meta">05 áreas / 13 herramientas</span>
             </div>
 
             <div class="stack rv">
-                <div class="cell"><span class="cell-idx">001</span><div><h3 class="cell-name">Java</h3><p class="cell-cat">Lenguaje · Núcleo</p></div></div>
-                <div class="cell"><span class="cell-idx">002</span><div><h3 class="cell-name">Spring</h3><p class="cell-cat">Framework · Backend</p></div></div>
-                <div class="cell"><span class="cell-idx">003</span><div><h3 class="cell-name">Hibernate</h3><p class="cell-cat">ORM · Persistencia</p></div></div>
-                <div class="cell"><span class="cell-idx">004</span><div><h3 class="cell-name">SQL</h3><p class="cell-cat">Datos · Consultas</p></div></div>
-                <div class="cell"><span class="cell-idx">005</span><div><h3 class="cell-name">React</h3><p class="cell-cat">Interfaz · Frontend</p></div></div>
-                <div class="cell"><span class="cell-idx">006</span><div><h3 class="cell-name">GitHub</h3><p class="cell-cat">Control de versiones</p></div></div>
-                <div class="cell"><span class="cell-idx">007</span><div><h3 class="cell-name">Docker</h3><p class="cell-cat">Contenedores · Deploy</p></div></div>
-                <div class="cell"><span class="cell-idx">008</span><div><h3 class="cell-name">Node</h3><p class="cell-cat">Runtime · Backend</p></div></div>
-                <div class="cell"><span class="cell-idx">009</span><div><h3 class="cell-name">Supabase</h3><p class="cell-cat">Datos · Backend as a Service</p></div></div>
-                <div class="cell"><span class="cell-idx">010</span><div><h3 class="cell-name">Claude Code</h3><p class="cell-cat">Agentes · Terminal</p></div></div>
-                <div class="cell"><span class="cell-idx">011</span><div><h3 class="cell-name">Cursor</h3><p class="cell-cat">Agentes · Editor</p></div></div>
+            <div class="tgroup">
+                <h3 class="tgroup-label">Backend</h3>
+                <ul class="tgroup-items"><li>Java</li><li>Spring</li><li>Hibernate</li><li>Node</li></ul>
+            </div>
+            <div class="tgroup">
+                <h3 class="tgroup-label">Frontend</h3>
+                <ul class="tgroup-items"><li>React</li><li>React Native</li><li>TailwindCSS</li></ul>
+            </div>
+            <div class="tgroup">
+                <h3 class="tgroup-label">Datos</h3>
+                <ul class="tgroup-items"><li>SQL</li><li>MySQL</li><li>PostgreSQL</li><li>Supabase</li></ul>
+            </div>
+            <div class="tgroup">
+                <h3 class="tgroup-label">Infraestructura</h3>
+                <ul class="tgroup-items"><li>Docker</li><li>Nginx</li><li>GitHub</li></ul>
+            </div>
+            <div class="tgroup">
+                <h3 class="tgroup-label">Agentes</h3>
+                <ul class="tgroup-items"><li>Claude Code</li><li>Cursor</li></ul>
+            </div>
+        </div>
             </div>
         </section>
 
@@ -865,109 +889,166 @@
                 <span class="sec-idx">02</span>
                 <h2 class="sec-title aberr" data-scramble>Trabajos destacados</h2>
                 <div class="sec-line"></div>
-                <span class="sec-meta">04 archivos / desclasificados</span>
+                <span class="sec-meta">06 archivos / 03 dominios</span>
             </div>
 
             <div class="work">
 
-                <article class="dossier d-1 rv" style="--acc:var(--orange)">
-                    <div class="d-bar">
-                        <span class="file">Archivo 001</span>
-                        <span>Sistema</span>
-                        <span class="stat push">En desarrollo</span>
-                    </div>
-                    <div class="d-body">
-                        <h3 class="d-title aberr">Sistema Administrativo Hotelero</h3>
-                        <p class="d-year">2025 · Producción activa</p>
-                        <p class="d-desc">Sistema de gestión hotelera para administrar reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.</p>
-
-                        <div class="d-block">
-                            <h4 class="block-label">Alcance</h4>
-                            <p class="d-stat"><b>14</b> módulos en producción</p>
-                            <ul class="chips">
-                                <li class="chip">Reservas</li>
-                                <li class="chip">Habitaciones</li>
-                                <li class="chip">Huéspedes</li>
-                                <li class="chip">Financiero</li>
-                            </ul>
+            <!-- ---------- A · HOTELERÍA ---------- -->
+            <div class="wgroup rv">
+                <div class="wgroup-head"><span class="n">A</span>Hotelería<i class="line"></i><span class="n">02 archivos</span></div>
+                <div class="wrow">
+                    <article class="dossier w-lg" style="--acc:var(--orange)">
+                        <div class="d-bar">
+                            <span class="file">Archivo 001</span>
+                            <span>Sistema</span>
+                            <span class="stat push">En desarrollo</span>
                         </div>
-
-                        <div class="d-block">
-                            <h4 class="block-label">Tecnologías</h4>
-                            <ul class="chips">
-                                <li class="chip chip-tech">Spring Boot</li>
-                                <li class="chip chip-tech">Hibernate</li>
-                                <li class="chip chip-tech">MySQL</li>
-                                <li class="chip chip-tech">React</li>
+                        <div class="d-body">
+                            <h3 class="d-title aberr">Sistema Administrativo Hotelero</h3>
+                            <p class="d-year">2025 · Producción activa</p>
+                            <p class="d-desc">Sistema de gestión hotelera para administrar reservas, habitaciones, huéspedes, facturación y reportes en tiempo real.</p>
+                            <div class="d-block">
+                                <h4 class="block-label">Alcance</h4>
+                                <p class="d-stat"><b>14</b> módulos en producción</p>
+                                <ul class="chips">
+                                    <li class="chip">Reservas</li>
+                                    <li class="chip">Habitaciones</li>
+                                    <li class="chip">Huéspedes</li>
+                                    <li class="chip">Financiero</li>
+                                    <li class="chip chip-more" title="10 módulos más">+10</li>
                                 </ul>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="dossier d-2 rv" style="--acc:var(--cyan)">
-                    <div class="d-bar">
-                        <span class="file">Archivo 002</span>
-                        <span>Landing</span>
-                        <span class="stat push">En línea</span>
-                    </div>
-                    <div class="d-body">
-                        <h3 class="d-title aberr">Hotel Estrellas de Mar</h3>
-                        <p class="d-year">2025</p>
-                        <p class="d-desc">Sitio web para Hotel Estrellas de Mar con reserva de habitaciones, información de amenidades, galería y opciones de contacto.</p>
-                        <a href="https://hotelestrellasdemar.com.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
-                    </div>
-                </article>
-
-                <article class="dossier d-3 rv" style="--acc:var(--magenta)">
-                    <div class="d-bar">
-                        <span class="file">Archivo 003</span>
-                        <span>App móvil</span>
-                        <span class="stat push">Proyecto final universitario</span>
-                    </div>
-                    <div class="d-body">
-                        <h3 class="d-title aberr">Entrena+ Atletismo</h3>
-                        <p class="d-year">2023 — 2024</p>
-                        <p class="d-desc">App móvil para atletas y entrenadores: consulta datos de la CADA (Confederación Argentina de Atletismo) y gestiona entrenamientos, ejercicios y grupos.</p>
-
-                        <div class="d-block">
-                            <h4 class="block-label">Alcance</h4>
-                            <p class="d-stat"><b>12</b> funcionalidades</p>
-                            <ul class="chips">
-                                <li class="chip">Rankings CADA</li>
-                                <li class="chip">Entrenamientos</li>
-                                <li class="chip">Grupos de Entrenamiento</li>
-                                <li class="chip">Calendario</li>
-                            </ul>
-                        </div>
-
-                        <div class="d-block">
-                            <h4 class="block-label">Tecnologías</h4>
-                            <ul class="chips">
-                                <li class="chip chip-tech">React Native</li>
-                                <li class="chip chip-tech">Java</li>
-                                <li class="chip chip-tech">Spring Boot</li>
+                            </div>
+                            <div class="d-block">
+                                <h4 class="block-label">Tecnologías</h4>
+                                <ul class="chips">
+                                    <li class="chip chip-tech">Spring Boot</li>
+                                    <li class="chip chip-tech">Hibernate</li>
+                                    <li class="chip chip-tech">MySQL</li>
+                                    <li class="chip chip-tech">React</li>
                                 </ul>
+                            </div>
                         </div>
+                    </article>
 
-                        <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
-                    </div>
-                </article>
-
-                <article class="dossier d-4 rv" style="--acc:var(--cyan)">
-                    <div class="d-bar">
-                        <span class="file">Archivo 004</span>
-                        <span>Landing</span>
-                        <span class="stat push">En línea</span>
-                    </div>
-                    <div class="d-body">
-                        <h3 class="d-title aberr">Entrena+ Web</h3>
-                        <p class="d-year">2024 · Proyecto final universitario</p>
-                        <p class="d-desc">Landing page para la aplicación móvil Entrena+ Atletismo, mostrando características como gestión de entrenamientos y seguimiento de resultados.</p>
-                        <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
-                    </div>
-                </article>
-
+                    <article class="dossier w-md" style="--acc:var(--cyan)">
+                        <div class="d-bar">
+                            <span class="file">Archivo 002</span>
+                            <span>Landing</span>
+                            <span class="stat push">En línea</span>
+                        </div>
+                        <div class="d-body">
+                            <h3 class="d-title aberr">Hotel Estrellas de Mar</h3>
+                            <p class="d-year">2025</p>
+                            <p class="d-desc">Sitio web con reserva de habitaciones, información de amenidades, galería y contacto.</p>
+                            <a href="https://hotelestrellasdemar.com.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
+                        </div>
+                    </article>
+                </div>
             </div>
+
+            <!-- ---------- B · DEPORTES ---------- -->
+            <div class="wgroup rv">
+                <div class="wgroup-head"><span class="n">B</span>Deportes<i class="line"></i><span class="n">03 archivos</span></div>
+                <div class="wrow">
+                    <article class="dossier w-lg" style="--acc:var(--cyan)">
+                        <div class="d-bar">
+                            <span class="file">Archivo 003</span>
+                            <span>Plataforma</span>
+                            <span class="stat push">En línea</span>
+                        </div>
+                        <div class="d-body">
+                            <h3 class="d-title aberr">Marcas ARG</h3>
+                            <p class="d-desc">Registro del atletismo argentino: competencias, calendario, rankings y récords, con buscador de atletas y torneos.</p>
+                            <div class="d-block">
+                                <h4 class="block-label">Secciones</h4>
+                                <ul class="chips">
+                                    <li class="chip">Competencias</li>
+                                    <li class="chip">Calendario</li>
+                                    <li class="chip">Rankings</li>
+                                    <li class="chip">Récords</li>
+                                </ul>
+                            </div>
+                            <a href="https://marcas-arg.tadeorimoli.com.ar/" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
+                        </div>
+                    </article>
+
+                    <article class="dossier w-md" style="--acc:var(--magenta)">
+                        <div class="d-bar">
+                            <span class="file">Archivo 004</span>
+                            <span>App móvil</span>
+                            <span class="stat push">Proyecto final · Tecnicatura</span>
+                        </div>
+                        <div class="d-body">
+                            <h3 class="d-title aberr">Entrena+ Atletismo</h3>
+                            <p class="d-year">2023 — 2024</p>
+                            <p class="d-desc">App móvil para atletas y entrenadores: consulta datos de la CADA y gestiona entrenamientos, ejercicios y grupos.</p>
+                            <div class="d-block">
+                                <h4 class="block-label">Alcance</h4>
+                                <p class="d-stat"><b>12</b> funcionalidades</p>
+                                <ul class="chips">
+                                    <li class="chip">Rankings CADA</li>
+                                    <li class="chip">Entrenamientos</li>
+                                    <li class="chip">Grupos</li>
+                                    <li class="chip chip-more" title="9 funcionalidades más">+9</li>
+                                </ul>
+                            </div>
+                            <div class="d-block">
+                                <h4 class="block-label">Tecnologías</h4>
+                                <ul class="chips">
+                                    <li class="chip chip-tech">React Native</li>
+                                    <li class="chip chip-tech">Java</li>
+                                    <li class="chip chip-tech">Spring Boot</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="dossier w-md" style="--acc:var(--cyan)">
+                        <div class="d-bar">
+                            <span class="file">Archivo 005</span>
+                            <span>Landing</span>
+                            <span class="stat push">En línea</span>
+                        </div>
+                        <div class="d-body">
+                            <h3 class="d-title aberr">Entrena+ Web</h3>
+                            <p class="d-year">2024</p>
+                            <p class="d-desc">Landing de la app Entrena+ Atletismo, con sus características y seguimiento de resultados.</p>
+                            <a href="https://entrenamas.ar" target="_blank" rel="noopener" class="btn"><span>Acceder</span><span>→</span></a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+            <!-- ---------- C · INVESTIGACIÓN ---------- -->
+            <div class="wgroup rv">
+                <div class="wgroup-head"><span class="n">C</span>Investigación<i class="line"></i><span class="n">01 archivo</span></div>
+                <div class="wrow">
+                    <article class="dossier w-lg" style="--acc:var(--orange)">
+                        <div class="d-bar">
+                            <span class="file">Archivo 006</span>
+                            <span>Agente</span>
+                            <span class="stat push">En construcción</span>
+                        </div>
+                        <div class="d-body">
+                            <h3 class="d-title aberr">Reconstrucción de incidentes</h3>
+                            <p class="d-year">Trabajo final · Licenciatura</p>
+                            <p class="d-desc">Sistema con agente que alerta sobre incidentes en servidores y reconstruye la cadena de pasos que llevó hasta ellos.</p>
+                            <div class="d-block">
+                                <h4 class="block-label">Cruce de áreas</h4>
+                                <ul class="chips">
+                                    <li class="chip">Servidores</li>
+                                    <li class="chip">IA</li>
+                                    <li class="chip">Agentes</li>
+                                    <li class="chip">Ciberseguridad</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+
+        </div>
         </section>
 
         <!-- ============ 03 EXPERIENCIA ============ -->
