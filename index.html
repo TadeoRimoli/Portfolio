@@ -8,9 +8,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preload" as="image" href="holograma.webp">
-    <link rel="preload" as="image" href="holograma-b.webp">
-    <link rel="preload" as="image" href="holograma-c.webp">
+    <link rel="preload" as="image" href="holograma-1.webp">
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="code.svg">
 
@@ -137,36 +135,52 @@
 
        El que compone tampoco es el que se anima: el hijo lleva el transform
        y el padre la máscara, así la máscara no se mueve con la animación. */
+    /* El spinner. La version anterior era una imagen trasladada en linea
+       recta a velocidad constante y se leia como una calcomania deslizandose.
+       Lo que faltaba:
+
+       1. PERSPECTIVA. Ahora entra chico (.55) y sale grande (1.15): se acerca.
+       2. TRAYECTORIA. Sube un poco mientras cruza en vez de ir por un riel
+          horizontal, y bancea (rota) como un vehiculo que corrige rumbo.
+       3. VELOCIDAD ANGULAR. La curva de tiempo es lenta en los bordes y
+          rapida al medio, que es como se ve algo que pasa cerca: 'linear'
+          es justamente lo que delata que es una imagen y no un objeto.
+
+       Ademas va mas chico y mas tenue: a esa distancia se leen las luces,
+       no la chapa. Cuanto mas detalle se distingue, mas parece un recorte. */
     .spinner{
         position:fixed;
-        top:var(--spin-y,6vh);
+        top:var(--spin-y,9vh);
         left:0;right:0;
-        height:calc(var(--spin-w,18vw) * 310 / 900);
+        height:calc(var(--spin-w,12vw) * 310 / 900);
         z-index:1;
         pointer-events:none;
-        opacity:var(--spin-op,.55);
+        opacity:var(--spin-op,.42);
     }
     .spinner-move{
         position:absolute;top:0;left:0;
-        width:var(--spin-w,18vw);height:100%;
+        width:var(--spin-w,12vw);height:100%;
         opacity:0;
         will-change:transform;
-        animation:spinnerPass 46s linear 6s infinite;
+        animation:spinnerPass 54s cubic-bezier(.42,0,.58,1) 9s infinite;
     }
     .spinner img{
         width:100%;height:100%;object-fit:contain;display:block;
         -webkit-mask-image:radial-gradient(ellipse 60% 62% at 50% 50%,#000 46%,transparent 96%);
         mask-image:radial-gradient(ellipse 60% 62% at 50% 50%,#000 46%,transparent 96%);
+        /* las luces de posicion no son fijas: titilan */
+        animation:spinnerLuces 3.1s steps(1,end) infinite;
     }
-    /* entra por izquierda y se aleja subiendo: la trompa y los rastros de luz
-       de la imagen ya apuntan en ese sentido. El ciclo es largo a propósito:
-       es un evento que pasa cada tanto, no una decoración permanente. */
     @keyframes spinnerPass{
-        0%      {transform:translate3d(-30vw,0,0) scale(.94);opacity:0}
-        4%      {opacity:1}
-        50%     {opacity:1}
-        58%     {transform:translate3d(114vw,0,0) scale(1.06);opacity:0}
-        100%    {transform:translate3d(114vw,0,0) scale(1.06);opacity:0}
+        0%      {transform:translate3d(-24vw,3.5vh,0) scale(.55) rotate(2.4deg);opacity:0}
+        7%      {opacity:1}
+        62%     {opacity:1}
+        72%,100%{transform:translate3d(110vw,-4vh,0) scale(1.15) rotate(-1.8deg);opacity:0}
+    }
+    @keyframes spinnerLuces{
+        0%,38%,40%,67%,69%,100%{opacity:1}
+        39%{opacity:.7}
+        68%{opacity:.86}
     }
 
     .holo-stage{
@@ -228,58 +242,31 @@
         position:absolute;inset:0;width:100%;height:100%;
         object-fit:contain;
     }
-    /* Tres poses recortadas con la MISMA caja, o sea registradas al pixel.
-       El orden arma una intencion: A en reposo con la mano en la cadera, B
-       levanta la mano, C gira y mira a camara. Entre B y C el cuerpo es
-       identico y solo cambia la cabeza, asi que ese salto se lee como que
-       ella gira, no como un cambio de imagen.
+    /* SECUENCIA DE GESTO. Siete cuadros recortados con la misma caja, o sea
+       registrados al pixel: entre ellos solo se mueven el brazo y la cabeza.
+       Reposo largo -> sube la mano -> dedos en los labios -> sopla -> baja ->
+       reposo. El 1 y el 7 son casi identicos, asi que el bucle no tiene corte.
 
-       Se apilan: C tapa a B, B tapa a A. Las dos animaciones comparten
-       duracion para no desfasarse. 27s no es multiplo de ninguno de los
-       otros ciclos (parpadeo 8.3, banda 8.6, barrido 1.15, deriva 23). */
-    /* PRUEBA: video encima de las tres poses. Se compone en 'cover' porque
-       el clip viene 400x736 (aspecto .543) y el encuadre de las poses es
-       .408: asi la figura queda al mismo alto y se recortan los costados,
-       que estan vacios. Si el video no carga o no puede reproducirse, abajo
-       siguen las poses fijas intactas.
-       Para sacarlo: borrar esta regla, el <video> del markup y holograma.mp4 */
-    .holo-vid{
-        position:absolute;inset:0;width:100%;height:100%;
-        object-fit:cover;
-    }
-    .holo-img-b{animation:poseB 27s steps(1,end) infinite}
-    .holo-img-c{animation:poseC 27s steps(1,end) infinite}
-    /* cada cambio ocurre DENTRO de un tartamudeo de senal, no con un fundido */
-    @keyframes poseB{
-        0%,37.9%   {opacity:0}
-        38%        {opacity:1}
-        38.4%      {opacity:0}
-        38.8%      {opacity:1}
-        39.3%      {opacity:0}
-        39.8%,89.6%{opacity:1}
-        89.8%      {opacity:0}
-        90.2%      {opacity:1}
-        90.7%,100% {opacity:0}
-    }
-    @keyframes poseC{
-        0%,57.9%   {opacity:0}
-        58%        {opacity:1}
-        58.3%      {opacity:0}
-        58.7%      {opacity:1}
-        59.1%,89.6%{opacity:1}
-        89.8%      {opacity:0}
-        90.2%      {opacity:1}
-        90.7%,100% {opacity:0}
-    }
-    /* parpadeo eléctrico: intervalos irregulares para que no suene a metrónomo */
-    @keyframes holoFlicker{
-        0%,6.4%,7.1%,19.4%,20.1%,42.9%,43.7%,57%,71.8%,72.6%,88.4%,89%,100%{opacity:1}
-        6.7%{opacity:.5}
-        19.7%{opacity:.76}
-        43.2%{opacity:.38}
-        72.1%{opacity:.63}
-        88.7%{opacity:.85}
-    }
+       Se reproduce a ~5 cuadros por segundo A PROPOSITO: una proyeccion
+       barata que tartamudea es mas creible que una animacion fluida, y es
+       lo que un puñado de imagenes puede sostener con honestidad.
+
+       Solo un cuadro esta en opacidad 1 por vez, asi que el orden en el DOM
+       no importa. Ciclo de 24s. */
+    .holo-f1{animation:seq1 24s steps(1,end) infinite}
+    .holo-f2{animation:seq2 24s steps(1,end) infinite}
+    .holo-f3{animation:seq3 24s steps(1,end) infinite}
+    .holo-f4{animation:seq4 24s steps(1,end) infinite}
+    .holo-f5{animation:seq5 24s steps(1,end) infinite}
+    .holo-f6{animation:seq6 24s steps(1,end) infinite}
+    .holo-f7{animation:seq7 24s steps(1,end) infinite}
+    @keyframes seq1{0%{opacity:1}72%,100%{opacity:0}}
+    @keyframes seq2{0%{opacity:0}72%{opacity:1}73.6%,100%{opacity:0}}
+    @keyframes seq3{0%{opacity:0}73.6%{opacity:1}75.2%,100%{opacity:0}}
+    @keyframes seq4{0%{opacity:0}75.2%{opacity:1}78.4%,100%{opacity:0}}
+    @keyframes seq5{0%{opacity:0}78.4%{opacity:1}80.2%,100%{opacity:0}}
+    @keyframes seq6{0%{opacity:0}80.2%{opacity:1}81.8%,100%{opacity:0}}
+    @keyframes seq7{0%{opacity:0}81.8%,100%{opacity:1}}
 
     /* líneas de barrido: negro semitransparente encima de la figura, que la
        oscurece en franjas. Suaves, porque la imagen ya trae trama propia; lo
@@ -829,10 +816,10 @@
 
     @media (prefers-reduced-motion:reduce){
         .layer-grain,.layer-scan::after,.baseline-track,.scroll-cue i::after,.pulse{animation:none}
-        .holo-move,.holo-img-b,.holo-img-c,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
+        .holo-move,.holo-img,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
         .spinner{display:none}
-        .holo-wipe,.holo-band,.holo-img-b,.holo-img-c{display:none}
-        .holo-vid{display:none}
+        .holo-wipe,.holo-band{display:none}
+        .holo-f2,.holo-f3,.holo-f4,.holo-f5,.holo-f6,.holo-f7{display:none}
         .ccard:hover{animation:none}
         .rv{opacity:1}
     }
@@ -855,17 +842,23 @@
       <div class="holo-move">
         <div class="holo-glow"></div>
 
-        <img class="holo-img" src="holograma.webp" alt=""
+        <img class="holo-img holo-f1" src="holograma-1.webp" alt=""
              width="663" height="1626" decoding="async">
-        <img class="holo-img holo-img-b" src="holograma-b.webp" alt=""
+        <img class="holo-img holo-f2" src="holograma-2.webp" alt=""
              width="663" height="1626" decoding="async">
-        <img class="holo-img holo-img-c" src="holograma-c.webp" alt=""
+        <img class="holo-img holo-f3" src="holograma-3.webp" alt=""
              width="663" height="1626" decoding="async">
-        <video class="holo-vid" src="holograma.mp4"
-               muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
+        <img class="holo-img holo-f4" src="holograma-4.webp" alt=""
+             width="663" height="1626" decoding="async">
+        <img class="holo-img holo-f5" src="holograma-5.webp" alt=""
+             width="663" height="1626" decoding="async">
+        <img class="holo-img holo-f6" src="holograma-6.webp" alt=""
+             width="663" height="1626" decoding="async">
+        <img class="holo-img holo-f7" src="holograma-7.webp" alt=""
+             width="663" height="1626" decoding="async">
 
         <div class="holo-band">
-            <img src="holograma.webp" alt="" width="663" height="1626" decoding="async">
+            <img src="holograma-1.webp" alt="" width="663" height="1626" decoding="async">
         </div>
 
         <div class="holo-lines"></div>
