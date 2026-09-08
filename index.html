@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" as="image" href="holograma.webp">
+    <link rel="preload" as="image" href="holograma-b.webp">
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/svg+xml" href="code.svg">
 
@@ -173,7 +174,7 @@
            venir de variables: una media query sobre --holo-op la pisaria el inline */
         --holo-top:.62; --holo-floor:.12;
         --holo-h:120vh;
-        --holo-w:calc(var(--holo-h) * 662 / 1635);
+        --holo-w:calc(var(--holo-h) * 663 / 1626);
         position:fixed;
         top:3vh;
         left:calc(var(--holo-x,60%) - var(--holo-w) / 2);
@@ -199,7 +200,10 @@
         position:absolute;inset:0;
         transform:translate3d(var(--px),var(--py),0);
         will-change:transform;
-        animation:holoDrift 23s ease-in-out infinite;
+        /* el parpadeo va aca y no en la imagen: asi alcanza a las dos poses y
+           a las lineas de barrido. Parpadea la proyeccion entera. */
+        animation:holoDrift 23s ease-in-out infinite,
+                  holoFlicker 8.3s steps(1,end) infinite;
     }
     /* la proyección nunca se queda del todo quieta */
     @keyframes holoDrift{
@@ -222,7 +226,23 @@
     .holo-img{
         position:absolute;inset:0;width:100%;height:100%;
         object-fit:contain;
-        animation:holoFlicker 8.3s steps(1,end) infinite;
+    }
+    /* Segunda pose. Las dos imagenes se recortaron con la misma caja, asi que
+       estan registradas al pixel: el cambio se lee como que la figura se
+       mueve, no como un salto de encuadre. El ciclo de 19s no es multiplo de
+       ninguno de los otros, para que no se sincronice. */
+    .holo-img-b{animation:poseB 19s steps(1,end) infinite}
+    /* el cambio ocurre DENTRO de un tartamudeo de senal, no con un fundido */
+    @keyframes poseB{
+        0%,45.9%   {opacity:0}
+        46%        {opacity:1}
+        46.5%      {opacity:0}
+        47%        {opacity:1}
+        47.6%      {opacity:0}
+        48.2%,95.3%{opacity:1}
+        95.5%      {opacity:0}
+        95.9%      {opacity:1}
+        96.5%,100% {opacity:0}
     }
     /* parpadeo eléctrico: intervalos irregulares para que no suene a metrónomo */
     @keyframes holoFlicker{
@@ -782,10 +802,10 @@
 
     @media (prefers-reduced-motion:reduce){
         .layer-grain,.layer-scan::after,.baseline-track,.scroll-cue i::after,.pulse{animation:none}
-        .holo-move,.holo-img,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
+        .holo-move,.holo-img-b,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
         .spinner{display:none}
-        .holo-wipe,.holo-band{display:none}
-        .cell:hover,.ccard:hover{animation:none}
+        .holo-wipe,.holo-band,.holo-img-b{display:none}
+        .ccard:hover{animation:none}
         .rv{opacity:1}
     }
     </style>
@@ -808,10 +828,12 @@
         <div class="holo-glow"></div>
 
         <img class="holo-img" src="holograma.webp" alt=""
-             width="662" height="1635" decoding="async">
+             width="663" height="1626" decoding="async">
+        <img class="holo-img holo-img-b" src="holograma-b.webp" alt=""
+             width="663" height="1626" decoding="async">
 
         <div class="holo-band">
-            <img src="holograma.webp" alt="" width="662" height="1635" decoding="async">
+            <img src="holograma.webp" alt="" width="663" height="1626" decoding="async">
         </div>
 
         <div class="holo-lines"></div>
@@ -1414,9 +1436,9 @@
                     });
             });
 
-            gsap.utils.toArray('.cell').forEach((cell, i) => {
-                gsap.from(cell, {
-                    opacity:0, duration:.22, ease:'steps(2)', delay:i*.045,
+            gsap.utils.toArray('.tgroup').forEach((fila, i) => {
+                gsap.from(fila, {
+                    opacity:0, duration:.22, ease:'steps(2)', delay:i*.06,
                     scrollTrigger:{trigger:'.stack', start:'top 82%', once:true}
                 });
             });
