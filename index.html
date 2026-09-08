@@ -169,6 +169,9 @@
 
     .holo-stage{
         --px:0px; --py:0px;
+        /* el JS escribe --holo-op inline, asi que el techo y el piso tienen que
+           venir de variables: una media query sobre --holo-op la pisaria el inline */
+        --holo-top:.62; --holo-floor:.12;
         --holo-h:120vh;
         --holo-w:calc(var(--holo-h) * 662 / 1635);
         position:fixed;
@@ -178,7 +181,7 @@
         height:var(--holo-h);
         z-index:2;
         pointer-events:none;
-        opacity:var(--holo-op,.62);
+        opacity:var(--holo-op,var(--holo-top));
         transition:opacity 400ms linear;
         overflow:hidden;
         /* Sin mix-blend-mode: el negro del archivo es #000 contra un fondo
@@ -720,13 +723,19 @@
         .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:span 4}
     }
     @media (max-width:1180px){
-        .holo-stage{--holo-x:74%;height:96vh;top:10vh}
-        .holo-stage{--holo-op:.5}
+        .holo-stage{--holo-x:74%;height:96vh;top:10vh;--holo-top:.46}
     }
     @media (max-width:860px){
         :root{--rail:0px}
         .rail{display:none}
-        .nav{display:none}
+        /* la navegacion vuelve como tira scrollable: oculta del todo dejaba
+           el sitio sin forma de saltar de seccion en telefono.
+           minmax(0,1fr) es lo que permite que la columna del medio encoja. */
+        .topbar{grid-template-columns:auto minmax(0,1fr) auto;gap:.5rem;padding:0 10px}
+        .nav{display:flex;overflow-x:auto;scrollbar-width:none}
+        .nav::-webkit-scrollbar{display:none}
+        .nav a{padding:5px 8px;white-space:nowrap}
+        .nav a::before{display:none}
         .shell{padding-left:6vw;padding-right:6vw}
         .sec-head{grid-template-columns:auto 1fr;row-gap:10px}
         .sec-title{grid-column:1/-1;order:3}
@@ -736,8 +745,11 @@
         .rec-time{padding-top:0}
         .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:1/-1;min-height:0}
         .botbar .hide-sm{display:none}
-        .holo-stage{--holo-x:56%;height:84vh;top:16vh}
-        .holo-stage{--holo-op:.38}
+        /* la etiqueta de 150px dejaba ~56px para las herramientas y se cortaban */
+        .tgroup{grid-template-columns:1fr;gap:9px;padding:16px 18px}
+        .tgroup-items{gap:7px 16px}
+        .tgroup-items li{font-size:.92rem}
+        .holo-stage{--holo-x:52%;height:76vh;top:18vh;--holo-top:.26;--holo-floor:.07}
         .spinner{display:none}
         .holo-glow{filter:none}
         .d-body{padding:18px 18px 22px}
@@ -1227,6 +1239,15 @@
         const sections = Array.from(document.querySelectorAll('.sec[data-sec]'));
         let ticking = false;
         const holo = document.getElementById('holoStage');
+        let holoTop = .62, holoFloor = .12;
+        function leerRangoHolo(){
+            if (!holo) return;
+            const cs = getComputedStyle(holo);
+            holoTop = parseFloat(cs.getPropertyValue('--holo-top')) || .62;
+            holoFloor = parseFloat(cs.getPropertyValue('--holo-floor')) || .12;
+        }
+        leerRangoHolo();
+        window.addEventListener('resize', leerRangoHolo);
 
         function onScroll(){
             const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -1247,7 +1268,7 @@
             }
             if (holo){
                 const fade = Math.min(1, window.scrollY / (window.innerHeight * 0.75));
-                holo.style.setProperty('--holo-op', (0.62 - fade * 0.50).toFixed(3));
+                holo.style.setProperty('--holo-op', (holoTop - fade * (holoTop - holoFloor)).toFixed(3));
             }
 
             railRead.textContent = current ? current.dataset.sec : 'SEC 00 — INICIO';
@@ -1407,7 +1428,7 @@
             return;
         }
 
-        const NIVEL = 0.04;          // casi subliminal: se nota más al apagarlo
+        const NIVEL = 0.15;          // ambiente audible sin taparlo todo
         let ctx = null, master = null, encendido = false;
 
         /* ruido con caída exponencial. Con caida=0 queda ruido plano, así que
@@ -1440,7 +1461,7 @@
 
             const filtro = ctx.createBiquadFilter();
             filtro.type = 'lowpass';
-            filtro.frequency.value = 210;
+            filtro.frequency.value = 420;
             filtro.Q.value = 1.1;
             filtro.connect(master);
             filtro.connect(rev);
@@ -1449,16 +1470,21 @@
             const lfo = ctx.createOscillator();
             lfo.frequency.value = 0.032;
             const lfoAmp = ctx.createGain();
-            lfoAmp.gain.value = 115;
+            lfoAmp.gain.value = 260;
             lfo.connect(lfoAmp);
             lfoAmp.connect(filtro.frequency);
             lfo.start();
 
-            /* 55 y 55.3 Hz desafinados dan un batido de ~3 segundos */
-            [[55, 'sawtooth', 0.16],
-             [55.3, 'sawtooth', 0.16],
-             [82.41, 'triangle', 0.085],
-             [27.5, 'sine', 0.2]].forEach(function(v){
+            /* 55 y 55.3 Hz desafinados dan un batido de ~3 segundos. La octava
+               (110 / 110.6) repite el batido donde SI llega un parlante chico:
+               por debajo de ~120 Hz la mayoria de los equipos no reproduce nada,
+               y solo con el fundamental el drone parecia estar apagado. */
+            [[55, 'sawtooth', 0.14],
+             [55.3, 'sawtooth', 0.14],
+             [110, 'sawtooth', 0.1],
+             [110.6, 'sawtooth', 0.1],
+             [164.81, 'triangle', 0.06],
+             [27.5, 'sine', 0.12]].forEach(function(v){
                 const o = ctx.createOscillator();
                 o.type = v[1];
                 o.frequency.value = v[0];
@@ -1475,10 +1501,10 @@
             aire.loop = true;
             const aireF = ctx.createBiquadFilter();
             aireF.type = 'bandpass';
-            aireF.frequency.value = 520;
+            aireF.frequency.value = 700;
             aireF.Q.value = 0.7;
             const aireG = ctx.createGain();
-            aireG.gain.value = 0.03;
+            aireG.gain.value = 0.042;
             aire.connect(aireF);
             aireF.connect(aireG);
             aireG.connect(master);
@@ -1519,13 +1545,16 @@
         let pref = '0';
         try { pref = localStorage.getItem('tr-audio') || '0'; } catch(e){}
         if (pref === '1'){
-            const retomar = function(){
+            /* si el primer gesto ES el boton, dejamos que lo maneje su propio
+               handler: si no, se prendia aca y se apagaba en el mismo toque */
+            const retomar = function(e){
+                if (e && e.target && e.target.closest && e.target.closest('#aud')) return;
                 document.removeEventListener('pointerdown', retomar);
                 document.removeEventListener('keydown', retomar);
                 encender();
             };
-            document.addEventListener('pointerdown', retomar, {once:true});
-            document.addEventListener('keydown', retomar, {once:true});
+            document.addEventListener('pointerdown', retomar);
+            document.addEventListener('keydown', retomar);
         }
 
         document.addEventListener('visibilitychange', function(){
