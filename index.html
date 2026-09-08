@@ -252,21 +252,22 @@
        lo que un puñado de imagenes puede sostener con honestidad.
 
        Solo un cuadro esta en opacidad 1 por vez, asi que el orden en el DOM
-       no importa. Ciclo de 24s. */
-    .holo-f1{animation:seq1 24s steps(1,end) infinite}
-    .holo-f2{animation:seq2 24s steps(1,end) infinite}
-    .holo-f3{animation:seq3 24s steps(1,end) infinite}
-    .holo-f4{animation:seq4 24s steps(1,end) infinite}
-    .holo-f5{animation:seq5 24s steps(1,end) infinite}
-    .holo-f6{animation:seq6 24s steps(1,end) infinite}
-    .holo-f7{animation:seq7 24s steps(1,end) infinite}
-    @keyframes seq1{0%{opacity:1}72%,100%{opacity:0}}
-    @keyframes seq2{0%{opacity:0}72%{opacity:1}73.6%,100%{opacity:0}}
-    @keyframes seq3{0%{opacity:0}73.6%{opacity:1}75.2%,100%{opacity:0}}
-    @keyframes seq4{0%{opacity:0}75.2%{opacity:1}78.4%,100%{opacity:0}}
-    @keyframes seq5{0%{opacity:0}78.4%{opacity:1}80.2%,100%{opacity:0}}
-    @keyframes seq6{0%{opacity:0}80.2%{opacity:1}81.8%,100%{opacity:0}}
-    @keyframes seq7{0%{opacity:0}81.8%,100%{opacity:1}}
+       no importa. Ciclo de 13s: ~10.7s de reposo (cuadro 7 + cuadro 1, que
+       son casi iguales y se perciben como uno solo) y ~2.3s de gesto. */
+    .holo-f1{animation:seq1 13s steps(1,end) infinite}
+    .holo-f2{animation:seq2 13s steps(1,end) infinite}
+    .holo-f3{animation:seq3 13s steps(1,end) infinite}
+    .holo-f4{animation:seq4 13s steps(1,end) infinite}
+    .holo-f5{animation:seq5 13s steps(1,end) infinite}
+    .holo-f6{animation:seq6 13s steps(1,end) infinite}
+    .holo-f7{animation:seq7 13s steps(1,end) infinite}
+    @keyframes seq1{0%{opacity:1}50%,100%{opacity:0}}
+    @keyframes seq2{0%{opacity:0}50%{opacity:1}53%,100%{opacity:0}}
+    @keyframes seq3{0%{opacity:0}53%{opacity:1}56%,100%{opacity:0}}
+    @keyframes seq4{0%{opacity:0}56%{opacity:1}62%,100%{opacity:0}}
+    @keyframes seq5{0%{opacity:0}62%{opacity:1}65%,100%{opacity:0}}
+    @keyframes seq6{0%{opacity:0}65%{opacity:1}68%,100%{opacity:0}}
+    @keyframes seq7{0%{opacity:0}68%,100%{opacity:1}}
 
     /* líneas de barrido: negro semitransparente encima de la figura, que la
        oscurece en franjas. Suaves, porque la imagen ya trae trama propia; lo
