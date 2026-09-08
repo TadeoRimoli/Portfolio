@@ -237,6 +237,16 @@
        Se apilan: C tapa a B, B tapa a A. Las dos animaciones comparten
        duracion para no desfasarse. 27s no es multiplo de ninguno de los
        otros ciclos (parpadeo 8.3, banda 8.6, barrido 1.15, deriva 23). */
+    /* PRUEBA: video encima de las tres poses. Se compone en 'cover' porque
+       el clip viene 400x736 (aspecto .543) y el encuadre de las poses es
+       .408: asi la figura queda al mismo alto y se recortan los costados,
+       que estan vacios. Si el video no carga o no puede reproducirse, abajo
+       siguen las poses fijas intactas.
+       Para sacarlo: borrar esta regla, el <video> del markup y holograma.mp4 */
+    .holo-vid{
+        position:absolute;inset:0;width:100%;height:100%;
+        object-fit:cover;
+    }
     .holo-img-b{animation:poseB 27s steps(1,end) infinite}
     .holo-img-c{animation:poseC 27s steps(1,end) infinite}
     /* cada cambio ocurre DENTRO de un tartamudeo de senal, no con un fundido */
@@ -822,6 +832,7 @@
         .holo-move,.holo-img-b,.holo-img-c,.holo-lines,.holo-wipe,.holo-band,.holo-glow{animation:none}
         .spinner{display:none}
         .holo-wipe,.holo-band,.holo-img-b,.holo-img-c{display:none}
+        .holo-vid{display:none}
         .ccard:hover{animation:none}
         .rv{opacity:1}
     }
@@ -850,6 +861,8 @@
              width="663" height="1626" decoding="async">
         <img class="holo-img holo-img-c" src="holograma-c.webp" alt=""
              width="663" height="1626" decoding="async">
+        <video class="holo-vid" src="holograma.mp4"
+               muted loop playsinline autoplay preload="auto" aria-hidden="true"></video>
 
         <div class="holo-band">
             <img src="holograma.webp" alt="" width="663" height="1626" decoding="async">
