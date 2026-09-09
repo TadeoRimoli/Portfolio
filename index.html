@@ -252,22 +252,23 @@
        lo que un puñado de imagenes puede sostener con honestidad.
 
        Solo un cuadro esta en opacidad 1 por vez, asi que el orden en el DOM
-       no importa. Ciclo de 13s: ~10.7s de reposo (cuadro 7 + cuadro 1, que
-       son casi iguales y se perciben como uno solo) y ~2.3s de gesto. */
-    .holo-f1{animation:seq1 13s steps(1,end) infinite}
-    .holo-f2{animation:seq2 13s steps(1,end) infinite}
-    .holo-f3{animation:seq3 13s steps(1,end) infinite}
-    .holo-f4{animation:seq4 13s steps(1,end) infinite}
-    .holo-f5{animation:seq5 13s steps(1,end) infinite}
-    .holo-f6{animation:seq6 13s steps(1,end) infinite}
-    .holo-f7{animation:seq7 13s steps(1,end) infinite}
-    @keyframes seq1{0%{opacity:1}50%,100%{opacity:0}}
-    @keyframes seq2{0%{opacity:0}50%{opacity:1}53%,100%{opacity:0}}
-    @keyframes seq3{0%{opacity:0}53%{opacity:1}56%,100%{opacity:0}}
-    @keyframes seq4{0%{opacity:0}56%{opacity:1}62%,100%{opacity:0}}
-    @keyframes seq5{0%{opacity:0}62%{opacity:1}65%,100%{opacity:0}}
-    @keyframes seq6{0%{opacity:0}65%{opacity:1}68%,100%{opacity:0}}
-    @keyframes seq7{0%{opacity:0}68%,100%{opacity:1}}
+       no importa. Ciclo de 15s: ~10.8s de reposo (cuadro 7 + cuadro 1, que
+       son casi iguales y se perciben como uno solo) y ~4.2s de gesto, con
+       cada cuadro intermedio sostenido 0.8s y el del beso 1.0s. */
+    .holo-f1{animation:seq1 15s steps(1,end) infinite}
+    .holo-f2{animation:seq2 15s steps(1,end) infinite}
+    .holo-f3{animation:seq3 15s steps(1,end) infinite}
+    .holo-f4{animation:seq4 15s steps(1,end) infinite}
+    .holo-f5{animation:seq5 15s steps(1,end) infinite}
+    .holo-f6{animation:seq6 15s steps(1,end) infinite}
+    .holo-f7{animation:seq7 15s steps(1,end) infinite}
+    @keyframes seq1{0%{opacity:1}45%,100%{opacity:0}}
+    @keyframes seq2{0%{opacity:0}45%{opacity:1}50.33%,100%{opacity:0}}
+    @keyframes seq3{0%{opacity:0}50.33%{opacity:1}55.67%,100%{opacity:0}}
+    @keyframes seq4{0%{opacity:0}55.67%{opacity:1}62.33%,100%{opacity:0}}
+    @keyframes seq5{0%{opacity:0}62.33%{opacity:1}67.67%,100%{opacity:0}}
+    @keyframes seq6{0%{opacity:0}67.67%{opacity:1}73%,100%{opacity:0}}
+    @keyframes seq7{0%{opacity:0}73%,100%{opacity:1}}
 
     /* líneas de barrido: negro semitransparente encima de la figura, que la
        oscurece en franjas. Suaves, porque la imagen ya trae trama propia; lo
