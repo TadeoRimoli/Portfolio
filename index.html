@@ -332,7 +332,7 @@
 
     /* ---------- HUD FIJO ---------- */
     .hud{position:fixed;inset:0;z-index:70;pointer-events:none}
-    .hud a{pointer-events:auto}
+    .hud a,.hud button,.hud input{pointer-events:auto}
 
 
     .mark{position:absolute;width:18px;height:18px;opacity:.7}
@@ -387,6 +387,17 @@
     .progress i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--orange);box-shadow:0 0 10px rgba(255,106,18,.7)}
     #clock{color:var(--cyan)}
     #scrollPct{color:var(--orange);min-width:36px;text-align:right}
+    .audio-console{display:flex;align-items:center;gap:8px;color:var(--ink-3)}
+    .audio-toggle{
+        display:flex;align-items:center;gap:7px;padding:2px 6px;border:0;
+        background:transparent;color:inherit;font:inherit;letter-spacing:inherit;
+        text-transform:uppercase;cursor:pointer;
+        transition:color var(--snap) steps(2);
+    }
+    .audio-toggle:hover,.audio-toggle[aria-pressed="true"]{color:var(--cyan)}
+    .audio-toggle:focus-visible,.audio-volume:focus-visible{outline:1px solid var(--cyan);outline-offset:2px}
+    .audio-icon{width:10px;color:var(--cyan);text-align:center}
+    .audio-volume{width:62px;height:3px;accent-color:var(--cyan);cursor:pointer}
 
     .rail{
         position:absolute;top:var(--hud-top);bottom:var(--hud-bot);width:var(--rail);
@@ -779,6 +790,7 @@
         .rec-time{padding-top:0}
         .ccard:nth-child(1),.ccard:nth-child(2),.ccard:nth-child(3){grid-column:1/-1;min-height:0}
         .botbar .hide-sm{display:none}
+        .audio-volume{display:none}
         /* la etiqueta de 150px dejaba ~56px para las herramientas y se cortaban */
         .tgroup{grid-template-columns:1fr;gap:9px;padding:16px 18px}
         .tgroup-items{gap:7px 16px}
@@ -791,6 +803,8 @@
     @media (max-width:520px){
         .brand-id{display:none}
         .progress{width:84px}
+        .botbar{gap:8px;padding:0 10px}
+        .audio-label{display:none}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -871,20 +885,34 @@
             </nav>
         </header>
 
-        <div class="rail rail-l"><span>Buenos Aires · Archivo personal · v2049</span></div>
+        <div class="rail rail-l"><span>Mar del Plata · Archivo personal · v2049</span></div>
         <div class="rail rail-r"><span id="railRead">SEC 00 — INICIO</span></div>
 
         <footer class="botbar">
             <span id="clock">--:--:--</span>
             <span class="sep"></span>
-            <span class="hide-sm">LAT -34.6037 / LON -58.3816</span>
+            <span class="hide-sm">LAT -38.0022 / LON -57.5575</span>
             <span class="sep hide-sm"></span>
             <span class="hide-sm">Señal estable</span>
+            <span class="sep hide-sm"></span>
+            <div class="audio-console">
+                <button class="audio-toggle" id="audioToggle" type="button" aria-pressed="false" aria-label="Reproducir música ambiental">
+                    <span class="audio-icon" id="audioIcon" aria-hidden="true">&#9654;</span>
+                    <span class="audio-label" id="audioLabel">Audio</span>
+                </button>
+                <input class="audio-volume" id="audioVolume" type="range" min="0" max="1" step="0.05" value="0.2" aria-label="Volumen de la música ambiental">
+            </div>
+            <span class="sep hide-sm"></span>
+            <span class="hide-sm">Diseño inspirado en Blade Runner</span>
             <span class="grow"></span>
             <div class="progress"><i id="bar"></i></div>
             <span id="scrollPct">000%</span>
         </footer>
     </div>
+
+    <audio id="ambientAudio" preload="metadata" loop>
+        <source src="assets/audio/dark-80s-sci-fi-atmosphere.mp3" type="audio/mpeg">
+    </audio>
 
     <main class="shell">
 
@@ -1264,6 +1292,7 @@
             <div class="endline">
                 <span>Fin de transmisión</span>
                 <span class="grow"></span>
+                <a href="https://pixabay.com/music/ambient-dark-80s-sci-fi-atmosphere-516363/" target="_blank" rel="noopener">Audio: Dark 80s Sci-Fi Atmosphere · Universfield</a>
                 <span>Tadeo Rimoli · <span id="year">2025</span></span>
             </div>
         </section>
@@ -1284,6 +1313,38 @@
         }
         tick(); setInterval(tick,1000);
         document.getElementById('year').textContent = new Date().getFullYear();
+
+        /* ---------- AUDIO AMBIENTAL ---------- */
+        const ambientAudio = document.getElementById('ambientAudio');
+        const audioToggle = document.getElementById('audioToggle');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioLabel = document.getElementById('audioLabel');
+        const audioVolume = document.getElementById('audioVolume');
+        ambientAudio.volume = Number(audioVolume.value);
+
+        function setAudioState(playing){
+            audioToggle.setAttribute('aria-pressed', String(playing));
+            audioToggle.setAttribute('aria-label', playing ? 'Pausar música ambiental' : 'Reproducir música ambiental');
+            audioIcon.innerHTML = playing ? '&#10074;&#10074;' : '&#9654;';
+            audioLabel.textContent = playing ? 'Pausar' : 'Audio';
+        }
+
+        audioToggle.addEventListener('click', async () => {
+            if (ambientAudio.paused){
+                try {
+                    await ambientAudio.play();
+                    setAudioState(true);
+                } catch (error) {
+                    setAudioState(false);
+                }
+            } else {
+                ambientAudio.pause();
+                setAudioState(false);
+            }
+        });
+        audioVolume.addEventListener('input', () => {
+            ambientAudio.volume = Number(audioVolume.value);
+        });
 
         /* ---------- PROGRESO / LECTURA DE SECCIÓN ---------- */
         const bar = document.getElementById('bar');
